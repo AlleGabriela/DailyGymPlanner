@@ -23,10 +23,6 @@ class MyApp extends StatelessWidget {
         tabletBody: const TabletScaffold(),
         desktopBody: const DesktopScaffold(),
       ),
-    /*initialRoute: '/welcomepage',
-    routes: {
-      '/welcomepage': (context) => WelcomePage(),
-    },*/
     );
   }
 }
