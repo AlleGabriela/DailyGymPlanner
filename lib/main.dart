@@ -4,6 +4,7 @@ import 'package:daily_gym_planner/responsive/responsive_layout.dart';
 import 'package:daily_gym_planner/responsive/tablet_scaffold.dart';
 import 'package:daily_gym_planner/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:daily_gym_planner/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +24,10 @@ class MyApp extends StatelessWidget {
         tabletBody: const TabletScaffold(),
         desktopBody: const DesktopScaffold(),
       ),
+      initialRoute: '/welcome',
+      routes: {
+        '/welcome': (context) => FirstAppPageScreen(),
+      },
     );
   }
 }
