@@ -1,8 +1,3 @@
-import 'package:daily_gym_planner/responsive/desktop_scaffold.dart';
-import 'package:daily_gym_planner/responsive/mobile_scaffold.dart';
-import 'package:daily_gym_planner/responsive/responsive_layout.dart';
-import 'package:daily_gym_planner/responsive/tablet_scaffold.dart';
-import 'package:daily_gym_planner/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,15 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: ResponsiveLayout(
-        mobileBody: const MobileScaffold(),
-        tabletBody: const TabletScaffold(),
-        desktopBody: const DesktopScaffold(),
-      ),
-    /*initialRoute: '/welcomepage',
-    routes: {
-      '/welcomepage': (context) => WelcomePage(),
-    },*/
     );
   }
 }
