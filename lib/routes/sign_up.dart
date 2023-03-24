@@ -104,11 +104,11 @@ class SignUp extends StatelessWidget{
                             children: [
                               TextSpan(
                                   text: "Already have an account? ",
+                                  style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => LogIn()));
                                     },
-                                  style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2)
                               ),
                             ]
                         )
