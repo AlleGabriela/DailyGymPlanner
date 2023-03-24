@@ -1,5 +1,6 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:daily_gym_planner/routes/sign_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -69,7 +70,11 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   Container(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                            Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => SignIn()),
+                            );
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: StadiumBorder(),
                             fixedSize: Size(buttonWidth, buttonHeight),
