@@ -1,6 +1,7 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:daily_gym_planner/routes/sign_in.dart';
+import 'package:daily_gym_planner/routes/sign_up.dart';
+import 'package:daily_gym_planner/routes/log_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -22,7 +23,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(marginSize,marginSize,0,0),
                       child: Text("Daily",
-                          style: TextStyle(color: Colors.yellow, fontSize: titleSize, fontFamily: font1))
+                          style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 ),
                 Align(
@@ -30,7 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(0,0,50,0),
                       child: Text("Gym",
-                          style: TextStyle(color: Colors.yellow, fontSize: titleSize, fontFamily: font1))
+                          style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 ),
                 Align(
@@ -38,7 +39,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(0,0,marginSize,0),
                       child: Text("Planner",
-                          style: TextStyle(color: Colors.yellow, fontSize: titleSize, fontFamily: font1))
+                          style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 )
               ],
@@ -52,7 +53,11 @@ class WelcomeScreen extends StatelessWidget {
                   Container(
                       margin: const EdgeInsets.fromLTRB(0,0,0,10),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => LogIn()),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: StadiumBorder(),
                             fixedSize: Size(buttonWidth, buttonHeight),
@@ -60,9 +65,9 @@ class WelcomeScreen extends StatelessWidget {
                                 fontSize: buttonText,
                                 fontWeight: FontWeight.bold
                             ),
-                            side: BorderSide(color: Colors.black54, width: 2),
-                            backgroundColor: Colors.yellow,
-                            foregroundColor: Colors.black,
+                            side: BorderSide(color: buttonTextColor, width: 2),
+                            backgroundColor: secondColor,
+                            foregroundColor: buttonTextColor,
                             elevation: 15
                         ),
                         child: Text("Log in"),
@@ -72,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                             Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => SignIn()),
+                                      MaterialPageRoute(builder: (context) => SignUp()),
                             );
                         },
                         style: ElevatedButton.styleFrom(
@@ -82,9 +87,9 @@ class WelcomeScreen extends StatelessWidget {
                                 fontSize: buttonText,
                                 fontWeight: FontWeight.bold
                             ),
-                            side: BorderSide(color: Colors.black54, width: 2),
-                            backgroundColor: Colors.yellow,
-                            foregroundColor: Colors.black,
+                            side: BorderSide(color: buttonTextColor, width: 2),
+                            backgroundColor: secondColor,
+                            foregroundColor: buttonTextColor,
                             elevation: 15
                         ),
                         child: Text("Sign up"),

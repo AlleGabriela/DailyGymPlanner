@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 // Color constants
 const primaryColor = Color(0xff54026e);
+const secondColor = Colors.yellow;
+const buttonTextColor = Colors.black;
 
 
 // App sizing
