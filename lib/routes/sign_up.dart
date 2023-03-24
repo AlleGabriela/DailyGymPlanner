@@ -97,18 +97,41 @@ class SignUp extends StatelessWidget{
                       )
                   ),
                   Container(
+                      alignment: Alignment.bottomRight,
+                      margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          //TODO: add redirection to ADMIN/CUSTOMER PAGE
+                          //TODO HINT: look in sign_up page, there is a model
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: StadiumBorder(),
+                            fixedSize: Size(buttonWidth, buttonHeight),
+                            textStyle: TextStyle(
+                                fontSize: buttonText,
+                                fontWeight: FontWeight.bold
+                            ),
+                            side: BorderSide(color: buttonTextColor, width: 2),
+                            backgroundColor: primaryColor,
+                            foregroundColor: buttonTextColor,
+                            elevation: 15
+                        ),
+                        child: Text("Sign Up"),
+                      )
+                  ),
+                  Container(
                     alignment: Alignment.bottomRight,
                     margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
                     child: Text.rich(
                         TextSpan(
                             children: [
                               TextSpan(
-                                  text: "Already have an account? ",
+                                  text: "\nAlready have an account? ",
+                                  style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => LogIn()));
                                     },
-                                  style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2)
                               ),
                             ]
                         )
