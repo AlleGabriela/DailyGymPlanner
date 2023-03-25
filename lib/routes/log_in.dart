@@ -1,3 +1,5 @@
+import 'package:daily_gym_planner/routes/reset_password.dart';
+import 'package:daily_gym_planner/routes/sign_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/util/constants.dart';
@@ -107,8 +109,7 @@ class LogIn extends StatelessWidget{
                                   style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
-                                      //TODO: add redirection to FORGOT PASSWORD PAGE
-                                      //TODO HINT: look in sign_up page, there is a model
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => PassReset()));
                                     },
                                 ),
                                 TextSpan(
@@ -116,8 +117,7 @@ class LogIn extends StatelessWidget{
                                   style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
-                                      //TODO: add redirection to SignUp PAGE
-                                      //TODO HINT: look in sign_up page, there is a model
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                                     },
                                 ),
                               ]
