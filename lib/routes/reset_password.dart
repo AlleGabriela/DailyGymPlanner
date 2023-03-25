@@ -86,8 +86,7 @@ class PassReset extends StatelessWidget{
                         margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
                         child: ElevatedButton(
                           onPressed: () {
-                            //TODO: add redirection to ADMIN/CUSTOMER PAGE
-                            //TODO HINT: look in sign_up page, there is a model
+
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),
@@ -115,7 +114,7 @@ class PassReset extends StatelessWidget{
                                   style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
-
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
                                     },
                                 )
                               ]
