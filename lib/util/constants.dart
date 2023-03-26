@@ -5,6 +5,7 @@ const primaryColor = Color(0xff54026e);
 const secondColor = Colors.yellow;
 const buttonTextColor = Colors.black;
 const questionTextColor = Colors.red;
+const dropdownFieldColor = Colors.grey;
 
 // App sizing
 const marginSize = 20.0;
