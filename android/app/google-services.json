@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "34034535310",
+    "project_id": "daily-gym-planner-app",
+    "storage_bucket": "daily-gym-planner-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34034535310:android:8640f840de861a5b9972df",
+        "android_client_info": {
+          "package_name": "com.example.daily_gym_planner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34034535310-p5dp2qmfokt1ib25cu4o5dg8nf46dca2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5xLeRlhperBCvvq6mbyo6LYrjqc1rkeo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34034535310-p5dp2qmfokt1ib25cu4o5dg8nf46dca2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
