@@ -7,9 +7,9 @@ import '../util/constants.dart';
 String userIdErrorText = "User id can not be empty";
 String userIdHintText = "Enter User Id";
 Color userIdHintTextColor = Colors.black;
-String valueChoose = "Trainer";
+String valueChoose = "None";
 List listItem = [
-  "Trainer", "Customer"
+  "None", "Trainer", "Customer"
 ];
 
 class SignUp extends StatefulWidget{
@@ -17,6 +17,11 @@ class SignUp extends StatefulWidget{
 }
 
 class HomeSignUp extends State<SignUp> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +77,7 @@ class HomeSignUp extends State<SignUp> {
                                     children: [
                                       Container(
                                         child: TextField(
+                                          controller: nameController,
                                           decoration: Box().textInputDecoration(
                                               'Name', 'Enter your name'),
                                         ),
@@ -81,16 +87,7 @@ class HomeSignUp extends State<SignUp> {
                                       SizedBox(height: boxDataSize),
                                       Container(
                                         child: TextField(
-                                          decoration: Box().textInputDecoration(
-                                              'Phone Number',
-                                              'Enter your phone number'),
-                                        ),
-                                        decoration: Box()
-                                            .inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
+                                          controller: emailController,
                                           decoration: Box().textInputDecoration(
                                               'E-mail', 'Enter your e-mail'),
                                         ),
@@ -100,6 +97,7 @@ class HomeSignUp extends State<SignUp> {
                                       SizedBox(height: boxDataSize),
                                       Container(
                                         child: TextField(
+                                          controller: passwordController,
                                           obscureText: true,
                                           decoration: Box().textInputDecoration(
                                               'Pasword', 'Enter your password'),
@@ -110,6 +108,7 @@ class HomeSignUp extends State<SignUp> {
                                       SizedBox(height: boxDataSize),
                                       Container(
                                         child: TextField(
+                                          controller: confirmPasswordController,
                                           obscureText: true,
                                           decoration: Box().textInputDecoration(
                                               'Repeat Password',
