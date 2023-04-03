@@ -7,9 +7,9 @@ import '../util/constants.dart';
 String userIdErrorText = "User id can not be empty";
 String userIdHintText = "Enter User Id";
 Color userIdHintTextColor = Colors.black;
-String valueChoose = "Trainer";
+String valueChoose = "None";
 List listItem = [
-  "Trainer", "Customer"
+  "None", "Trainer", "Customer"
 ];
 
 class SignUp extends StatefulWidget{
@@ -17,6 +17,7 @@ class SignUp extends StatefulWidget{
 }
 
 class HomeSignUp extends State<SignUp> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
