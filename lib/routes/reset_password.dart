@@ -2,10 +2,29 @@ import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../services/auth_methods.dart';
 import '../util/components_theme/box.dart';
 import '../util/constants.dart';
+import '../util/showSnackBar.dart';
 
-class PassReset extends StatelessWidget{
+class PassReset extends StatefulWidget{
+  HomePassReset createState() => HomePassReset();
+}
+
+class HomePassReset extends State<PassReset>{
+  final emailController = TextEditingController();
+
+  FirebaseAuthMethods _authService = FirebaseAuthMethods();
+
+  Future<void> _handlePassReset() async {
+    String email = emailController.text.trim();
+
+    await _authService.handlePassReset(
+      email: email,
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,32 +69,13 @@ class PassReset extends StatelessWidget{
                               ),
                               SizedBox(height: boxDataSize),
                               Form(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        child: TextField(
-                                          decoration: Box().textInputDecoration('E-mail', 'Enter your e-mail'),
-                                        ),
-                                        decoration: Box().inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
-                                          obscureText: true,
-                                          decoration: Box().textInputDecoration('New Pasword', 'Enter your new password'),
-                                        ),
-                                        decoration: Box().inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
-                                          obscureText: true,
-                                          decoration: Box().textInputDecoration('Repeat Password', 'Repeat your password'),
-                                        ),
-                                        decoration: Box().inputBoxDecorationShaddow(),
-                                      )
-                                    ],
-                                  )
+                                child: Container(
+                                  child: TextField(
+                                    controller: emailController,
+                                    decoration: Box().textInputDecoration('E-mail', 'Enter your e-mail'),
+                                  ),
+                                  decoration: Box().inputBoxDecorationShaddow(),
+                                )
                               )
                             ],
                           ),
@@ -85,8 +85,12 @@ class PassReset extends StatelessWidget{
                         alignment: Alignment.bottomRight,
                         margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
                         child: ElevatedButton(
-                          onPressed: () {
-
+                          onPressed: () async {
+                            try {
+                              _handlePassReset();
+                            } catch (e) {
+                              showSnackBar(context, 'Email does not exist: $e');
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),
@@ -100,7 +104,7 @@ class PassReset extends StatelessWidget{
                               foregroundColor: buttonTextColor,
                               elevation: 15
                           ),
-                          child: Text("Submit"),
+                          child: Text("Reset"),
                         )
                     ),
                     Container(

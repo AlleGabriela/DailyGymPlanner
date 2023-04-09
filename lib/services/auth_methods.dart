@@ -70,7 +70,29 @@ class FirebaseAuthMethods {
      } on FirebaseAuthException catch (e) {
        showSnackBar(context, e.message!);
      }
-
    }
+
+  Future<void> handlePassReset({
+    required String email,
+    required BuildContext context,
+  }) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
+    try {
+      List<String> userSignInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+      if (userSignInMethods.isNotEmpty) {
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        showSnackBar(context, 'Password Reset Email Sent');
+      } else {
+        showSnackBar(context, 'Email is not valid');
+      }
+
+    } on FirebaseAuthException catch (e) {
+        print(e);
+        showSnackBar(context, e.message!);
+    }
+  }
 }
 
