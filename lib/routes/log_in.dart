@@ -4,10 +4,31 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 
+import '../services/auth_methods.dart';
 import '../util/components_theme/box.dart';
+import '../util/showSnackBar.dart';
 
+class LogIn extends StatefulWidget{
+  HomeLogIn createState() => HomeLogIn();
+}
 
-class LogIn extends StatelessWidget{
+  class HomeLogIn extends State<LogIn>{
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+  FirebaseAuthMethods _authService = FirebaseAuthMethods();
+
+  Future<void> _handleLogIn() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    await _authService.handleLogIn(
+      email: email,
+      password: password,
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +77,7 @@ class LogIn extends StatelessWidget{
                                     children: [
                                       Container(
                                         child: TextField(
+                                          controller: emailController,
                                           decoration: Box().textInputDecoration('E-mail', 'Enter your e-mail'),
                                         ),
                                         decoration: Box().inputBoxDecorationShaddow(),
@@ -63,6 +85,7 @@ class LogIn extends StatelessWidget{
                                       SizedBox(height: boxDataSize),
                                       Container(
                                         child: TextField(
+                                          controller: passwordController,
                                           obscureText: true,
                                           decoration: Box().textInputDecoration('Pasword', 'Enter your password'),
                                         ),
@@ -79,9 +102,12 @@ class LogIn extends StatelessWidget{
                       alignment: Alignment.bottomRight,
                       margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
                         child: ElevatedButton(
-                          onPressed: () {
-                                //TODO: add redirection to ADMIN/CUSTOMER PAGE
-                                //TODO HINT: look in sign_up page, there is a model
+                          onPressed: () async {
+                            try {
+                              _handleLogIn();
+                            } catch (e) {
+                              showSnackBar(context, 'User does not exist: $e');
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),
