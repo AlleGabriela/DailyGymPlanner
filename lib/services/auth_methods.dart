@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../util/showSnackBar.dart';
 
 class FirebaseAuthMethods {
+
+  Future<bool> doesUserExist(String email) async {
+    final users = FirebaseFirestore.instance.collection('users');
+    final userSnapshot = await users.where('email', isEqualTo: email).get();
+    return userSnapshot.docs.isNotEmpty;
+  }
 
   Future<void> handleSignUp({
     required String role,
@@ -17,42 +24,30 @@ class FirebaseAuthMethods {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
 
-    final CollectionReference customers = FirebaseFirestore.instance.collection('customers');
-    final CollectionReference trainers = FirebaseFirestore.instance.collection('trainers');
-
-    bool userExistsCustomer =
-        (await customers.where('email', isEqualTo: email).get()).docs.isNotEmpty;
-    bool userExistsTrainer =
-        (await trainers.where('email', isEqualTo: email).get()).docs.isNotEmpty;
-
-    if (userExistsCustomer) {
-      // User already exists! Handle it here
-      showSnackBar(context, 'User already exists based on this e-mail address');
-    } else if(userExistsTrainer) {
-      // User already exists! Handle it here
-      showSnackBar(context, 'User already exists based on this e-mail address');
-    } else {
+    if (await doesUserExist(email)) {
+      // User already exists ERROR!
+      }  else {
       // User does not exist. Proceed with sign up
-      CollectionReference collection;
+      String collection;
       try {
         if (password != confirmpassword) {
           throw Exception('Passwords do not match.');
         }
         if (role == 'Trainer') {
-          collection = FirebaseFirestore.instance.collection('trainers');
+          collection = "trainers";
         } else if (role == 'Customer') {
-          collection = FirebaseFirestore.instance.collection('customers');
+          collection = 'customers';
         } else {
           throw Exception('Invalid role');
         }
         if( email == "" || name == "" || password == "") {
           throw Exception('Field cannot be empty.');
         }
-        await collection.add({
-          'name': name,
-          'email': email,
-          'password': password
-        });
+        final credentials = await FirebaseAuth.instance.createUserWithEmailAndPassword( email: email, password: password);
+        FirebaseFirestore.instance
+          .collection(collection)
+          .doc(credentials.user?.uid)
+          .set({'name': name});
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
