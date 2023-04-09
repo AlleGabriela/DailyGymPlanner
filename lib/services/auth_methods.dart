@@ -62,51 +62,15 @@ class FirebaseAuthMethods {
      WidgetsFlutterBinding.ensureInitialized();
      await Firebase.initializeApp();
 
-     final CollectionReference customers = FirebaseFirestore.instance
-         .collection('customers');
-     final CollectionReference trainers = FirebaseFirestore.instance.collection(
-         'trainers');
-
-     bool userExistsCustomer =
-         (await customers.where('email', isEqualTo: email).get()).docs
-             .isNotEmpty;
-     bool userExistsTrainer =
-         (await trainers.where('email', isEqualTo: email).get()).docs
-             .isNotEmpty;
-
-     bool userPasswordCustomer =
-         (await trainers.where('password', isEqualTo: password).get()).docs
-             .isNotEmpty;
-
-     bool userPasswordTrainer =
-         (await trainers.where('password', isEqualTo: password).get()).docs
-             .isNotEmpty;
-
-     if (userExistsCustomer) {
-       if (userPasswordCustomer) {
-         //TODO: add redirection to CUSTOMER PAGE
-         //TODO HINT: look in sign_up page, there is a model
-         } else {
-         showSnackBar(context, 'Wrong password provided!');
-       }
-     } else if (userExistsTrainer) {
-       if (userPasswordTrainer) {
-         //TODO: add redirection to ADMIN PAGE
-         //TODO HINT: look in sign_up page, there is a model
-       } else {
-         showSnackBar(context, 'Wrong password provided!');
-       }
-     } else {
-       try {
-         if (userExistsCustomer == false || userExistsTrainer == false) {
-           showSnackBar(context, 'No user found!');
-         } else {
-           showSnackBar(context, 'Please fill all the cells!');
-         }
-       } catch (e) {
-         showSnackBar(context, 'Failed to login user!');
-       }
+     try {
+       await FirebaseAuth.instance.signInWithEmailAndPassword(
+           email: email,
+           password: password
+       );
+     } on FirebaseAuthException catch (e) {
+       showSnackBar(context, e.message!);
      }
+
    }
 }
 
