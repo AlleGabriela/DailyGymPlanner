@@ -1,8 +1,10 @@
 import 'package:daily_gym_planner/routes/log_in.dart';
+import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../util/components_theme/box.dart';
 import '../util/constants.dart';
+import '../util/showSnackBar.dart';
 
 String userIdErrorText = "User id can not be empty";
 String userIdHintText = "Enter User Id";
@@ -21,6 +23,24 @@ class HomeSignUp extends State<SignUp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  FirebaseAuthMethods _authService = FirebaseAuthMethods();
+
+  Future<void> _handleSignUp() async {
+    String name = nameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = confirmPasswordController.text.trim();
+
+    await _authService.handleSignUp(
+      role: valueChoose,
+      name: name,
+      email: email,
+      password: password,
+      confirmpassword: confirmPassword,
+      context: context,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +146,9 @@ class HomeSignUp extends State<SignUp> {
                                           items: listItem.map(
                                                   (e) =>
                                                   DropdownMenuItem(
-                                                    child: Text(e), value: e,)
+                                                    child: Text(e),
+                                                    value: e,
+                                                  )
                                           ).toList(),
                                           onChanged: (val) {
                                             setState(() {
@@ -148,9 +170,12 @@ class HomeSignUp extends State<SignUp> {
                         margin: const EdgeInsets.fromLTRB(
                             0, 0, marginSize, marginSize),
                         child: ElevatedButton(
-                          onPressed: () {
-                            //TODO: add redirection to ADMIN/CUSTOMER PAGE
-                            //TODO HINT: look in sign_up page, there is a model
+                          onPressed: () async {
+                            try {
+                              _handleSignUp();
+                            } catch (e) {
+                              showSnackBar(context, 'Failed to create user: $e');
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),
