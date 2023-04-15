@@ -104,7 +104,13 @@ class LogIn extends StatefulWidget{
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              _handleLogIn();
+                              await _handleLogIn();
+                              String role = await _authService.getRole(emailController.text.trim());
+                              if( role == "Trainer") {
+                                Navigator.pushReplacementNamed(context, "/TrainerHomePage");
+                              } else {
+                                //TODO:  GO TO CUTOMER PAGE
+                              }
                             } catch (e) {
                               showSnackBar(context, 'User does not exist: $e');
                             }

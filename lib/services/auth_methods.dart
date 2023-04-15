@@ -72,6 +72,16 @@ class FirebaseAuthMethods {
      }
    }
 
+  Future<String> getRole(String userId) async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+
+    String role = snapshot.get('role');
+    return role;
+  }
+
   Future<void> handlePassReset({
     required String email,
     required BuildContext context,
