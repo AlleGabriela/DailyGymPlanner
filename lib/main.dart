@@ -1,4 +1,7 @@
+import 'package:daily_gym_planner/routes/models/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/sign_up.dart';
+import 'package:daily_gym_planner/routes/log_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,6 +24,9 @@ class MyApp extends StatelessWidget {
         initialRoute: '/welcome_screen',
         routes: {
           '/welcome_screen': (context) => WelcomeScreen(),
+          '/sign_up':  (context) => SignUp(),
+          '/log_in': (context) => LogIn(),
+          '/TrainerHomePage':  (context) => TrainerHome(),
         }
     );
   }

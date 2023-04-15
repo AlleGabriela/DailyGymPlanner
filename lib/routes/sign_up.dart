@@ -172,7 +172,12 @@ class HomeSignUp extends State<SignUp> {
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              _handleSignUp();
+                              await _handleSignUp();
+                              if( valueChoose == "Trainer") {
+                                Navigator.pushReplacementNamed(context, "/TrainerHomePage");
+                              } else {
+                                //TODO:  GO TO CUTOMER PAGE
+                              }
                             } catch (e) {
                               showSnackBar(context, 'Failed to create user: $e');
                             }

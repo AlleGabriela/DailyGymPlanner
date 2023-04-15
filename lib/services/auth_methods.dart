@@ -47,7 +47,7 @@ class FirebaseAuthMethods {
         FirebaseFirestore.instance
           .collection(collection)
           .doc(credentials.user?.uid)
-          .set({'name': name});
+          .set({'name': name, 'role': role});
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
