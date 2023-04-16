@@ -1,5 +1,7 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
+import 'package:daily_gym_planner/services/auth_methods.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TrainerHome extends StatefulWidget{
@@ -8,8 +10,25 @@ class TrainerHome extends StatefulWidget{
 
 class TrainerHomePage extends State<TrainerHome>{
 
-  void onLogout() {
-    // TODO: Implement logout functionality.
+  String userName = "userName";
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserDetails();
+  }
+
+  Future<void> _getUserDetails() async {
+
+    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    User? user = FirebaseAuth.instance.currentUser;
+    String? email = user?.email;
+    if (email != null) {
+      String name = await _authService.getName(email) ;
+      setState(() {
+        userName = name;
+      });
+    }
   }
 
   @override
@@ -17,8 +36,8 @@ class TrainerHomePage extends State<TrainerHome>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
-            userName: "userName",
-            onLogout: onLogout,
+            userName: userName,
+            selectedSection: "Home",
         ),
       body: CustomScrollView(
         slivers: <Widget>[

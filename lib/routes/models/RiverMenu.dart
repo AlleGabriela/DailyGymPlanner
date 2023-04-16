@@ -8,12 +8,10 @@ class RiverMenu extends StatelessWidget {
   const RiverMenu({
     Key? key,
     required this.userName,
-    required this.onLogout,
     this.selectedSection = 'Home',
   }) : super(key: key);
 
   final String userName;
-  final VoidCallback onLogout;
   final String selectedSection;
 
   @override
@@ -28,7 +26,7 @@ class RiverMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               InfoCard(
-                name: userName
+                name: userName,
               ),
               const Divider(),
               SideMenuIcons(
