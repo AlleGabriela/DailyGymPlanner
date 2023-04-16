@@ -1,4 +1,4 @@
-import 'package:daily_gym_planner/routes/models/TrainerHomePage.dart';
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/routes/sign_up.dart';
 import 'package:daily_gym_planner/routes/log_in.dart';
