@@ -2,6 +2,7 @@ import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+
   const MyAppBar({Key? key}) : super(key: key);
 
   @override
@@ -10,9 +11,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor:  primaryColor,
       leading: IconButton(
         icon: Icon(Icons.menu),
-        onPressed: () {
-          //TODO: Add your menu icon onPressed logic here
-        },
+        onPressed: () => Scaffold.of(context).openDrawer(),
       ),
       title: Image.asset(
         'assets/images/barbell.png',
