@@ -18,15 +18,17 @@ class LogIn extends StatefulWidget{
 
   FirebaseAuthMethods _authService = FirebaseAuthMethods();
 
-  Future<void> _handleLogIn() async {
+  Future<String> _handleLogIn() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-
+    
     await _authService.handleLogIn(
       email: email,
       password: password,
       context: context,
     );
+    
+    return _authService.getRole(email);
   }
 
   @override
@@ -104,9 +106,8 @@ class LogIn extends StatefulWidget{
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              await _handleLogIn();
-                              String role = await _authService.getRole(emailController.text.trim());
-                              if( role == "Trainer") {
+                              String role = await _handleLogIn();
+                              if( role == 'Trainer') {
                                 Navigator.pushReplacementNamed(context, "/TrainerHomePage");
                               } else {
                                 //TODO:  GO TO CUTOMER PAGE
