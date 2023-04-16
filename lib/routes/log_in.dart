@@ -1,3 +1,4 @@
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/reset_password.dart';
 import 'package:daily_gym_planner/routes/sign_up.dart';
 import 'package:flutter/gestures.dart';
@@ -108,7 +109,8 @@ class LogIn extends StatefulWidget{
                             try {
                               String role = await _handleLogIn();
                               if( role == 'Trainer') {
-                                Navigator.pushReplacementNamed(context, "/TrainerHomePage");
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => TrainerHome()));
                               } else {
                                 //TODO:  GO TO CUTOMER PAGE
                               }

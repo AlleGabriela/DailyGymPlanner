@@ -1,4 +1,5 @@
 import 'package:daily_gym_planner/routes/log_in.dart';
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,8 @@ class HomeSignUp extends State<SignUp> {
                             try {
                               await _handleSignUp();
                               if( valueChoose == "Trainer") {
-                                Navigator.pushReplacementNamed(context, "/TrainerHomePage");
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => TrainerHome()));
                               } else {
                                 //TODO:  GO TO CUTOMER PAGE
                               }
