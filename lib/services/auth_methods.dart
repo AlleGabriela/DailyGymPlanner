@@ -47,7 +47,7 @@ class FirebaseAuthMethods {
         FirebaseFirestore.instance
           .collection(collection)
           .doc(credentials.user?.uid)
-          .set({'name': name});
+          .set({'name': name, 'role': role});
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
@@ -71,6 +71,66 @@ class FirebaseAuthMethods {
        showSnackBar(context, e.message!);
      }
    }
+
+  Future<String> getRole(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('trainers')
+        .doc(user.uid)
+        .get();
+
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String role;
+    if (adminSnapshot.exists) {
+      // User exists in the "admins" table
+      role = adminSnapshot.get('role');
+    } else if (customerSnapshot.exists) {
+      // User exists in the "customers" table
+      role = customerSnapshot.get('role');
+    } else {
+      // User does not exist in either table
+      throw Exception('User does not exist');
+    }
+    return role;
+  }
+
+  Future<String> getName(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('trainers')
+        .doc(user.uid)
+        .get();
+
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String name;
+    if (adminSnapshot.exists) {
+      // User exists in the "admins" table
+      name = adminSnapshot.get('name');
+    } else if (customerSnapshot.exists) {
+      // User exists in the "customers" table
+      name = customerSnapshot.get('name');
+    } else {
+      // User does not exist in either table
+      throw Exception('User does not exist');
+    }
+    return name;
+  }
 
   Future<void> handlePassReset({
     required String email,

@@ -1,3 +1,4 @@
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/reset_password.dart';
 import 'package:daily_gym_planner/routes/sign_up.dart';
 import 'package:flutter/gestures.dart';
@@ -18,15 +19,17 @@ class LogIn extends StatefulWidget{
 
   FirebaseAuthMethods _authService = FirebaseAuthMethods();
 
-  Future<void> _handleLogIn() async {
+  Future<String> _handleLogIn() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-
+    
     await _authService.handleLogIn(
       email: email,
       password: password,
       context: context,
     );
+    
+    return _authService.getRole(email);
   }
 
   @override
@@ -104,7 +107,13 @@ class LogIn extends StatefulWidget{
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              _handleLogIn();
+                              String role = await _handleLogIn();
+                              if( role == 'Trainer') {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => TrainerHome()));
+                              } else {
+                                //TODO:  GO TO CUTOMER PAGE
+                              }
                             } catch (e) {
                               showSnackBar(context, 'User does not exist: $e');
                             }

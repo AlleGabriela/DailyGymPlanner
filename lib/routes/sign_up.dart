@@ -1,4 +1,5 @@
 import 'package:daily_gym_planner/routes/log_in.dart';
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +173,13 @@ class HomeSignUp extends State<SignUp> {
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
-                              _handleSignUp();
+                              await _handleSignUp();
+                              if( valueChoose == "Trainer") {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => TrainerHome()));
+                              } else {
+                                //TODO:  GO TO CUTOMER PAGE
+                              }
                             } catch (e) {
                               showSnackBar(context, 'Failed to create user: $e');
                             }
