@@ -1,4 +1,5 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
+import 'package:daily_gym_planner/routes/models/ListOfBoxes.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,16 +37,20 @@ class TrainerHomePage extends State<TrainerHome>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
-            userName: userName,
-            selectedSection: "Home",
+          userName: userName,
+          selectedSection: "Home",
         ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          MyAppBar(),
-          // other sliver widgets
-        ],
+        body: CustomScrollView(
+          slivers: <Widget>[
+            MyAppBar(),
+            SliverList(
+                delegate: SliverChildListDelegate(
+                  ListOfBoxes.buildBoxes(),
+                ),
+            ), // other sliver widgets
+          ],
+        ),
       ),
-    ),
     );
   }
 }
