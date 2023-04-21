@@ -1,3 +1,5 @@
+import 'package:daily_gym_planner/routes/trainer/AddNews.dart';
+//import 'package:daily_gym_planner/routes/trainer/NewsDetailsScreen.dart';
 import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/routes/sign_up.dart';
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
           '/sign_up':  (context) => SignUp(),
           '/log_in': (context) => LogIn(),
           '/TrainerHomePage':  (context) => TrainerHome(),
+          '/_AddNewsPageState':  (context) => AddNewsPage(),
+          //'/_NewsDetailsScreenState':  (context) => NewsDetailsScreen(),
         }
     );
   }

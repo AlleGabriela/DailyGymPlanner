@@ -8,6 +8,8 @@ const questionTextColor = Colors.red;
 const dropdownFieldColor = Colors.grey;
 const accentColor = Colors.white;
 
+const lightLila = Color(0xff9630B7);
+
 
 // App sizing
 const marginSize = 20.0;

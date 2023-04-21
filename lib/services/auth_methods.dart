@@ -69,6 +69,7 @@ class FirebaseAuthMethods {
        );
      } on FirebaseAuthException catch (e) {
        showSnackBar(context, e.message!);
+       throw Exception('User does not exist!');
      }
    }
 
@@ -153,6 +154,14 @@ class FirebaseAuthMethods {
         print(e);
         showSnackBar(context, e.message!);
     }
+  }
+
+  Future<String> getUserId() async {
+    String? userID;
+    final user = FirebaseAuth.instance.currentUser;
+    userID = user!.uid;
+
+    return userID;
   }
 }
 
