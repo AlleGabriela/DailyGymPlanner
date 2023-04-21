@@ -1,3 +1,4 @@
+import 'package:daily_gym_planner/routes/trainer/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/util/constants.dart';
@@ -36,7 +37,8 @@ class RiverMenu extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => TrainerHome()));
                 },
                 onClientsSelected: () {
-                  // TODO: Navigate to Clients page.
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ClientsList()));
                 },
                 onMealsSelected: () {
                   // TODO: Navigate to Meals page.
