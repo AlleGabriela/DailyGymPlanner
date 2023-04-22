@@ -25,24 +25,4 @@ class Box {
       )
     ]);
   }
-
-  BoxDecoration listOfBoxDesign() {
-    return BoxDecoration(
-      color: accentColor,
-      borderRadius: BorderRadius.circular(30),
-      boxShadow:
-        [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          )
-        ],
-      image: DecorationImage(
-        image: NetworkImage('https://picsum.photos/200/200'),
-        fit: BoxFit.cover,
-      ),
-    );
-  }
 }
