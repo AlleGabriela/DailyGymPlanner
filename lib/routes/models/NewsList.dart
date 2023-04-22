@@ -44,50 +44,75 @@ class _NewsListState extends State<NewsList> {
         if( title == '' || imageUrl == '' || description == '')
           throw Exception("The news cannot pe accessed!");
 
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: dropdownFieldColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              )
-            ],
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
+        return Dismissible(
+          key: Key(doc.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: Colors.red,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-          child: SizedBox(
-            height: 300,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewsDetails(
-                      title: title,
-                      imageUrl: imageUrl,
-                      description: description,
-                    ),
-                  ),
-                );
-              },
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.3,
-                      child: Container(
-                        color: Colors.white,
+          onDismissed: (direction) async {
+            await FirebaseFirestore.instance
+                .collection("trainers")
+                .doc(userId)
+                .collection("news")
+                .doc(doc.id)
+                .delete();
+            setState(() {});
+          },
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: dropdownFieldColor,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                )
+              ],
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SizedBox(
+              height: 300,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetails(
+                        title: title,
+                        imageUrl: imageUrl,
+                        description: description,
                       ),
                     ),
-                  ),
-                  Positioned.fill(
-                    child: Center(
+                  );
+                },
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Container(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Center(
                         child: Text(
                           title,
                           style: const TextStyle(
@@ -98,8 +123,9 @@ class _NewsListState extends State<NewsList> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
