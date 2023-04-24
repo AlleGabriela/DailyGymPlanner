@@ -50,7 +50,7 @@ class TrainerHomePage extends State<TrainerHome>{
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 50, // set the height of the fixed box as required
-                child: Container(
+                child: Container( 
                   color: lightLila,
                   child: Center(
                     child: Text.rich(

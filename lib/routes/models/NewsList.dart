@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:daily_gym_planner/routes/models/NewsDetails.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
@@ -44,65 +45,24 @@ class _NewsListState extends State<NewsList> {
         if( title == '' || imageUrl == '' || description == '')
           throw Exception("The news cannot pe accessed!");
 
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: dropdownFieldColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              )
-            ],
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: SizedBox(
-            height: 300,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewsDetails(
-                      title: title,
-                      imageUrl: imageUrl,
-                      description: description,
-                    ),
-                  ),
-                );
-              },
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.3,
-                      child: Container(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Center(
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: accentColor,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return Container(
+          margin: EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
+          height: 180,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewsDetails(
+                                  title: title,
+                                  imageUrl: imageUrl,
+                                  description: description,
+                                ),
+                ),
+              );
+            },
+            child: listItems(title, imageUrl, Icons.newspaper, primaryColor),
+          )
         );
       }).toList();
     }

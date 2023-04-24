@@ -1,7 +1,5 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
-import 'package:daily_gym_planner/routes/models/NewsList.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
-import 'package:daily_gym_planner/routes/trainer/AddNews.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
