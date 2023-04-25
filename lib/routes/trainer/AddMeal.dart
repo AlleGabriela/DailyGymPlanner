@@ -4,13 +4,22 @@ import 'package:daily_gym_planner/util/showSnackBar.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/MealServices.dart';
+import '../../util/components_theme/box.dart';
 
 String valueChoose = "Breakfast";
 List listItem = [
-  "Breakfast", "Snack", "Lunch", "Dinner"
+  "Breakfast", "Snack", "Lunch", "Dinner", "Full Day Meal", "One Week Meal Plan"
 ];
-double _currentSliderValue1 = 0;
-double _currentSliderValue2 = 0;
+
+String mealChoose = "Choose meal:";
+List listMeals = [
+  "Choose meal:"
+];
+
+// String planChoose = "xc";
+// List listPlans = [
+//   "xc"
+// ];
 
 class AddMealPage extends StatefulWidget {
   AddMealPage({Key? key}) : super(key: key);
@@ -21,11 +30,12 @@ class AddMealPage extends StatefulWidget {
 
 class _AddMealPageState extends State<AddMealPage> {
   final _formKey = GlobalKey<FormState>();
-  String _category = valueChoose;
+  String _category = valueChoose = "Breakfast";
   String _name = '';
   String _description = '';
-  double _timeInHours = _currentSliderValue2;
-  double _timeInMinutes = _currentSliderValue1;
+  double _timeInHours = 0;
+  double _timeInMinutes = 0;
+
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
 
@@ -56,9 +66,9 @@ class _AddMealPageState extends State<AddMealPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mealPagesColor,
+      backgroundColor: addPagesBackgroundColor,
       appBar: AppBar(
-        title: Text('Add Meal'),
+        title: Text("Add "+valueChoose),
         backgroundColor: primaryColor,
       ),
       body: SingleChildScrollView(
@@ -70,8 +80,16 @@ class _AddMealPageState extends State<AddMealPage> {
             children: [
               Container(
                 child: DropdownButtonFormField(
-                  style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+                  style: TextStyle(color: inputDecorationColor, fontFamily: font1),
                   dropdownColor: dropdownFieldColor,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: inputDecorationColor),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: inputDecorationColor),
+                    ),
+                  ),
                   value: valueChoose,
                   items: listItem.map(
                           (e) =>
@@ -87,98 +105,384 @@ class _AddMealPageState extends State<AddMealPage> {
                   },
                 ),
               ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Name'),
-                maxLength: 30,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    showSnackBar( context, 'Please enter the name of the meal.');
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _name = value ?? '';
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    showSnackBar(context, 'Please enter a description.');
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _description = value ?? '';
-                },
-              ),
-              SizedBox(height: 32),
-              Text(
-                "Time for preparation",
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: questionSize,
-                  fontFamily: font1,
-                )
-              ),
-              SizedBox(height: 16),
-              Text(
-                  "Minutes",
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: questionSize*0.75,
-                    fontFamily: font1,
-                  )
-              ),
-              Slider(
-                value: _currentSliderValue1,
-                max: 59,
-                divisions: 59,
-                activeColor: primaryColor,
-                label: _currentSliderValue1.round().toString(),
-                onChanged: (double value) {
-                  setState(() {
-                    _currentSliderValue1 = value;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              Text(
-                  "Hours",
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: questionSize*0.75,
-                    fontFamily: font1,
-                  )
-              ),
-              Slider(
-                value: _currentSliderValue2,
-                max: 5,
-                divisions: 5,
-                activeColor: primaryColor,
-                label: _currentSliderValue2.round().toString(),
-                onChanged: (double value) {
-                  setState(() {
-                    _currentSliderValue2 = value;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: mealButtonColor
-                ),
-                onPressed: _submitForm,
-                child: Text('Save meal'),
-              ),
+              if (valueChoose == "Full Day Meal")
+                FullDayMeal()
+              else if (valueChoose == "One Week Meal Plan")
+                OneWeekMeal()
+              else
+                DayMeal()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Column DayMeal () {
+    return Column(
+        children: [
+          SizedBox(height: 16),
+          TextFormField(
+            decoration: addPageInputStyle("Name"),
+            cursorColor: inputDecorationColor,
+            maxLength: 30,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                showSnackBar( context, 'Please enter the name of the meal.');
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _name = value ?? '';
+            },
+          ),
+          SizedBox(height: 16),
+          TextFormField(
+            decoration: addPageInputStyle("Description"),
+            cursorColor: inputDecorationColor,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                showSnackBar(context, 'Please enter a description.');
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _description = value ?? '';
+            },
+          ),
+          SizedBox(height: 32),
+          titleStyle("Time for preparation", questionSize),
+          SizedBox(height: 16),
+          titleStyle("Minutes", questionSize*0.75),
+          Slider(
+            value: _timeInMinutes,
+            max: 59,
+            divisions: 59,
+            activeColor: primaryColor,
+            inactiveColor: lightLila,
+            label: _timeInMinutes.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                _timeInMinutes = value;
+              });
+            },
+          ),
+          SizedBox(height: 16),
+          titleStyle("Hours", questionSize*0.75),
+          Slider(
+            value: _timeInHours,
+            max: 5,
+            divisions: 5,
+            activeColor: primaryColor,
+            inactiveColor: lightLila,
+            label: _timeInHours.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                _timeInHours = value;
+              });
+            },
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: mealButtonColor
+            ),
+            onPressed: _submitForm,
+            child: Text('Save meal'),
+          ),
+        ]
+    );
+
+  }
+  Column FullDayMeal () {
+    mealChoose = "Choose meal:";
+    listMeals = [
+      "Choose meal:"
+    ];
+    return Column(
+      children: [
+        SizedBox(height: 32),
+        titleStyle("Breakfast", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Snack 1", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Lunch", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Snack 2", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Dinner", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 32),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mealButtonColor
+          ),
+          onPressed: _submitForm,
+          child: Text('Save full day meal'),
+        ),
+      ],
+    );
+
+  }
+  Column OneWeekMeal () {
+    mealChoose = "Choose plan:";
+    listMeals = [
+      "Choose plan:"
+    ];
+    return Column(
+      children: [
+        SizedBox(height: 32),
+        titleStyle("Monday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Tuesday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Wednesday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Thursday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Friday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Saturday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 16),
+        titleStyle("Sunday", questionSize*0.9),
+        Container(
+          child: DropdownButtonFormField(
+            style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+            dropdownColor: dropdownFieldColor,
+            value: mealChoose,
+            items: listMeals.map(
+                    (e) =>
+                    DropdownMenuItem(
+                      child: Text(e),
+                      value: e,
+                    )
+            ).toList(),
+            onChanged: (val) {
+              setState(() {
+                mealChoose = val as String;
+              });
+            },
+          ),
+        ),
+        SizedBox(height: 32),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mealButtonColor
+          ),
+          onPressed: _submitForm,
+          child: Text('Save meal plan'),
+        ),
+      ],
     );
   }
 }

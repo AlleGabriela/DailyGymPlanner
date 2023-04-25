@@ -25,4 +25,31 @@ class Box {
       )
     ]);
   }
+
 }
+
+InputDecoration addPageInputStyle(String labelText) {
+  return InputDecoration(
+    labelText: labelText,
+    labelStyle: TextStyle(color: inputDecorationColor),
+
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: inputDecorationColor),
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: inputDecorationColor),
+    ),
+  );
+}
+
+Text titleStyle(String title, double size) {
+  return Text(
+      title,
+      style: TextStyle(
+        color: primaryColor,
+        fontSize: size,
+        fontFamily: font1,
+      )
+  );
+}
+

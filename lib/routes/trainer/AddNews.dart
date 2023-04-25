@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../services/NewsServices.dart';
+import '../../util/components_theme/box.dart';
 
 class AddNewsPage extends StatefulWidget {
   AddNewsPage({Key? key}) : super(key: key);
@@ -82,7 +83,7 @@ class _AddNewsPageState extends State<AddNewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightLila,
+      backgroundColor: addPagesBackgroundColor,
       appBar: AppBar(
         title: Text('Add News'),
         backgroundColor: primaryColor,
@@ -95,7 +96,8 @@ class _AddNewsPageState extends State<AddNewsPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: addPageInputStyle("Title"),
+                cursorColor: inputDecorationColor,
                 maxLength: 30,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -128,7 +130,8 @@ class _AddNewsPageState extends State<AddNewsPage> {
               ),
               SizedBox(height: 16),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: addPageInputStyle("Description"),
+                cursorColor: inputDecorationColor,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     showSnackBar(context, 'Please enter a description.');

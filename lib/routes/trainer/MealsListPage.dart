@@ -87,7 +87,7 @@ class MealsListPage extends State<MealsList>{
             MyAppBar(),
             SliverFillRemaining(
               child: Container(
-                color: mealPagesColor,
+                color: accentColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
