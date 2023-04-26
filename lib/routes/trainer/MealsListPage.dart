@@ -10,6 +10,9 @@ import '../../util/constants.dart';
 import 'dart:ui';
 
 class MealsList extends StatefulWidget{
+  const MealsList({super.key});
+
+  @override
   MealsListPage createState() => MealsListPage();
 }
 
@@ -84,7 +87,7 @@ class MealsListPage extends State<MealsList>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(),
+            const MyAppBar(),
             SliverFillRemaining(
               child: Container(
                 color: accentColor,
@@ -99,7 +102,7 @@ class MealsListPage extends State<MealsList>{
                             children: [
                               TextSpan(
                                 text: "\nWant to add something new? ",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: buttonTextColor,
                                   fontSize: questionSize,
                                   fontFamily: font2,
@@ -124,8 +127,8 @@ class MealsListPage extends State<MealsList>{
                         itemCount: categories.length,
                         itemBuilder: (BuildContext ctx, int index) {
                           return Container(
-                            margin: EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
-                            height: 180,
+                            margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
+                            height: itemListHeight,
                             child: GestureDetector(
                               // onTap: () {
                               //   Navigator.push(

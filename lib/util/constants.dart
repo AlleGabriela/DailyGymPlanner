@@ -23,6 +23,7 @@ const buttonText = 25.0;
 const titleSizePhoto = 35.0;
 const pageSizeName = 30.0;
 const questionSize = 20.0;
+const itemListHeight = 180.0;
 
 const boxDataSize = 30.0; // boxes for sign in/log in pages
 

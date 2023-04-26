@@ -8,7 +8,7 @@ class Box {
       hintText: hintText,
       fillColor: Colors.white,
       filled: true,
-      contentPadding: EdgeInsets.fromLTRB(marginSize, marginSize, marginSize, marginSize),
+      contentPadding: const EdgeInsets.fromLTRB(marginSize, marginSize, marginSize, marginSize),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: BorderSide(color: Colors.grey)),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: BorderSide(color: Colors.grey.shade400)),
       errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100.0), borderSide: BorderSide(color: Colors.red, width: 2.0)),
@@ -31,12 +31,12 @@ class Box {
 InputDecoration addPageInputStyle(String labelText) {
   return InputDecoration(
     labelText: labelText,
-    labelStyle: TextStyle(color: inputDecorationColor),
+    labelStyle: const TextStyle(color: inputDecorationColor),
 
-    enabledBorder: UnderlineInputBorder(
+    enabledBorder: const UnderlineInputBorder(
       borderSide: BorderSide(color: inputDecorationColor),
     ),
-    focusedBorder: UnderlineInputBorder(
+    focusedBorder: const UnderlineInputBorder(
       borderSide: BorderSide(color: inputDecorationColor),
     ),
   );

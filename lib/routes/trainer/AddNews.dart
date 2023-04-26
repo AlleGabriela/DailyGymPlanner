@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
@@ -74,6 +75,12 @@ class _AddNewsPageState extends State<AddNewsPage> {
         await newss.addToFirestore();
         showSnackBar(context, "News added succesfully!");
         Navigator.pop(context);
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => TrainerHome(),
+          ),
+        );
       } catch (e) {
         throw Exception('Error adding news to Firestore: $e');
       }
@@ -132,6 +139,8 @@ class _AddNewsPageState extends State<AddNewsPage> {
               TextFormField(
                 decoration: addPageInputStyle("Description"),
                 cursorColor: inputDecorationColor,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     showSnackBar(context, 'Please enter a description.');
