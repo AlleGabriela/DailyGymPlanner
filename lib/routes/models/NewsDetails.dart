@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../util/constants.dart';
 
 class NewsDetails extends StatelessWidget {
