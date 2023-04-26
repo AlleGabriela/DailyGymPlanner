@@ -5,8 +5,11 @@ const primaryColor = Color(0xff54026e);
 const secondColor = Colors.yellow;
 const buttonTextColor = Colors.black;
 const questionTextColor = Colors.red;
-const dropdownFieldColor = Colors.grey;
+const dropdownFieldColor = Color(0xffe1bee7);
 const accentColor = Colors.white;
+const mealButtonColor = primaryColor;
+const inputDecorationColor = primaryColor;
+const addPagesBackgroundColor = Color(0xffce93d8);
 
 const lightLila = Color(0xff9630B7);
 
@@ -20,6 +23,7 @@ const buttonText = 25.0;
 const titleSizePhoto = 35.0;
 const pageSizeName = 30.0;
 const questionSize = 20.0;
+const itemListHeight = 180.0;
 
 const boxDataSize = 30.0; // boxes for sign in/log in pages
 

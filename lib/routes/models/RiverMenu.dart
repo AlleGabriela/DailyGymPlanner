@@ -1,8 +1,11 @@
+import 'package:daily_gym_planner/routes/trainer/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../trainer/MealsListPage.dart';
 
 class RiverMenu extends StatelessWidget {
   const RiverMenu({
@@ -36,10 +39,12 @@ class RiverMenu extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => TrainerHome()));
                 },
                 onClientsSelected: () {
-                  // TODO: Navigate to Clients page.
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ClientsList()));
                 },
                 onMealsSelected: () {
-                  // TODO: Navigate to Meals page.
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MealsList()));
                 },
                 onWorkoutSelected: () {
                   // TODO: Navigate to Workout page.

@@ -1,7 +1,5 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
-import 'package:daily_gym_planner/routes/models/NewsList.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
-import 'package:daily_gym_planner/routes/trainer/AddNews.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -9,11 +7,11 @@ import 'package:flutter/material.dart';
 
 import '../../util/constants.dart';
 
-class TrainerHome extends StatefulWidget{
-  TrainerHomePage createState() => TrainerHomePage();
+class ClientsList extends StatefulWidget{
+  ClientsListPage createState() => ClientsListPage();
 }
 
-class TrainerHomePage extends State<TrainerHome>{
+class ClientsListPage extends State<ClientsList>{
 
   String userName = "userName";
 
@@ -24,7 +22,6 @@ class TrainerHomePage extends State<TrainerHome>{
   }
 
   Future<void> _getUserDetails() async {
-
     FirebaseAuthMethods _authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
@@ -42,7 +39,7 @@ class TrainerHomePage extends State<TrainerHome>{
       home: Scaffold(
         drawer: RiverMenu(
           userName: userName,
-          selectedSection: "Home",
+          selectedSection: "Clients",
         ),
         body: CustomScrollView(
           slivers: <Widget>[
@@ -50,14 +47,14 @@ class TrainerHomePage extends State<TrainerHome>{
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 50, // set the height of the fixed box as required
-                child: Container( 
+                child: Container(
                   color: lightLila,
                   child: Center(
                     child: Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: "\nWant to share something new? ",
+                            //text: "\nWant to share something new? ",
                             style: TextStyle(
                               color: buttonTextColor,
                               fontSize: questionSize,
@@ -65,12 +62,12 @@ class TrainerHomePage extends State<TrainerHome>{
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddNewsPage(),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => AddNewsPage(),
+                                //   ),
+                                // );
                               },
                           ),
                         ],
@@ -80,9 +77,9 @@ class TrainerHomePage extends State<TrainerHome>{
                 ),
               ),
             ),
-            SliverFillRemaining(
-              child: NewsList(),
-            )
+            // SliverFillRemaining(
+            //   child: NewsList(),
+            // )
           ],
         ),
       ),
