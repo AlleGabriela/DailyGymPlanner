@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/routes/trainer/MealsListPage.dart';
+import 'package:daily_gym_planner/routes/trainer/MealCategories.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
@@ -113,7 +113,7 @@ class _AddMealPageState extends State<AddMealPage> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => MealsList(),
+            builder: (BuildContext context) => CategoryList(),
           ),
         );
       } catch (e) {
@@ -145,7 +145,7 @@ class _AddMealPageState extends State<AddMealPage> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => MealsList(),
+            builder: (BuildContext context) => CategoryList(),
           ),
         );
       } catch (e) {
@@ -179,7 +179,7 @@ class _AddMealPageState extends State<AddMealPage> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => MealsList(),
+            builder: (BuildContext context) => CategoryList(),
           ),
         );
       } catch (e) {
@@ -297,7 +297,7 @@ class _AddMealPageState extends State<AddMealPage> {
           TextFormField(
             decoration: addPageInputStyle("Name"),
             cursorColor: inputDecorationColor,
-            maxLength: 50,
+            maxLength: 35,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 showSnackBar( context, 'Please enter the name of the meal.');
@@ -396,7 +396,7 @@ class _AddMealPageState extends State<AddMealPage> {
         TextFormField(
           decoration: addPageInputStyle("Name"),
           cursorColor: inputDecorationColor,
-          maxLength: 50,
+          maxLength: 25,
           validator: (value) {
             if (value == null || value.isEmpty) {
               showSnackBar( context, 'Please enter the name of the full day meal.');
@@ -430,7 +430,7 @@ class _AddMealPageState extends State<AddMealPage> {
         TextFormField(
           decoration: addPageInputStyle("Name"),
           cursorColor: inputDecorationColor,
-          maxLength: 50,
+          maxLength: 25,
           validator: (value) {
             if (value == null || value.isEmpty) {
               showSnackBar( context, 'Please enter the name of the week meal plan.');

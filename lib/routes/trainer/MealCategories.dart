@@ -7,15 +7,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../util/constants.dart';
+import 'MealList.dart';
 
-class MealsList extends StatefulWidget{
-  const MealsList({super.key});
+class CategoryList extends StatefulWidget{
+  const CategoryList({super.key});
 
   @override
-  MealsListPage createState() => MealsListPage();
+  CategoryListPage createState() => CategoryListPage();
 }
 
-class MealsListPage extends State<MealsList>{
+class CategoryListPage extends State<CategoryList>{
 
   String userName = "userName";
 
@@ -129,14 +130,14 @@ class MealsListPage extends State<MealsList>{
                             margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
                             height: itemListHeight,
                             child: GestureDetector(
-                              // onTap: () {
-                              //   Navigator.push(
-                              //     context,
-                              //     // MaterialPageRoute(
-                              //     //   builder: (context) => BreakfastPage(),
-                              //     // ),
-                              //   );
-                              // },
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MealList(categoryName: categories[index].name, icon: categories[index].icon, iconColor: categories[index].color),
+                                  ),
+                                );
+                              },
                               child: listItemsUsingImageAsset(categories[index].name, categories[index].imgName, categories[index].icon, categories[index].color),
                             )
                           );
@@ -167,5 +168,5 @@ class Category {
         required this.color,
         required this.imgName
       }
-      );
+    );
 }

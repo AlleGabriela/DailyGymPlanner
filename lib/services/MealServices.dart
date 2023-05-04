@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+FirebaseFirestore db = FirebaseFirestore.instance;
+
 class Meal {
   String userID;
   String chosenCategory;
@@ -10,7 +12,6 @@ class Meal {
   double timeInMinutes;
 
   Meal(this.userID, this.chosenCategory, this.name, this.imageUrl, this.description, this.timeInHours, this.timeInMinutes);
-  FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<void> addMealToFirestore() async {
     String mealsCategory = "meal";
@@ -49,8 +50,6 @@ class FullDayMeal {
   String dinner;
 
   FullDayMeal(this.userID, this.name, this.breakfast, this.snack1, this.lunch, this.snack2, this.dinner);
-
-  FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<void> addFullMealToFirestore() async {
     String mealsCategory = "one day meal plan";
@@ -114,8 +113,6 @@ class OneWeekMealPlan {
 
   OneWeekMealPlan(this.userID, this.weekPlanName, this.monday, this.tuesday, this.wednesday, this.thursday, this.friday, this.saturday, this.sunday);
 
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
   Future<void> addOneWeekPlanToFirestore() async {
     String mealsCategory = "one week meal plan";
 
@@ -159,6 +156,51 @@ class OneWeekMealPlan {
       },
       onError: (e) => print("Error completing: $e"),
     );
-    return db.doc("trainers/$userID/meals/one week meal plan/One Week Meal Plan/$fullDayMealID");
+    return db.doc("trainers/$userID/meals/one day meal plan/One Day Meal Plan/$fullDayMealID");
   }
+}
+
+Future<List> getMealsFromFullDayMeal (String title, String userID) async {
+  List meals = [];
+
+  await db.collection("trainers/$userID/meals/one day meal plan/One Day Meal Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('name') == title) {
+          var meal;
+          if ((meal = docSnapshot.get('breakfast')) != "") meals.add(meal);
+          if ((meal = docSnapshot.get('snack 1')) != "") meals.add(meal);
+          if ((meal = docSnapshot.get('lunch')) != "") meals.add(meal);
+          if ((meal = docSnapshot.get('snack 2')) != "") meals.add(meal);
+          if ((meal = docSnapshot.get('dinner')) != "") meals.add(meal);
+          break;
+        }
+      }
+    },
+    onError: (e) => print("Error completing: $e"),
+  );
+  return meals;
+}
+
+Future<List> getDayPlansFromOneWeekMeal (String title, String userID) async {
+  List plans = [];
+
+  await db.collection("trainers/$userID/meals/one week meal plan/One Week Meal Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('name') == title) {
+          plans.add(docSnapshot.get('monday'));
+          plans.add(docSnapshot.get('tuesday'));
+          plans.add(docSnapshot.get('wednesday'));
+          plans.add(docSnapshot.get('thursday'));
+          plans.add(docSnapshot.get('friday'));
+          plans.add(docSnapshot.get('saturday'));
+          plans.add(docSnapshot.get('sunday'));
+          break;
+        }
+      }
+    },
+    onError: (e) => print("Error completing: $e"),
+  );
+  return plans;
 }
