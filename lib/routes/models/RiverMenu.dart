@@ -5,7 +5,7 @@ import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../trainer/MealsListPage.dart';
+import '../trainer/MealCategories.dart';
 
 class RiverMenu extends StatelessWidget {
   const RiverMenu({
@@ -44,7 +44,7 @@ class RiverMenu extends StatelessWidget {
                 },
                 onMealsSelected: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MealsList()));
+                      MaterialPageRoute(builder: (context) => CategoryList()));
                 },
                 onWorkoutSelected: () {
                   // TODO: Navigate to Workout page.
