@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import '../../util/constants.dart';
 
-class NewsDetails extends StatelessWidget {
+class MealDetails extends StatelessWidget {
   final String title;
   final String? imageUrl;
   final String description;
+  final double timeInMinutes;
+  final double timeInHours;
 
-  const NewsDetails({Key? key, required this.title, required this.description, this.imageUrl}) : super(key: key);
+  const MealDetails({Key? key, required this.title, required this.description, this.imageUrl, required this.timeInMinutes, required this.timeInHours}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String timeOfPreparationMessage = "Timp de preparare: ";
+    if (timeInHours == 0) {
+      timeOfPreparationMessage += "${timeInMinutes.toInt()} minute";
+    } else if (timeInHours == 1) {
+      timeOfPreparationMessage += "o ora si ${timeInMinutes.toInt()} minute";
+    } else {
+      timeOfPreparationMessage += "${timeInHours.toInt()} ore si ${timeInMinutes.toInt()} minute";
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -38,9 +49,17 @@ class NewsDetails extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                timeOfPreparationMessage,
+                style: TextStyle(color: primaryColor, fontSize: 20),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
