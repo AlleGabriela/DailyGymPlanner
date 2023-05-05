@@ -1,6 +1,6 @@
 import 'package:daily_gym_planner/routes/trainer/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
-import 'package:daily_gym_planner/routes/trainer/WorkoutListPage.dart';
+import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';

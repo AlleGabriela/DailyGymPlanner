@@ -1,13 +1,15 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
 import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
-import 'package:daily_gym_planner/routes/trainer/AddWorkout.dart';
+import 'package:daily_gym_planner/routes/trainer/Workout/AddWorkout.dart';
+import 'package:daily_gym_planner/routes/trainer/Workout/CategoryPage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../util/constants.dart';
-import 'dart:ui';
+import '../../../util/constants.dart';
+
+import '../../models/category.dart';
 
 class WorkoutList extends StatefulWidget{
   const WorkoutList({super.key});
@@ -17,27 +19,7 @@ class WorkoutList extends StatefulWidget{
 }
 
 class WorkoutListPage extends State<WorkoutList>{
-
   String userName = "userName";
-
-  @override
-  void initState() {
-    super.initState();
-    _getUserDetails();
-  }
-
-  Future<void> _getUserDetails() async {
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
-    User? user = FirebaseAuth.instance.currentUser;
-    String? email = user?.email;
-    if (email != null) {
-      String name = await _authService.getName(email) ;
-      setState(() {
-        userName = name;
-      });
-    }
-  }
-
   final List<Category> categories = [
     Category(
         color: primaryColor,
@@ -64,6 +46,24 @@ class WorkoutListPage extends State<WorkoutList>{
         imgName: 'assets/images/OneWeekWorkout.jpg'
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserDetails();
+  }
+
+  Future<void> _getUserDetails() async {
+    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    User? user = FirebaseAuth.instance.currentUser;
+    String? email = user?.email;
+    if (email != null) {
+      String name = await _authService.getName(email) ;
+      setState(() {
+        userName = name;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +118,14 @@ class WorkoutListPage extends State<WorkoutList>{
                                   margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
                                   height: itemListHeight,
                                   child: GestureDetector(
-                                    // onTap: () {
-                                    //     Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //         builder: (context) => MealsList(),
-                                    //       ),
-                                    //     );
-                                    // },
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CategoryList(categoryName: categories[index].name, icon: categories[index].icon, iconColor: categories[index].color),
+                                        ),
+                                      );
+                                    },
                                     child: listItemsUsingImageAsset(categories[index].name, categories[index].imgName, categories[index].icon, categories[index].color),
                                   )
                               );
@@ -141,20 +141,4 @@ class WorkoutListPage extends State<WorkoutList>{
       ),
     );
   }
-}
-
-class Category {
-  String name;
-  IconData icon;
-  Color color;
-  String imgName;
-
-  Category(
-      {
-        required this.name,
-        required this.icon,
-        required this.color,
-        required this.imgName
-      }
-  );
 }
