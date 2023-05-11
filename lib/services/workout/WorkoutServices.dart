@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../auth_methods.dart';
+
 class Workout {
   String userID;
   String category;
@@ -29,3 +31,22 @@ class Workout {
     }
   }
 }
+
+Future<List<String>> getExercisesName(String category, String subcategory) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  final firestore = FirebaseFirestore.instance;
+  List<String> exercisesNames = [];
+  String exercise = "Simple Exercise";
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$exercise").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      exercisesNames.add(docSnapshot.get('name'));
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return exercisesNames;
+}
+
+

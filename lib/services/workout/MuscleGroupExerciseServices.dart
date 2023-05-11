@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../auth_methods.dart';
+
 class GroupExercise {
   String name;
   String nrSeries;
@@ -38,4 +40,45 @@ class MuscleGroupExercise {
       throw Exception('Muscle Group Exercise cannot be added to firebase.');
     }
   }
+}
+
+Future<Object> getMuscleGroupReference(String category, String subcategory) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  String exerciseGroupID = "";
+  final firestore = FirebaseFirestore.instance;
+  String collectionName = "Muscle Group Exercise";
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('name') == collectionName) {
+          exerciseGroupID = docSnapshot.id;
+          break;
+        }
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  if (exerciseGroupID != "") {
+    return firestore.doc("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName/$exerciseGroupID");
+  } else {
+    return "";
+  }
+}
+
+Future<List<String>> getMuscleGroupWorkoutsName(String category, String subcategory) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  final firestore = FirebaseFirestore.instance;
+  List<String> muscleGroupsNames = [];
+  String collectionName = "Muscle Group Exercise";
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      muscleGroupsNames.add(docSnapshot.get('name'));
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return muscleGroupsNames;
 }

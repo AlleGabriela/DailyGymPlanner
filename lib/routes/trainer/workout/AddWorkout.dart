@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
+import 'package:daily_gym_planner/services/workout/OneDayWorkoutServices.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +11,8 @@ import '../../../services/workout/WorkoutServices.dart';
 import '../../../util/components_theme/box.dart';
 
 List<String> listItem = [ "Choose category", "Upper Body", "Lower Body", "Upper Body Muscle Group", "Lower Body Muscle Group", "One Day Workout", "One Week Workout Plan" ];
-List<String> listUpperLowerBody = ["Upper Body", "Lower Body"];
 List<String> upperBodyItems = [ "Choose", "Abs", "Back", "Biceps", "Chest", "Shoulders", "Traps", "Triceps"];
 List<String> lowerBodyItems = [ "Choose:", "Calves", "Hamstrings", "Glutes", "Quads"];
-List<String> nrSeries = [ "0 series", "1 series", "2 series", "3 series", "4 series", "5 series", "6 series", "7 series", "8 series", "9 series", "10 series"];
-List<String> nrReps =  [ "0 reps", "1 reps", "2 reps", "3 reps", "4 reps", "5 reps", "6 reps", "7 reps", "8 reps", "9 reps", "10 reps", "11 reps", "12 reps", "13 reps", "14 reps", "15 reps", "16 reps", "17 reps", "18 reps", "19 reps", "20 reps"];
-
-List exerciseUpperBody = [];
-List exerciseLowerBody = [];
-List oneDayWorkoutExercise = [];
 
 class AddWorkoutPage extends StatefulWidget {
   const AddWorkoutPage({Key? key}) : super(key: key);
@@ -30,36 +25,37 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   final _formKey = GlobalKey<FormState>();
   String _category = "";
   String _subcategory = "";
-  String _name = '';
-  String _UpperBodySubcategory  = "Choose";
-  String _LowerBodySubcategory  = "Choose:";
+  String _nameSimpleExercise = '';
   String valueChoose = "Choose category";
-  String nrSeriesChoose = "0 series";
-  String nrRepsChoose = "0 reps";
+  bool isCategorySelected = false;
 
+  /** Group of Exercise Variables **/
   String _nameMuscleGroup = "";
   List<Map<String, dynamic>> exerciseLowerUpperBody = [];
+  List<String> exerciseNames = [];
+  List<String> exerciseAbs = [];
+  List<String> exerciseBack = [];
+  List<String> exerciseBiceps = [];
+  List<String> exerciseChest= [];
+  List<String> exerciseShoulders = [];
+  List<String> exerciseTraps = [];
+  List<String> exerciseTriceps = [];
+  List<String> exerciseCalves = [];
+  List<String> exerciseHamstrings = [];
+  List<String> exerciseGlutes = [];
+  List<String> exerciseQuads = [];
+  /** End Group of Exercise Variables **/
+
+  String _nameOneDayWorkout = "";
+  List<String> oneDayWorkoutWorkouts = [];
+  List<String> muscleGroupWorkoutsNames = [];
 
   String workoutChoose = "";
   List listWorkouts = [];
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
-  String selectedBodyPart = 'Chest';
-  String selectedMuscleGroup = 'Upper Chest';
-  String selectedPlan = 'Strength';
-
-  final Map<String, List<String>> muscleGroups = {
-    'Chest': ['Upper Chest', 'Lower Chest'],
-    'Back': ['Upper Back', 'Lower Back'],
-    'Shoulders': ['Front Shoulders', 'Side Shoulders', 'Rear Shoulders'],
-  };
-
-  final Map<String, List<String>> exercisePlans = {
-    'Strength': ['3x5', '5x5', '3x8'],
-    'Hypertrophy': ['3x10', '4x10', '3x12'],
-    'Endurance': ['3x15', '4x15', '3x20'],
-  };
   final key = ValueKey(DateTime.now().toString());
 
   void _addExercise() async {
@@ -72,7 +68,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
         userID,
         _category,
         _subcategory,
-        _name,
+        _nameSimpleExercise,
       );
       try {
         await workout.addWorkoutToFirestore();
@@ -81,7 +77,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => WorkoutList(),
+            builder: (BuildContext context) => const WorkoutList(),
           ),
         );
       } catch (e) {
@@ -115,7 +111,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => WorkoutList(),
+            builder: (BuildContext context) => const WorkoutList(),
           ),
         );
       } catch (e) {
@@ -123,6 +119,34 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       }
     }
   }
+
+  void _addOneDayWorkout() async {
+    if (_formKey.currentState != null &&
+        _formKey.currentState!.validate())
+    {
+      _formKey.currentState!.save();
+      String userID = await authMethods.getUserId();
+      final oneDayWorkoutInstance = OneDayWorkout(
+        userID,
+        _nameOneDayWorkout,
+        oneDayWorkoutWorkouts,
+      );
+      try {
+        await oneDayWorkoutInstance.addOneDayWorkoutToFirestore();
+        showSnackBar(context, "One Day Workout added succesfully!");
+        Navigator.pop(context);
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const WorkoutList(),
+          ),
+        );
+      } catch (e) {
+        throw Exception('Error adding one day workout to Firestore: $e');
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -161,246 +185,26 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
                 onChanged: (val) {
                   setState(() {
                     valueChoose = val as String;
+                    isCategorySelected = true;
                     exerciseLowerUpperBody.clear();
                     exerciseLowerUpperBody.add({});
+                    oneDayWorkoutExercise.clear();
+                    oneDayWorkoutExercise.add({});
                   });
                 },
               ),
-              if (valueChoose == "Upper Body Muscle Group" || valueChoose == "Lower Body Muscle Group")
+              if ( (valueChoose == "Upper Body Muscle Group" || valueChoose == "Lower Body Muscle Group") && isCategorySelected == true)
                 muscleGroup(valueChoose)
-              else if (valueChoose == "One Day Workout")
+              else if (valueChoose == "One Day Workout" && isCategorySelected == true)
                 oneDayWorkout()
-              else if ( valueChoose == "One Week Workout Plan")
+              else if ( valueChoose == "One Week Workout Plan" && isCategorySelected == true)
                   oneWeekWorkout()
-                else
+                else if(isCategorySelected == true)
                   workoutExercise(valueChoose)
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Column workoutExercise (String listType) {
-    if( listType == "Upper Body") {
-      workoutChoose = _UpperBodySubcategory;
-      listWorkouts = upperBodyItems;
-    }  else {
-      workoutChoose = _LowerBodySubcategory;
-      listWorkouts = lowerBodyItems;
-    }
-    _category = listType;
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        dropdownChooseMenu(workoutChoose, listWorkouts, listType),
-        const SizedBox(height: 16),
-        TextFormField(
-          decoration: addPageInputStyle("Name"),
-          cursorColor: inputDecorationColor,
-          maxLength: 35,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              showSnackBar( context, 'Please enter the name of the exercise.');
-            }
-            return null;
-          },
-          onSaved: (value) {
-            _name = value ?? '';
-          },
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: mealButtonColor
-          ),
-          onPressed: _addExercise,
-          child: Text('Save exercise'),
-        ),
-      ],
-    );
-  }
-
-  Column oneDayWorkout () {
-    return Column(
-      children: [
-        const SizedBox(height: 32),
-        titleStyle("Add groups of exercises", questionSize*0.9),
-        const SizedBox(height: 16),
-        parentChildDropdown(
-          title: "Select Body Part",
-          titleSize: questionSize * 0.7,
-          selectedValue: selectedBodyPart,
-          onChanged: (value) {
-            setState(() {
-              selectedBodyPart = value!;
-              selectedMuscleGroup = muscleGroups[selectedBodyPart]![0];
-              selectedPlan = exercisePlans.keys.first;
-            });
-          },
-          dropdownItems: muscleGroups.keys.toList(),
-        ),
-        parentChildDropdown(
-          title: "Select Muscle Group",
-          titleSize: questionSize * 0.7,
-          selectedValue: selectedMuscleGroup,
-          onChanged: (value) {
-            setState(() {
-              selectedMuscleGroup = value!;
-            });
-          },
-          dropdownItems: muscleGroups[selectedBodyPart]!,
-        ),
-        parentChildDropdown(
-          title: "Select Plan",
-          titleSize: questionSize * 0.7,
-          selectedValue: selectedPlan,
-          onChanged: (value) {
-            setState(() {
-              selectedPlan = value!;
-            });
-          },
-          dropdownItems: exercisePlans.keys.toList(),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            titleStyle("Add another exercise group:", titleSize*0.3),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: addGroupOfExercise,
-                    child: Icon(Icons.add_circle),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-
-        for (var item in oneDayWorkoutExercise)
-          Column(
-            children: [
-              const SizedBox(height: 32),
-              parentChildDropdown(
-                title: "Select Body Part",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedBodyPart,
-                onChanged: (value) {
-                  setState(() {
-                    selectedBodyPart = value!;
-                    selectedMuscleGroup = muscleGroups[selectedBodyPart]![0];
-                    selectedPlan = exercisePlans.keys.first;
-                  });
-                },
-                dropdownItems: muscleGroups.keys.toList(),
-              ),
-              parentChildDropdown(
-                title: "Select Muscle Group",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedMuscleGroup,
-                onChanged: (value) {
-                  setState(() {
-                    selectedMuscleGroup = value!;
-                  });
-                },
-                dropdownItems: muscleGroups[selectedBodyPart]!,
-              ),
-              parentChildDropdown(
-                title: "Select Plan",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedPlan,
-                onChanged: (value) {
-                  setState(() {
-                    selectedPlan = value!;
-                  });
-                },
-                dropdownItems: exercisePlans.keys.toList(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  titleStyle("Add or delete exercise group:", titleSize*0.3),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: addGroupOfExercise,
-                          child: Icon(Icons.add_circle),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              final index = oneDayWorkoutExercise.indexOf(item);
-                              if (index != -1) {
-                                oneDayWorkoutExercise.removeAt(index);
-                              }
-                            });
-                          },
-                          child: Icon(Icons.remove_circle),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.start,
-              ),
-            ],
-          ),
-
-        const SizedBox(height: 16),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: mealButtonColor
-          ),
-          onPressed: _addExercise,
-          child: Text('Save workout'),
-        ),
-      ],
-    );
-
-  }
-
-  Column oneWeekWorkout () {
-    // TODO: add from database the list and the implicit value is Pause
-    workoutChoose = _LowerBodySubcategory;
-    listWorkouts = lowerBodyItems;
-    return Column(
-      children: [
-        const SizedBox(height: 32),
-        titleStyle("Monday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Monday"),
-        const SizedBox(height: 16),
-        titleStyle("Tuesday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Tuesday"),
-        const SizedBox(height: 16),
-        titleStyle("Wednesday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Wednesday"),
-        const SizedBox(height: 16),
-        titleStyle("Thursday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Thursday"),
-        const SizedBox(height: 16),
-        titleStyle("Friday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Friday"),
-        const SizedBox(height: 16),
-        titleStyle("Saturday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Saturday"),
-        const SizedBox(height: 16),
-        titleStyle("Sunday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Sunday"),
-        const SizedBox(height: 32),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: mealButtonColor
-          ),
-          onPressed: _addExercise,
-          child: const Text('Save workout plan'),
-        ),
-      ],
     );
   }
 
@@ -425,6 +229,8 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       onChanged: (val) {
         setState(() {
           valueChoose = val as String;
+          exerciseLowerUpperBody.clear();
+          exerciseLowerUpperBody.add({});
           switch(title) {
             case "Upper Body":
               {
@@ -441,7 +247,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
                 _subcategory = valueChoose;
                 break;
               }
-            case "Muscle Group Subcategory":
+            case "Lower Body Muscle Group":
               {
                 _subcategory = valueChoose;
                 break;
@@ -486,7 +292,53 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   }
 
 
-  /* Group Exercise functions */
+  /** Single exercise functions **/
+  Column workoutExercise (String listType) {
+    final String _upperBodySubcategory  = "Choose";
+    final String _lowerBodySubcategory  = "Choose:";
+
+    if( listType == "Upper Body") {
+      workoutChoose = _upperBodySubcategory;
+      listWorkouts = upperBodyItems;
+    }  else {
+      workoutChoose = _lowerBodySubcategory;
+      listWorkouts = lowerBodyItems;
+    }
+    _category = listType;
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        dropdownChooseMenu(workoutChoose, listWorkouts, listType),
+        const SizedBox(height: 16),
+        TextFormField(
+          decoration: addPageInputStyle("Name"),
+          cursorColor: inputDecorationColor,
+          maxLength: 50,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              showSnackBar( context, 'Please enter the name of the exercise.');
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _nameSimpleExercise = value ?? '';
+          },
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mealButtonColor
+          ),
+          onPressed: _addExercise,
+          child: const Text('Save exercise'),
+        ),
+      ],
+    );
+  }
+
+  /** End Single exercise functions **/
+
+  /** Group Exercise functions  **/
   void _addNewLine() {
     setState(() {
       exerciseLowerUpperBody.add({});
@@ -501,6 +353,8 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
 
   Widget _buildDropdown(int index, String dropdownLabel, List<String> dropdownItems) {
     return DropdownButtonFormField<String>(
+      style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
+      dropdownColor: dropdownFieldColor,
       value: exerciseLowerUpperBody[index][dropdownLabel],
       items: dropdownItems
           .map((value) => DropdownMenuItem(
@@ -515,29 +369,57 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       },
       decoration: InputDecoration(
         labelText: dropdownLabel,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
+      isExpanded: true,
     );
   }
 
-  Widget _buildLine(int index) {
+  Widget _buildLine(int index, String subcategoryExercise, List<String> secondList, List<String> thirdList) {
+
+    List<String> firstList = [];
+    firstList.clear();
+    if (subcategoryExercise == 'Abs') {
+      firstList += exerciseAbs;
+    } else if (subcategoryExercise == 'Back') {
+      firstList += exerciseBack;
+    } else if (subcategoryExercise == 'Biceps') {
+      firstList += exerciseBiceps;
+    } else if (subcategoryExercise == 'Chest') {
+      firstList += exerciseChest;
+    } else if (subcategoryExercise == 'Shoulders') {
+      firstList += exerciseShoulders;
+    } else if (subcategoryExercise == 'Traps') {
+      firstList += exerciseTraps;
+    } else if (subcategoryExercise == 'Triceps') {
+      firstList += exerciseTriceps;
+    } else if (subcategoryExercise == 'Calves') {
+      firstList += exerciseCalves;
+    } else if (subcategoryExercise == 'Hamstrings') {
+      firstList += exerciseHamstrings;
+    } else if (subcategoryExercise == 'Glutes') {
+      firstList += exerciseGlutes;
+    } else if (subcategoryExercise == 'Quads') {
+      firstList += exerciseQuads;
+    }
+
     return Row(
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 32),
-              _buildDropdown(index, "Exercise name", upperBodyItems),
-              SizedBox(height: 16),
-              _buildDropdown(index, "Series number", nrSeries),
-              SizedBox(height: 16),
-              _buildDropdown(index, "Reps number", nrReps),
+              const SizedBox(height: 32),
+              _buildDropdown(index, "Exercise name", firstList),
+              const SizedBox(height: 16),
+              _buildDropdown(index, "Series number", secondList),
+              const SizedBox(height: 16),
+              _buildDropdown(index, "Reps number", thirdList),
             ],
           ),
         ),
         IconButton(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: index == exerciseLowerUpperBody.length - 1 &&
               exerciseLowerUpperBody[index]["Exercise name"] != null && exerciseLowerUpperBody[index]["Exercise name"] != "Choose" &&
               exerciseLowerUpperBody[index]["Series number"] != null && exerciseLowerUpperBody[index]["Series number"] != "0 series" &&
@@ -546,7 +428,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
               : null,
         ),
         IconButton(
-          icon: Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
           onPressed: () {
             if (exerciseLowerUpperBody.length > 1) {
               _deleteLine(index);
@@ -557,16 +439,76 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
     );
   }
 
+  void getExerciseNames(String category, String subcategory) async {
+    List<String> names = await getExercisesName(category, subcategory);
+    setState(() {
+      exerciseNames.clear();
+      exerciseNames = names;
+    });
+    if (subcategory == 'Abs') {
+      exerciseAbs.clear();
+      exerciseAbs += exerciseNames;
+    } else if (subcategory == 'Back') {
+      exerciseBack.clear();
+      exerciseBack += exerciseNames;
+    } else if (subcategory == 'Biceps') {
+      exerciseBiceps.clear();
+      exerciseBiceps += exerciseNames;
+    } else if (subcategory == 'Chest') {
+      exerciseChest.clear();
+      exerciseChest += exerciseNames;
+    } else if (subcategory == 'Shoulders') {
+      exerciseShoulders.clear();
+      exerciseShoulders += exerciseNames;
+    } else if (subcategory == 'Traps') {
+      exerciseTraps.clear();
+      exerciseTraps += exerciseNames;
+    } else if (subcategory == 'Triceps') {
+      exerciseTriceps.clear();
+      exerciseTriceps += exerciseNames;
+    } else if (subcategory == 'Calves') {
+      exerciseCalves.clear();
+      exerciseCalves += exerciseNames;
+    } else if (subcategory == 'Hamstrings') {
+      exerciseHamstrings.clear();
+      exerciseHamstrings += exerciseNames;
+    } else if (subcategory == 'Glutes') {
+      exerciseGlutes.clear();
+      exerciseGlutes += exerciseNames;
+    } else if (subcategory == 'Quads') {
+      exerciseQuads.clear();
+      exerciseQuads += exerciseNames;
+    }
+  }
+
   Column muscleGroup( String listType) {
+    final String _upperBodySubcategory  = "Choose";
+    final String _lowerBodySubcategory  = "Choose:";
+
+    List<String> nrSeries = [ "0 series", "1 series", "2 series", "3 series", "4 series", "5 series", "6 series", "7 series", "8 series", "9 series", "10 series"];
+    List<String> nrReps =  [ "0 reps", "1 reps", "2 reps", "3 reps", "4 reps", "5 reps", "6 reps", "7 reps", "8 reps", "9 reps", "10 reps", "11 reps", "12 reps", "13 reps", "14 reps", "15 reps", "16 reps", "17 reps", "18 reps", "19 reps", "20 reps"];
+
     if( listType == "Upper Body Muscle Group") {
-      workoutChoose = _UpperBodySubcategory;
+      workoutChoose = _upperBodySubcategory;
       listWorkouts = upperBodyItems;
       _category = "Upper Body";
+      getExerciseNames(_category, 'Abs');
+      getExerciseNames(_category, 'Back');
+      getExerciseNames(_category, 'Biceps');
+      getExerciseNames(_category, 'Chest');
+      getExerciseNames(_category, 'Shoulders');
+      getExerciseNames(_category, 'Traps');
+      getExerciseNames(_category, 'Triceps');
     }  else {
-      workoutChoose = _LowerBodySubcategory;
+      workoutChoose = _lowerBodySubcategory;
       listWorkouts = lowerBodyItems;
       _category = "Lower Body";
+      getExerciseNames(_category, 'Calves');
+      getExerciseNames(_category, 'Hamstrings');
+      getExerciseNames(_category, 'Glutes');
+      getExerciseNames(_category, 'Quads');
     }
+
     return Column(
       children: [
         const SizedBox(height: 16),
@@ -587,7 +529,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
           },
         ),
         for (var i = 0; i < exerciseLowerUpperBody.length; i++)
-          _buildLine(i),
+            _buildLine(i, _subcategory, nrSeries, nrReps),
         const SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -610,63 +552,202 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
             }
           },
 
-          child: Text('Save group'),
+          child: const Text('Save group'),
         ),
       ],
     );
   }
-  /* End group of exercise functions */
+  /** End group of exercise functions **/
 
+  /** One Day Workout functions **/
 
-  void addGroupOfExercise() {
+  List<Map<String, dynamic>> oneDayWorkoutExercise = [];
+
+  final Map<String, List<String>> muscleGroups = {
+    'None selected': ['Select'],
+    'Upper Body': ['Abs', 'Back', 'Biceps', 'Chest', 'Shoulders', 'Traps', 'Triceps'],
+    'Lower Body': ['Calves', 'Hamstrings', 'Glutes', 'Quads'],
+  };
+
+  final Map<String, List<String>> exercisePlans = {
+    'Select': ['Select'],
+    'Abs': [],
+    'Back': [],
+    'Biceps': [],
+    'Chest': [],
+    'Shoulders': [],
+    'Traps': [],
+    'Triceps': [],
+    'Calves': [],
+    'Hamstrings': [],
+    'Glutes': [],
+    'Quads': [],
+  };
+
+  void _addNewWorkoutLine() {
     setState(() {
-      oneDayWorkoutExercise.add(
-        DropdownMenuItem(
-          child: Row(
-            children: [
-              parentChildDropdown(
-                title: "Select Body Part",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedBodyPart,
+      oneDayWorkoutExercise.add({});
+    });
+  }
+
+  void _deleteWorkoutLine(int index) {
+    setState(() {
+      oneDayWorkoutExercise.removeAt(index);
+    });
+  }
+
+  void getMuscleGroupNames(String category, String subcategory) async {
+    List<String> names = await getMuscleGroupWorkoutsName(category, subcategory);
+    setState(() {
+      muscleGroupWorkoutsNames.clear();
+      muscleGroupWorkoutsNames = names;
+    });
+    if (subcategory == 'Abs') {
+      exercisePlans['Abs']?.clear();
+      exercisePlans['Abs']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Back') {
+      exercisePlans['Back']?.clear();
+      exercisePlans['Back']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Biceps') {
+      exercisePlans['Biceps']?.clear();
+      exercisePlans['Biceps']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Chest') {
+      exercisePlans['Chest']?.clear();
+      exercisePlans['Chest']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Shoulders') {
+      exercisePlans['Shoulders']?.clear();
+      exercisePlans['Shoulders']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Traps') {
+      exercisePlans['Traps']?.clear();
+      exercisePlans['Traps']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Triceps') {
+      exercisePlans['Triceps']?.clear();
+      exercisePlans['Triceps']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Calves') {
+      exercisePlans['Calves']?.clear();
+      exercisePlans['Calves']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Hamstrings') {
+      exercisePlans['Hamstrings']?.clear();
+      exercisePlans['Hamstrings']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Glutes') {
+      exercisePlans['Glutes']?.clear();
+      exercisePlans['Glutes']?.addAll(muscleGroupWorkoutsNames);
+    } else if (subcategory == 'Quads') {
+      exercisePlans['Quads']?.clear();
+      exercisePlans['Quads']?.addAll(muscleGroupWorkoutsNames);
+    }
+  }
+
+  Widget buildGroupOfExerciseLine(int index, String selectedBodyPart, String selectedMuscleGroup, String selectedPlan) {
+    List<String> secondList = [];
+    List<String> thirdList = [];
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: titleStyle("Select Body Part", questionSize * 0.7)),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: selectedBodyPart,
                 onChanged: (value) {
                   setState(() {
                     selectedBodyPart = value!;
                     selectedMuscleGroup = muscleGroups[selectedBodyPart]![0];
                     selectedPlan = exercisePlans.keys.first;
+                    oneDayWorkoutExercise[index]["Body Part"] = selectedBodyPart;
+                    for(int i=0; i<muscleGroups.length; i++)
+                      if(muscleGroups[i] == selectedBodyPart)
+                        secondList = muscleGroups[i]!;
                   });
                 },
-                dropdownItems: muscleGroups.keys.toList(),
+                items: muscleGroups.keys.toList().map((item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
               ),
-              parentChildDropdown(
-                title: "Select Muscle Group",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedMuscleGroup,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Select Muscle Group", questionSize * 0.7)),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: selectedBodyPart,
                 onChanged: (value) {
                   setState(() {
                     selectedMuscleGroup = value!;
+                    oneDayWorkoutExercise[index]["Muscle Group"] = selectedMuscleGroup;
+                    for(int i=0; i<exercisePlans.length; i++) {
+                      if(exercisePlans[i] == selectedMuscleGroup)
+                        thirdList = exercisePlans[i]!;
+                    }
                   });
                 },
-                dropdownItems: muscleGroups[selectedBodyPart]!,
+                items: secondList.map((item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
               ),
-              parentChildDropdown(
-                title: "Select Plan",
-                titleSize: questionSize * 0.7,
-                selectedValue: selectedPlan,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Select Exercise Plan", questionSize * 0.7)),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: selectedBodyPart,
                 onChanged: (value) {
                   setState(() {
                     selectedPlan = value!;
+                    oneDayWorkoutExercise[index]["Exercise Plan"] = selectedPlan;
                   });
                 },
-                dropdownItems: exercisePlans.keys.toList(),
+                items: thirdList.map((item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    });
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            titleStyle("Add or delete exercise group:", titleSize*0.3),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: index == oneDayWorkoutExercise.length - 1 &&
+                  oneDayWorkoutExercise[index]["Body Part"] != null && oneDayWorkoutExercise[index]["Body Part"] != "None selected" &&
+                  oneDayWorkoutExercise[index]["Muscle Group"] != null && oneDayWorkoutExercise[index]["Muscle Group"] != "Select" &&
+                  oneDayWorkoutExercise[index]["Exercise Plan"] != null   && oneDayWorkoutExercise[index]["Exercise Plan"] != "Select"
+                  ? () => _addNewWorkoutLine()
+                  : null,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                if (oneDayWorkoutExercise.length > 1) {
+                  _deleteWorkoutLine(index);
+                }
+              },
+            ),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+      ],
+    );
   }
 
   Widget parentChildDropdown({
+    required int index,
     required String title,
     required double titleSize,
     required String selectedValue,
@@ -693,10 +774,96 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ],
     );
   }
 
+  Column oneDayWorkout () {
+    String selectedBodyPart = muscleGroups.keys.first;
+    String selectedMuscleGroup = muscleGroups[selectedBodyPart]![0];
+    String selectedPlan = exercisePlans.keys.first;
+
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        TextFormField(
+          decoration: addPageInputStyle("Name"),
+          cursorColor: inputDecorationColor,
+          maxLength: 50,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              showSnackBar( context, 'Please enter the name of the workout.');
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _nameMuscleGroup = value ?? '';
+          },
+        ),
+        const SizedBox(height: 32),
+        titleStyle("Add groups of exercises", questionSize*0.9),
+        const SizedBox(height: 16),
+        for (int i = 0; i < oneDayWorkoutExercise.length; i++)
+          buildGroupOfExerciseLine(i, selectedBodyPart, selectedMuscleGroup, selectedPlan),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mealButtonColor
+          ),
+          onPressed: _addOneDayWorkout,
+          child: const Text('Save workout'),
+        ),
+      ],
+    );
+  }
+
+
+  /** End One Day Workout functions **/
+
+  /** One Week Workout functions **/
+
+  Column oneWeekWorkout () {
+    //final String _upperBodySubcategory  = "Choose";
+    final String _lowerBodySubcategory  = "Choose:";
+    // TODO: add from database the list and the implicit value is Pause
+    workoutChoose = _lowerBodySubcategory;
+    listWorkouts = lowerBodyItems;
+    return Column(
+      children: [
+        const SizedBox(height: 32),
+        titleStyle("Monday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Monday"),
+        const SizedBox(height: 16),
+        titleStyle("Tuesday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Tuesday"),
+        const SizedBox(height: 16),
+        titleStyle("Wednesday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Wednesday"),
+        const SizedBox(height: 16),
+        titleStyle("Thursday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Thursday"),
+        const SizedBox(height: 16),
+        titleStyle("Friday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Friday"),
+        const SizedBox(height: 16),
+        titleStyle("Saturday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Saturday"),
+        const SizedBox(height: 16),
+        titleStyle("Sunday", questionSize*0.9),
+        dropdownChooseMenu(workoutChoose, listWorkouts, "Sunday"),
+        const SizedBox(height: 32),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mealButtonColor
+          ),
+          onPressed: _addExercise,
+          child: const Text('Save workout plan'),
+        ),
+      ],
+    );
+  }
+
+  /** End One Week Workout functions **/
 
 }
