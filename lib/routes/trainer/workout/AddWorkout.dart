@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/services/workout/OneDayWorkoutServices.dart';
+import 'package:daily_gym_planner/services/workout/OneWeekWorkoutServices.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,9 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   String _nameSimpleExercise = '';
   String valueChoose = "Choose category";
   bool isCategorySelected = false;
+
+  String workoutChoose = "";
+  List listWorkouts = [];
 
   /** Group of Exercise Variables **/
   String _nameMuscleGroup = "";
@@ -66,8 +70,18 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   };
   /** End One Day Workout Variables **/
 
-  String workoutChoose = "";
-  List listWorkouts = [];
+  /** One Week Workout Variables **/
+  List<String> oneDayWorkoutsNames = [];
+  String _nameOneWeekWorkout = "";
+
+  String monday = "";
+  String tuesday = "";
+  String wednesday = "";
+  String thursday = "";
+  String friday = "";
+  String saturday = "";
+  String sunday = "";
+  /** End One Week Workout Variables **/
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -164,6 +178,40 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
         );
       } catch (e) {
         throw Exception('Error adding one day workout to Firestore: $e');
+      }
+    }
+  }
+
+  void _addOneWeekWorkout() async {
+    if (_formKey.currentState != null &&
+        _formKey.currentState!.validate())
+    {
+      _formKey.currentState!.save();
+      String userID = await authMethods.getUserId();
+      final oneWeekPlan = OneWeekWorkoutPlan(
+          userID,
+          _nameOneWeekWorkout,
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday,
+          sunday
+      );
+
+      try {
+        await oneWeekPlan.addOneWeekWorkoutToFirestore();
+        showSnackBar(context, "One week workout plan added succesfully!");
+        Navigator.pop(context);
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const WorkoutList(),
+          ),
+        );
+      } catch (e) {
+        throw Exception('Error adding one week workout plan to Firestore: $e');
       }
     }
   }
@@ -274,30 +322,37 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
               }
             case "Monday":
               {
+                monday = valueChoose;
                 break;
               }
             case "Tuesday":
               {
+                tuesday = valueChoose;
                 break;
               }
             case "Wednesday":
               {
+                wednesday = valueChoose;
                 break;
               }
             case "Thursday":
               {
+                thursday = valueChoose;
                 break;
               }
             case "Friday":
               {
+                friday = valueChoose;
                 break;
               }
             case "Saturday":
               {
+                saturday = valueChoose;
                 break;
               }
             case "Sunday":
               {
+                sunday = valueChoose;
                 break;
               }
             default:
@@ -308,9 +363,9 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
           }
         });
       },
+      isExpanded: true,
     );
   }
-
 
   /** Single exercise functions **/
   Column workoutExercise (String listType) {
@@ -780,41 +835,103 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
 
   /** One Week Workout functions **/
 
+  void getOneDayWorkoutsNames(String collectionName, String subcollectionName) async {
+    List<String> oneDayWorkouts = [];
+    List<String> names = await getOneDayWorkoutsName(collectionName, subcollectionName);
+    setState(() {
+      oneDayWorkouts.clear();
+      oneDayWorkouts = names;
+    });
+    if( subcollectionName == "All One Day Workouts" ) {
+      oneDayWorkoutsNames.clear();
+      oneDayWorkoutsNames.add(" Rest Day");
+      oneDayWorkoutsNames += oneDayWorkouts;
+      oneDayWorkoutsNames.sort();
+    }
+  }
+
   Column oneWeekWorkout () {
-    //final String _upperBodySubcategory  = "Choose";
-    final String _lowerBodySubcategory  = "Choose:";
-    // TODO: add from database the list and the implicit value is Pause
-    workoutChoose = _lowerBodySubcategory;
-    listWorkouts = lowerBodyItems;
+    getOneDayWorkoutsNames("One Day Workouts", "All One Day Workouts");
     return Column(
       children: [
+        const SizedBox(height: 16),
+        TextFormField(
+          decoration: addPageInputStyle("Name"),
+          cursorColor: inputDecorationColor,
+          maxLength: 50,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              showSnackBar( context, 'Please enter the name of the workout.');
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _nameOneWeekWorkout = value ?? '';
+          },
+        ),
         const SizedBox(height: 32),
-        titleStyle("Monday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Monday"),
-        const SizedBox(height: 16),
-        titleStyle("Tuesday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Tuesday"),
-        const SizedBox(height: 16),
-        titleStyle("Wednesday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Wednesday"),
-        const SizedBox(height: 16),
-        titleStyle("Thursday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Thursday"),
-        const SizedBox(height: 16),
-        titleStyle("Friday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Friday"),
-        const SizedBox(height: 16),
-        titleStyle("Saturday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Saturday"),
-        const SizedBox(height: 16),
-        titleStyle("Sunday", questionSize*0.9),
-        dropdownChooseMenu(workoutChoose, listWorkouts, "Sunday"),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Monday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Monday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Tuesday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Tuesday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Wednesday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Wednesday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Thursday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Thursday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Friday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Friday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Saturday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Saturday"),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(child: titleStyle("Sunday", questionSize * 0.8)),
+            Expanded(
+              child: dropdownChooseMenu(oneDayWorkoutsNames[0], oneDayWorkoutsNames, "Sunday"),
+            ),
+          ],
+        ),
         const SizedBox(height: 32),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
               backgroundColor: mealButtonColor
           ),
-          onPressed: _addExercise,
+          onPressed: _addOneWeekWorkout,
           child: const Text('Save workout plan'),
         ),
       ],

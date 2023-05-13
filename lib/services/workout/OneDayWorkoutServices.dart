@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../auth_methods.dart';
+
 class OneDayWorkoutExercise {
   String bodyPart;
   String muscleGroup;
@@ -34,4 +36,48 @@ class OneDayWorkout {
       throw Exception('Muscle Group Exercise cannot be added to firebase.');
     }
   }
+}
+
+Future<String> getOneDayWorkoutReference(String selectedDay) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  String oneDayWorkoutGroupID = "";
+  final firestore = FirebaseFirestore.instance;
+  String collectionName = "One Day Workouts";
+  String subcollectionName = "All One Day Workouts";
+
+  try {
+    await firestore.collection("trainers/$userID/workouts/$collectionName/$subcollectionName").get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.get('name') == selectedDay) {
+            oneDayWorkoutGroupID = docSnapshot.id;
+            break;
+          }
+        }
+      },
+    );
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  if (oneDayWorkoutGroupID != "") {
+    return firestore.doc("trainers/$userID/workouts/$collectionName/$subcollectionName/$oneDayWorkoutGroupID").path;
+  } else {
+    return "Rest Day";
+  }
+}
+
+Future<List<String>> getOneDayWorkoutsName(String collectionName, String subcollectionName) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  final firestore = FirebaseFirestore.instance;
+  List<String> oneDayWorkoutsNames = [];
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$collectionName/$subcollectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      oneDayWorkoutsNames.add(docSnapshot.get('name'));
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return oneDayWorkoutsNames;
 }
