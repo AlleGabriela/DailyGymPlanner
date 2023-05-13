@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/services/workout/OneDayWorkoutServices.dart';
 
+import '../auth_methods.dart';
+
 
 class OneWeekWorkoutPlan {
   String userID;
@@ -42,4 +44,20 @@ class OneWeekWorkoutPlan {
       throw Exception('One Week Meal Plan cannot be added to firebase: $e');
     }
   }
+}
+
+Future<List<String>> getOneWeekWorkoutsName(String collectionName) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  final firestore = FirebaseFirestore.instance;
+  List<String> oneWeekWorkoutsNames = [];
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$collectionName/$collectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      oneWeekWorkoutsNames.add(docSnapshot.get('name'));
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return oneWeekWorkoutsNames;
 }

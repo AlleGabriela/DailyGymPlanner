@@ -183,12 +183,12 @@ Stack listItemsWithoutImage(String title, IconData icon, Color iconColor) {
                     fontSize: 25
                 ),
               ),
-              const SizedBox(width: 110),
+              const SizedBox(width: 10),
               const Icon(
-                Icons.keyboard_arrow_right,
-                color: Colors.white,
-                size: 40,
-              ),
+                  Icons.keyboard_arrow_right,
+                  color: Colors.white,
+                  size: 40,
+                ),
             ],
           )
         ),
