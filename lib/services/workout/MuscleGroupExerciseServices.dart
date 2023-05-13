@@ -58,14 +58,7 @@ Future<String> getMuscleGroupReference(String category, String subcategory, Stri
           }
         }
       },
-      onError: (e) => print("Error completing: $e"),
     );
-    // for (var docSnapshot in querySnapshot.docs) {
-    //     if (docSnapshot.get('name') == collectionName) {
-    //       exerciseGroupID = docSnapshot.id;
-    //       break;
-    //     }
-    // }
   } catch (e) {
     Exception("Error completing: $e");
   }
