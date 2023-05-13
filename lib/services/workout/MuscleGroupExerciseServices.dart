@@ -42,25 +42,35 @@ class MuscleGroupExercise {
   }
 }
 
-Future<Object> getMuscleGroupReference(String category, String subcategory) async {
+Future<String> getMuscleGroupReference(String category, String subcategory, String selectedExercise) async {
   String userID = await FirebaseAuthMethods().getUserId();
   String exerciseGroupID = "";
   final firestore = FirebaseFirestore.instance;
   String collectionName = "Muscle Group Exercise";
 
   try {
-    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get();
-    for (var docSnapshot in querySnapshot.docs) {
-        if (docSnapshot.get('name') == collectionName) {
-          exerciseGroupID = docSnapshot.id;
-          break;
+    await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.get('name') == selectedExercise) {
+            exerciseGroupID = docSnapshot.id;
+            break;
+          }
         }
-    }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    // for (var docSnapshot in querySnapshot.docs) {
+    //     if (docSnapshot.get('name') == collectionName) {
+    //       exerciseGroupID = docSnapshot.id;
+    //       break;
+    //     }
+    // }
   } catch (e) {
     Exception("Error completing: $e");
   }
   if (exerciseGroupID != "") {
-    return firestore.doc("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName/$exerciseGroupID");
+    return firestore.doc("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName/$exerciseGroupID").path;
   } else {
     return "";
   }
