@@ -63,35 +63,26 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
         backgroundColor: primaryColor,
         child: Text('$index'),
       ),
-      title: Flexible(
-        child: Text(
-          doc,
-          style: const TextStyle(color: Colors.black87, fontFamily: font1),
-        ),
+      title: Row(
+        children: [
+          Flexible(
+            child: Text(
+              doc,
+              style: const TextStyle(color: Colors.black, fontFamily: font1),
+            ),
+          ),
+        ],
       ),
       trailing: PopupMenuButton<String>(
-        onSelected: (value) async {
+        onSelected: (value) {
           if (value == 'delete') {
-            // final querySnapshot = await FirebaseFirestore.instance
-            //     .collection("trainers")
-            //     .doc(userId)
-            //     .collection("workouts")
-            //     .doc(categoryName)
-            //     .collection(subcategoryName)
-            //     .doc(subcategoryName)
-            //     .collection("Simple Exercise")
-            //     .where('name', isEqualTo: doc)
-            //     .get();
-            // TODO: ADD REMOVE
-            // setState(() {
-            //   exerciseList.removeAt(index);
-            // });
+            // TODO: ADD DELETE FUNCTIONALITIES
           }
         },
         itemBuilder: (BuildContext context) => [
-          const PopupMenuItem<String>(
+          PopupMenuItem<String>(
             value: 'delete',
-            child: Text('Delete'),
+            child: const Text('Delete'),
           ),
         ],
       ),
