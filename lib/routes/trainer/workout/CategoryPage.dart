@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';
 import '../../models/category.dart';
+import 'WorkoutPlansDayWeek.dart';
 
 class CategoryList extends StatefulWidget{
   final String categoryName;
@@ -178,7 +179,7 @@ class CategoryListPage extends State<CategoryList>{
                       .delete();
                   setState(() {});
               },
-              child: buildSubcategoryList(name, subcategories, fullWorkout),
+              child: buildSubcategoryList(categoryName, name, subcategories, fullWorkout),
             );
         }).toList();
       }
@@ -226,7 +227,7 @@ class CategoryListPage extends State<CategoryList>{
                     .delete();
                 setState(() {});
               },
-              child: buildSubcategoryList(name, subcategories, fullWorkout),
+              child: buildSubcategoryList(categoryName, name, subcategories, fullWorkout),
             );
         }).toList();
       }
@@ -256,7 +257,7 @@ class CategoryListPage extends State<CategoryList>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      buildSubcategoryList(categoryName, subcategories, fullWorkout),
+                      buildSubcategoryList(categoryName, categoryName, subcategories, fullWorkout),
                     ],
                   ),
                 ),
@@ -292,7 +293,7 @@ class CategoryListPage extends State<CategoryList>{
     }
   }
 
-  Widget buildSubcategoryList(String categoryName, List<Category> subcategories, List<Widget> fullWorkout) {
+  Widget buildSubcategoryList(String categoryName, String title, List<Category> subcategories, List<Widget> fullWorkout) {
     if(categoryName == "Upper Body Workouts" || categoryName == "Lower Body Workouts") {
       return Expanded(
         child: ListView.builder(
@@ -316,9 +317,19 @@ class CategoryListPage extends State<CategoryList>{
         height: 80,
         child: GestureDetector(
           onTap: () {
-
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WorkoutPlansDayWeek(
+                  categoryName: categoryName,
+                  title: title,
+                  icon: Icons.fitness_center,
+                  iconColor: primaryColor,
+                ),
+              ),
+            );
           },
-          child:  listItemsWithoutImage(categoryName, Icons.fitness_center, primaryColor),
+          child:  listItemsWithoutImage(title, Icons.fitness_center, primaryColor),
         ),
       );
     }
