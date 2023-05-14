@@ -2,6 +2,7 @@ import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../services/workout/WorkoutServices.dart';
 import '../../../util/constants.dart';
+import 'GroupOfExercise.dart';
 
 class SubcategoryExercise extends StatefulWidget{
   final String categoryName;
@@ -46,7 +47,6 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
       categoryName = "Lower Body";
       exercises = await getExercisesName(categoryName, subcategoryName);
     }
-
     if (exercises.isNotEmpty) {
       int index = 1;
       exerciseList = [
@@ -70,9 +70,22 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
         ),
       ),
       trailing: PopupMenuButton<String>(
-        onSelected: (value) {
+        onSelected: (value) async {
           if (value == 'delete') {
+            // final querySnapshot = await FirebaseFirestore.instance
+            //     .collection("trainers")
+            //     .doc(userId)
+            //     .collection("workouts")
+            //     .doc(categoryName)
+            //     .collection(subcategoryName)
+            //     .doc(subcategoryName)
+            //     .collection("Simple Exercise")
+            //     .where('name', isEqualTo: doc)
+            //     .get();
             // TODO: ADD REMOVE
+            // setState(() {
+            //   exerciseList.removeAt(index);
+            // });
           }
         },
         itemBuilder: (BuildContext context) => [
@@ -101,6 +114,43 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GroupOfExercise(
+                        categoryName: categoryName,
+                        subcategoryName: subcategoryName,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(20),
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: lightLila,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    "Tap to see the exercise groups",
+                    style: TextStyle(fontSize: 20, color: Colors.black87, fontFamily: font1),
+                  ),
+                ),
+              ),
+            ),
             SliverList(
               delegate: SliverChildListDelegate(
                 exerciseList,
