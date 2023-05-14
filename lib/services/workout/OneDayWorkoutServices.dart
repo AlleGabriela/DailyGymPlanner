@@ -81,3 +81,23 @@ Future<List<String>> getOneDayWorkoutsName(String collectionName, String subcoll
   }
   return oneDayWorkoutsNames;
 }
+
+Future<List> getMuscleGroupsFromOneDayWorkout (String title, String userID) async {
+  final firestore = FirebaseFirestore.instance;
+  List workouts = [];
+  String collectionName = "One Day Workouts";
+  String subcollectionName = "All One Day Workouts";
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$collectionName/$subcollectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      if (docSnapshot.get('name') == title) {
+        workouts = docSnapshot.get('groupOfWorkouts');
+        break;
+      }
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return workouts;
+}

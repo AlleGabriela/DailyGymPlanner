@@ -22,14 +22,15 @@ class OneWeekWorkoutPlan {
     String workoutsCategory = "One Week Workout Plan";
 
     try {
-      final meals = firestore.collection("trainers").doc(userID).collection("workouts");
-      meals.doc(workoutsCategory).set({});
+      if( weekPlanName == ""  ) {
+        throw Exception('Field cannot be empty.');
+      }
 
       await firestore.collection("trainers")
           .doc(userID)
           .collection("workouts")
           .doc(workoutsCategory)
-          .collection("One Week Workout Plan")
+          .collection(workoutsCategory)
           .add({'name': weekPlanName,
         'monday':await getOneDayWorkoutReference(monday),
         'tuesday': await getOneDayWorkoutReference(tuesday),
@@ -60,4 +61,29 @@ Future<List<String>> getOneWeekWorkoutsName(String collectionName) async {
     Exception("Error completing: $e");
   }
   return oneWeekWorkoutsNames;
+}
+
+Future<List> getOneDayWorkoutsFromOneWeekPlan (String title, String userID) async {
+  final firestore = FirebaseFirestore.instance;
+  String collectionName = "One Week Workout Plan";
+  List workouts = [];
+
+  try{
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$collectionName/$collectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      if (docSnapshot.get('name') == title) {
+        workouts.add(docSnapshot.get('monday'));
+        workouts.add(docSnapshot.get('tuesday'));
+        workouts.add(docSnapshot.get('wednesday'));
+        workouts.add(docSnapshot.get('thursday'));
+        workouts.add(docSnapshot.get('friday'));
+        workouts.add(docSnapshot.get('saturday'));
+        workouts.add(docSnapshot.get('sunday'));
+        break;
+      }
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return workouts;
 }
