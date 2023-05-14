@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';
 import '../../models/category.dart';
+import 'SubcategoryExercise.dart';
 import 'WorkoutPlansDayWeek.dart';
 
 class CategoryList extends StatefulWidget{
@@ -304,6 +305,15 @@ class CategoryListPage extends State<CategoryList>{
               height: itemListHeight,
               child: GestureDetector(
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SubcategoryExercise(
+                        categoryName: categoryName,
+                        subcategoryName: subcategories[index].name,
+                      ),
+                    ),
+                  );
                 },
                 child: listItemsUsingImageAsset(subcategories[index].name, subcategories[index].imgName, subcategories[index].icon, subcategories[index].color),
               ),
