@@ -5,6 +5,7 @@ import '../../../services/workout/OneDayWorkoutServices.dart';
 import '../../../services/workout/OneWeekWorkoutServices.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';
+import 'GroupExerciseDetails.dart';
 
 class WorkoutPlansDayWeek extends StatefulWidget{
   final String categoryName;
@@ -62,6 +63,46 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
     setState(() {});
   }
 
+  String searchSubcategory(String category, String searchedString) {
+    if(searchedString.contains("Upper Body")) {
+      if(searchedString.contains("Abs")) {
+        return "Abs";
+      } else if(searchedString.contains("Back")) {
+        return "Back";
+      } else if(searchedString.contains("Biceps")) {
+        return "Biceps";
+      } else if(searchedString.contains("Chest")) {
+        return "Chest";
+      } else if(searchedString.contains("Shoulders")) {
+        return "Shoulders";
+      } else if(searchedString.contains("Traps")) {
+        return "Traps";
+      } else if(searchedString.contains("Triceps")) {
+        return "Triceps";
+      }
+    } else if( searchedString.contains("Lower Body")) {
+      if(searchedString.contains("Calves")) {
+        return "Calves";
+      } else if(searchedString.contains("Glutes")) {
+        return "Glutes";
+      } else if(searchedString.contains("Hamstrings")) {
+        return "Hamstrings";
+      } else if(searchedString.contains("Quads")) {
+        return "Quads";
+      }
+    }
+    return "";
+  }
+
+  String searchCategory(String category, String searchedString) {
+    if(searchedString.contains("Upper Body")) {
+      return "Upper Body";
+    } else if(searchedString.contains("Lower Body")) {
+      return "Lower Body";
+    }
+    return "";
+  }
+
   Future<Container> buildWorkoutContainer(doc) async {
     String workoutName = '';
     List workoutExercise = [];
@@ -84,7 +125,16 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
       height: 80,
       child: GestureDetector(
         onTap: () {
-          // TODO: Handle the container's tap event
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GroupExerciseDetails(
+                  categoryName: searchCategory(categoryName, doc),
+                  subcategoryName: searchSubcategory(categoryName, doc),
+                  title: workoutName
+              ),
+            ),
+          );
         },
         child: listItemsWithoutImage(workoutName, workoutIcon, workoutIconColor),
       ),
