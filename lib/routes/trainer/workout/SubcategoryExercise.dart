@@ -94,7 +94,7 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
                 .delete();
             setState(() {});
           },
-          child: buildGroupOfExerciseList(index++, name),
+          child: buildExerciseList(index++, name),
         );
       }).toList();
     }
@@ -102,7 +102,7 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
 
   }
 
-  Widget buildGroupOfExerciseList( int index, String name) {
+  Widget buildExerciseList( int index, String name) {
     return Container(
       child: ListTile(
           leading: CircleAvatar(

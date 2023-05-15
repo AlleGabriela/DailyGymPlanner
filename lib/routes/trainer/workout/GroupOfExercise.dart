@@ -3,6 +3,7 @@ import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
+import 'GroupExerciseDetails.dart';
 
 class GroupOfExercise extends StatefulWidget{
   final String categoryName;
@@ -100,17 +101,16 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
       height: 80,
       child: GestureDetector(
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => WorkoutPlansDayWeek(
-          //       categoryName: categoryName,
-          //       title: title,
-          //       icon: Icons.fitness_center,
-          //       iconColor: primaryColor,
-          //     ),
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GroupExerciseDetails(
+                categoryName: categoryName,
+                subcategoryName: subcategoryName,
+                title: name
+              ),
+            ),
+          );
         },
         child:  listItemsWithoutImage(name, Icons.fitness_center, primaryColor),
       ),

@@ -86,6 +86,23 @@ Future<List<String>> getMuscleGroupWorkoutsName(String category, String subcateg
   return muscleGroupsNames;
 }
 
+Future<List<GroupExercise>> getMuscleGroupWorkoutsList(String category, String subcategory) async {
+  String userID = await FirebaseAuthMethods().getUserId();
+  final firestore = FirebaseFirestore.instance;
+  List<GroupExercise> muscleGroupsList = [];
+  String collectionName = "Muscle Group Exercise";
+
+  try {
+    final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get();
+    for (var docSnapshot in querySnapshot.docs) {
+      muscleGroupsList.add( GroupExercise(docSnapshot.get('name'), docSnapshot.get('nrSeries'), docSnapshot.get('nrReps')));
+    }
+  } catch (e) {
+    Exception("Error completing: $e");
+  }
+  return muscleGroupsList;
+}
+
 Future<List> getExerciseFromOneMuscleGroup (String title, String userID, String category, String subcategory) async {
   final firestore = FirebaseFirestore.instance;
   List exercises = [];
@@ -95,8 +112,7 @@ Future<List> getExerciseFromOneMuscleGroup (String title, String userID, String 
     final querySnapshot = await firestore.collection("trainers/$userID/workouts/$category/$subcategory/$subcategory/$collectionName").get();
     for (var docSnapshot in querySnapshot.docs) {
       if (docSnapshot.get('name') == title) {
-        var workout = docSnapshot.get('groupExercise');
-        exercises.add(workout);
+        exercises = docSnapshot.get('groupExercise');
         break;
       }
     }
