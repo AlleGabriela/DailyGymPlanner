@@ -105,8 +105,6 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
 
   Future<Container> buildWorkoutContainer(doc) async {
     String workoutName = '';
-    List workoutExercise = [];
-    String workoutID = '';
     IconData? workoutIcon = Icons.fitness_center;
     Color? workoutIconColor = primaryColor;
 
@@ -114,8 +112,6 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
       await FirebaseFirestore.instance.doc(doc).get().then((DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
         workoutName = data['name'];
-        workoutExercise = data['workoutExercise'];
-        workoutID = doc.id;
       });
     } catch (e) {
       Exception("Error accessing the exercise group: $e");
@@ -167,7 +163,17 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
           height: 180,
           child: GestureDetector(
             onTap: () {
-              // TODO: ADD ACTION!
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WorkoutPlansDayWeek(
+                    categoryName: "One Day Workout",
+                    title: planName,
+                    icon: Icons.fitness_center,
+                    iconColor: primaryColor,
+                  ),
+                ),
+              );
             },
             child: listItemsUsingImageAsset(planName, imageList[index], workoutIcon, workoutIconColor),
           )
