@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
-import '../../../services/workout/WorkoutServices.dart';
 import '../../../util/constants.dart';
 import 'GroupOfExercise.dart';
 
@@ -40,55 +40,88 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
   }
 
   void getSubcategoryItems(String userId) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot;
     if (categoryName == "Upper Body Workouts") {
       categoryName = "Upper Body";
-      exercises = await getExercisesName(categoryName, subcategoryName);
     } else {
       categoryName = "Lower Body";
-      exercises = await getExercisesName(categoryName, subcategoryName);
     }
-    if (exercises.isNotEmpty) {
-      int index = 1;
-      exerciseList = [
-        for (final exercise in exercises)
-          await buildExerciseContainer(exercise, index++, userId),
-      ];
-    }
-    setState(() {});
-  }
+    snapshot = await FirebaseFirestore.instance
+        .collection("trainers")
+        .doc(userId)
+        .collection("workouts")
+        .doc(categoryName)
+        .collection(subcategoryName)
+        .doc(subcategoryName)
+        .collection("Simple Exercise")
+        .orderBy('name', descending: false)
+        .get();
 
-  Future<Widget> buildExerciseContainer(doc, int index, String userId ) async{
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: primaryColor,
-        child: Text('$index'),
-      ),
-      title: Row(
-        children: [
-          Flexible(
-            child: Text(
-              doc,
-              style: const TextStyle(color: Colors.black, fontFamily: font1),
+    if (snapshot.docs.isNotEmpty) {
+      String name = "";
+      int index = 1;
+      exerciseList = snapshot.docs.map((doc) {
+        name = doc['name'];
+        if( name == '') {
+          throw Exception("The exercise cannot pe accessed!");
+        }
+        return Dismissible(
+          key: Key(doc.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: Colors.red,
+            child: const Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 16.0),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-        ],
-      ),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          if (value == 'delete') {
-            // TODO: ADD DELETE FUNCTIONALITIES
-          }
-        },
-        itemBuilder: (BuildContext context) => [
-          PopupMenuItem<String>(
-            value: 'delete',
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
+          onDismissed: (direction) async {
+            await FirebaseFirestore.instance
+                .collection("trainers")
+                .doc(userId)
+                .collection("workouts")
+                .doc(categoryName)
+                .collection(subcategoryName)
+                .doc(subcategoryName)
+                .collection("Simple Exercise")
+                .doc(doc.id)
+                .delete();
+            setState(() {});
+          },
+          child: buildGroupOfExerciseList(index++, name),
+        );
+      }).toList();
+    }
+    setState(() {});
+
   }
 
+  Widget buildGroupOfExerciseList( int index, String name) {
+    return Container(
+      child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: primaryColor,
+            child: Text('$index'),
+          ),
+          title: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  name,
+                  style: const TextStyle(color: Colors.black, fontFamily: font1),
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
