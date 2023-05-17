@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
+import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
@@ -7,8 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../services/NewsServices.dart';
-import '../../util/components_theme/box.dart';
+import '../../../services/news/NewsServices.dart';
+import '../../../util/components_theme/box.dart';
 
 class AddNewsPage extends StatefulWidget {
   AddNewsPage({Key? key}) : super(key: key);
