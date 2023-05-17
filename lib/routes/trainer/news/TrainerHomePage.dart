@@ -1,13 +1,13 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
-import 'package:daily_gym_planner/routes/models/NewsList.dart';
+import 'package:daily_gym_planner/routes/trainer/news/NewsList.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
-import 'package:daily_gym_planner/routes/trainer/AddNews.dart';
+import 'package:daily_gym_planner/routes/trainer/news/AddNews.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/constants.dart';
+import '../../../util/constants.dart';
 
 class TrainerHome extends StatefulWidget{
   TrainerHomePage createState() => TrainerHomePage();

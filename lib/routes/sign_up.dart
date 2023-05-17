@@ -1,5 +1,5 @@
 import 'package:daily_gym_planner/routes/log_in.dart';
-import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
+import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

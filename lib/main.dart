@@ -1,6 +1,6 @@
-import 'package:daily_gym_planner/routes/trainer/AddNews.dart';
+import 'package:daily_gym_planner/routes/trainer/news/AddNews.dart';
 //import 'package:daily_gym_planner/routes/trainer/NewsDetailsScreen.dart';
-import 'package:daily_gym_planner/routes/trainer/TrainerHomePage.dart';
+import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
 import 'package:daily_gym_planner/routes/sign_up.dart';
 import 'package:daily_gym_planner/routes/log_in.dart';

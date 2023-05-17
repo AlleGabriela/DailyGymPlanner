@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/routes/models/NewsDetails.dart';
+import 'package:daily_gym_planner/routes/trainer/news/NewsDetails.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 
-import 'ListItems.dart';
+import '../../models/ListItems.dart';
 
 class NewsList extends StatefulWidget {
   const NewsList({super.key});
