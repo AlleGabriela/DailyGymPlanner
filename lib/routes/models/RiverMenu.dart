@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../trainer/MealCategories.dart';
+import '../trainer/settings/Settings.dart';
 
 class RiverMenu extends StatelessWidget {
   const RiverMenu({
@@ -55,7 +56,8 @@ class RiverMenu extends StatelessWidget {
                   // TODO: Navigate to Today page.
                 },
                 onSettingsSelected: () {
-                  // TODO: Navigate to Settings page.
+                  Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Settings()));
                 },
                 onLogoutSelected: () {
                   Navigator.push(context,
@@ -157,7 +159,7 @@ class SideMenuIcons extends StatelessWidget {
           selectedSection == 'Today',
           onTodaySelected,
         ),
-        const Divider(),
+        const Divider(color: accentColor),
         _buildMenuItem(
           context,
           'Settings',
