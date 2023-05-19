@@ -47,7 +47,7 @@ class FirebaseAuthMethods {
         FirebaseFirestore.instance
           .collection(collection)
           .doc(credentials.user?.uid)
-          .set({'name': name, 'role': role, 'photo': ''});
+          .set({'name': name, 'role': role, 'photo': '', 'location': 'The location is not set yet'});
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
@@ -108,7 +108,6 @@ class FirebaseAuthMethods {
     if (user == null) {
       throw Exception('User does not exist!');
     }
-
     DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
         .collection('trainers')
         .doc(user.uid)
@@ -131,6 +130,35 @@ class FirebaseAuthMethods {
       throw Exception('User does not exist');
     }
     return name;
+  }
+
+  Future<String> getLocation(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('trainers')
+        .doc(user.uid)
+        .get();
+
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String location;
+    if (adminSnapshot.exists) {
+      // User exists in the "admins" table
+      location = adminSnapshot.get('location');
+    } else if (customerSnapshot.exists) {
+      // User exists in the "customers" table
+      location = customerSnapshot.get('location');
+    } else {
+      // User does not exist in either table
+      throw Exception('User does not exist');
+    }
+    return location;
   }
 
   Future<void> handlePassReset({
