@@ -30,6 +30,8 @@ class SettingsPage extends State<Settings>{
   File? _imageFile;
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _userlocationController = TextEditingController();
 
   @override
   void initState() {
@@ -85,9 +87,14 @@ class SettingsPage extends State<Settings>{
 
   void saveChanges() async {
     String userID = await authMethods.getUserId();
-    await _uploadImage();
+    if( _imageFile != null)
+        await _uploadImage();
       try {
-        await authMethods.updatePhotoURL("trainers", userID, userPhoto);
+        if( _imageFile != null )
+          await authMethods.updatePhotoURL("trainers", userID, userPhoto);
+
+        await authMethods.updateUsername("trainers", userID, userName);
+        await authMethods.updateLocation("trainers", userID, userLocation);
         showSnackBar(context, "News added succesfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
@@ -117,45 +124,6 @@ class SettingsPage extends State<Settings>{
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
-        obscureText: isPasswordTextField ? showPassword : false,
-        decoration: InputDecoration(
-            labelStyle: const TextStyle(color: primaryColor),
-            enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
-            ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: primaryColor),
-            ),
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  showPassword = !showPassword;
-                });
-              },
-              icon: Icon(
-                Icons.remove_red_eye,
-                color: Colors.grey,
-              ),
-            )
-                : null,
-            contentPadding: EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )),
       ),
     );
   }
@@ -222,11 +190,71 @@ class SettingsPage extends State<Settings>{
               ],
             ),
           ),
-          const SizedBox( height: 25),
-          buildTextField("Name", userName, false),
-          buildTextField("E-mail", userEmail, false),
-          buildTextField("Password", "********", true),
-          buildTextField("Location", userLocation, false),
+          TextField(
+            controller: _usernameController,
+            decoration: InputDecoration(
+              labelStyle: const TextStyle(color: primaryColor),
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              labelText: 'Name',
+              hintText: userName,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintStyle: const TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            onChanged: (value) {
+              setState(() {
+                userName = value;
+              });
+              _updateUsername();
+            },
+          ),
+          const SizedBox(height: 15),
+          TextField(
+            decoration: InputDecoration(
+              labelStyle: const TextStyle(color: primaryColor),
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              labelText: 'E-mail',
+              hintText: userEmail,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintStyle: const TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+              enabled: false
+            ),
+          ),
+          const SizedBox(height: 15),
+          //buildTextField("Password", "********", true),
+          const SizedBox(height: 15),
+          TextField(
+            controller: _userlocationController,
+            decoration: InputDecoration(
+              labelStyle: const TextStyle(color: primaryColor),
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              labelText: 'Location',
+              hintText: userLocation,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintStyle: const TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            onChanged: (value) {
+              setState(() {
+                userLocation = value;
+              });
+              _updateUserlocation();
+            },
+          ),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -235,7 +263,6 @@ class SettingsPage extends State<Settings>{
                     backgroundColor: mealButtonColor
                 ),
                 onPressed: () {
-                  // TODO Add functionality
                   saveChanges();
                 },
                 child: const Text('Save changes'),
@@ -245,5 +272,23 @@ class SettingsPage extends State<Settings>{
         ],
       ),
     );
+  }
+
+  void _updateUsername() {
+    // Perform the update logic here
+    String newUsername = _usernameController.text;
+    // Update the username in Firestore or perform other operations
+    setState(() {
+      userName = newUsername; // Update the placeholder value
+    });
+  }
+
+  void _updateUserlocation() {
+    // Perform the update logic here
+    String newUserlocation = _userlocationController.text;
+    // Update the username in Firestore or perform other operations
+    setState(() {
+      userLocation = newUserlocation; // Update the placeholder value
+    });
   }
 }

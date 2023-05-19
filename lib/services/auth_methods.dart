@@ -227,9 +227,8 @@ class FirebaseAuthMethods {
     return userID;
   }
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   Future<void> updatePhotoURL(String collection, String userId, String newPhotoURL) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     DocumentReference docRef = firestore.collection(collection).doc(userId);
     try {
       await docRef.update({
@@ -239,5 +238,30 @@ class FirebaseAuthMethods {
       Exception('Error updating photo URL: $error');
     }
   }
+
+  Future<void> updateUsername(String collection, String userId, String newUsername) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentReference docRef = firestore.collection(collection).doc(userId);
+    try {
+      await docRef.update({
+        'name': newUsername,
+      });
+    } catch (e) {
+      Exception('Error updating username: $e');
+    }
+  }
+
+  Future<void> updateLocation(String collection, String userId, String newLocation) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentReference docRef = firestore.collection(collection).doc(userId);
+    try {
+      await docRef.update({
+        'location': newLocation,
+      });
+    } catch (e) {
+      Exception('Error updating location: $e');
+    }
+  }
+
 }
 
