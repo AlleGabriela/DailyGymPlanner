@@ -26,7 +26,7 @@ class FirebaseAuthMethods {
 
     if (await doesUserExist(email)) {
       showSnackBar(context, 'An user with same email already exists!');
-      }  else {
+    } else {
       // User does not exist. Proceed with sign up
       String collection;
       try {
@@ -40,38 +40,44 @@ class FirebaseAuthMethods {
         } else {
           throw Exception('Invalid role');
         }
-        if( email == "" || name == "" || password == "") {
+        if (email == "" || name == "" || password == "") {
           throw Exception('Field cannot be empty.');
         }
-        final credentials = await FirebaseAuth.instance.createUserWithEmailAndPassword( email: email, password: password);
+        final credentials = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
         FirebaseFirestore.instance
-          .collection(collection)
-          .doc(credentials.user?.uid)
-          .set({'name': name, 'role': role, 'photo': '', 'location': 'The location is not set yet'});
+            .collection(collection)
+            .doc(credentials.user?.uid)
+            .set({
+          'name': name,
+          'role': role,
+          'photo': '',
+          'location': 'The location is not set yet'
+        });
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
     }
   }
 
-   Future<void> handleLogIn({
+  Future<void> handleLogIn({
     required String email,
     required String password,
-     required BuildContext context,
-   }) async {
-     WidgetsFlutterBinding.ensureInitialized();
-     await Firebase.initializeApp();
+    required BuildContext context,
+  }) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
 
-     try {
-       await FirebaseAuth.instance.signInWithEmailAndPassword(
-           email: email,
-           password: password
-       );
-     } on FirebaseAuthException catch (e) {
-       showSnackBar(context, e.message!);
-       throw Exception('User does not exist!');
-     }
-   }
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message!);
+      throw Exception('User does not exist!');
+    }
+  }
 
   Future<String> getRole(String email) async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -198,7 +204,8 @@ class FirebaseAuthMethods {
     await Firebase.initializeApp();
 
     try {
-      List<String> userSignInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      List<String> userSignInMethods = await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(email);
 
       if (userSignInMethods.isNotEmpty) {
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
@@ -206,10 +213,9 @@ class FirebaseAuthMethods {
       } else {
         showSnackBar(context, 'Email is not valid');
       }
-
     } on FirebaseAuthException catch (e) {
-        print(e);
-        showSnackBar(context, e.message!);
+      print(e);
+      showSnackBar(context, e.message!);
     }
   }
 
@@ -219,6 +225,19 @@ class FirebaseAuthMethods {
     userID = user!.uid;
 
     return userID;
+  }
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<void> updatePhotoURL(String collection, String userId, String newPhotoURL) async {
+    DocumentReference docRef = firestore.collection(collection).doc(userId);
+    try {
+      await docRef.update({
+        'photo': newPhotoURL,
+      });
+    } catch (error) {
+      Exception('Error updating photo URL: $error');
+    }
   }
 }
 
