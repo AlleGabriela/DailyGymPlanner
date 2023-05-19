@@ -25,7 +25,7 @@ class FirebaseAuthMethods {
     await Firebase.initializeApp();
 
     if (await doesUserExist(email)) {
-      // User already exists ERROR!
+      showSnackBar(context, 'An user with same email already exists!');
       }  else {
       // User does not exist. Proceed with sign up
       String collection;
@@ -47,7 +47,7 @@ class FirebaseAuthMethods {
         FirebaseFirestore.instance
           .collection(collection)
           .doc(credentials.user?.uid)
-          .set({'name': name, 'role': role});
+          .set({'name': name, 'role': role, 'photo': ''});
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
