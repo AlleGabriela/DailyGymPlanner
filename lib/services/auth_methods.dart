@@ -161,6 +161,35 @@ class FirebaseAuthMethods {
     return location;
   }
 
+  Future<String> getPhoto(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('trainers')
+        .doc(user.uid)
+        .get();
+
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String photo;
+    if (adminSnapshot.exists) {
+      // User exists in the "admins" table
+      photo = adminSnapshot.get('photo');
+    } else if (customerSnapshot.exists) {
+      // User exists in the "customers" table
+      photo = customerSnapshot.get('photo');
+    } else {
+      // User does not exist in either table
+      throw Exception('User does not exist');
+    }
+    return photo;
+  }
+
   Future<void> handlePassReset({
     required String email,
     required BuildContext context,
