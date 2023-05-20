@@ -152,13 +152,14 @@ class SideMenuIcons extends StatelessWidget {
           selectedSection == 'Workout',
           onWorkoutSelected,
         ),
-        _buildMenuItem(
-          context,
-          'Today',
-          Icons.calendar_today,
-          selectedSection == 'Today',
-          onTodaySelected,
-        ),
+        // TODO: Resolve this when you'll implement Today
+        // _buildMenuItem(
+        //   context,
+        //   'Today',
+        //   Icons.calendar_today,
+        //   selectedSection == 'Today',
+        //   onTodaySelected,
+        // ),
         const Divider(color: accentColor),
         _buildMenuItem(
           context,

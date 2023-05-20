@@ -32,6 +32,7 @@ class SettingsPage extends State<Settings>{
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _userlocationController = TextEditingController();
+  TextEditingController _userpasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -86,12 +87,16 @@ class SettingsPage extends State<Settings>{
   }
 
   void saveChanges() async {
+    User? user = FirebaseAuth.instance.currentUser;
     String userID = await authMethods.getUserId();
     if( _imageFile != null)
         await _uploadImage();
       try {
         if( _imageFile != null )
           await authMethods.updatePhotoURL("trainers", userID, userPhoto);
+
+        if( userPassword != "")
+          user?.updatePassword(userPassword);
 
         await authMethods.updateUsername("trainers", userID, userName);
         await authMethods.updateLocation("trainers", userID, userLocation);
@@ -230,7 +235,40 @@ class SettingsPage extends State<Settings>{
             ),
           ),
           const SizedBox(height: 15),
-          //buildTextField("Password", "********", true),
+          TextField(
+              controller: _userpasswordController,
+              obscureText: showPassword,
+              decoration: InputDecoration(
+              labelStyle: const TextStyle(color: primaryColor),
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+                icon: Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.grey,
+                ),
+              ),
+              labelText: 'Enter new password',
+              hintText: userPassword,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintStyle: const TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            onChanged: (value) {
+              setState(() {
+                userPassword = value;
+              });
+              _updatePassword();
+            },
+          ),
           const SizedBox(height: 15),
           TextField(
             controller: _userlocationController,
@@ -290,5 +328,14 @@ class SettingsPage extends State<Settings>{
     setState(() {
       userLocation = newUserlocation; // Update the placeholder value
     });
+  }
+
+  void _updatePassword() async {
+    String newUserpassword = _userpasswordController.text;
+    // Update the username in Firestore or perform other operations
+    setState(() {
+      userPassword = newUserpassword; // Update the placeholder value
+    });
+
   }
 }
