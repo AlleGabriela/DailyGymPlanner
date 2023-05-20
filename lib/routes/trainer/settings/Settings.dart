@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../services/auth_methods.dart';
@@ -26,13 +25,14 @@ class SettingsPage extends State<Settings>{
   String userPassword = "";
   String userPhoto = "";
   String userLocation = "";
-  bool showPassword = false;
+  bool showPassword = true;
   File? _imageFile;
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _userlocationController = TextEditingController();
   TextEditingController _userpasswordController = TextEditingController();
+
 
   @override
   void initState() {
@@ -54,7 +54,6 @@ class SettingsPage extends State<Settings>{
         userPhoto = photo;
       });
     }
-    print("User photo: $userPhoto");
   }
 
   Future<void> _pickImage() async {
@@ -262,12 +261,12 @@ class SettingsPage extends State<Settings>{
               floatingLabelBehavior: FloatingLabelBehavior.always,
               hintStyle: const TextStyle( fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
             ),
-            onChanged: (value) {
-              setState(() {
-                userPassword = value;
-              });
-              _updatePassword();
-            },
+              onChanged: (value) {
+                setState(() {
+                  userPassword = value;
+                });
+                _updatePassword();
+              },
           ),
           const SizedBox(height: 15),
           TextField(
