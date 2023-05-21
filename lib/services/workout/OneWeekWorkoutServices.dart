@@ -87,3 +87,21 @@ Future<List> getOneDayWorkoutsFromOneWeekPlan (String title, String userID) asyn
   }
   return workouts;
 }
+
+Future<DocumentReference<Map<String, dynamic>>> getOneWeekWorkoutPlanReference(String selectedWorkoutPlan, String trainerID) async{
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  String oneWeekWorkoutPlanID = "";
+
+  await db.collection("trainers/$trainerID/workouts/One Week Workout Plan/One Week Workout Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('name') == selectedWorkoutPlan) {
+          oneWeekWorkoutPlanID = docSnapshot.id;
+          break;
+        }
+      }
+    },
+    onError: (e) => Exception("Error getting one week workout plan reference: $e"),
+  );
+  return db.doc("trainers/$trainerID/workouts/One Week Workout Plan/One Day Workout Plan/$oneWeekWorkoutPlanID");
+}

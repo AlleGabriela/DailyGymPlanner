@@ -1,4 +1,4 @@
-import 'package:daily_gym_planner/routes/trainer/ClientsListPage.dart';
+import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/routes/welcome_screen.dart';
@@ -6,7 +6,7 @@ import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../trainer/MealCategories.dart';
+import '../trainer/meals/MealCategories.dart';
 import '../trainer/settings/Settings.dart';
 
 class RiverMenu extends StatelessWidget {

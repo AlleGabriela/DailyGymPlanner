@@ -163,37 +163,42 @@ Stack listItemsWithoutImage(String title, IconData icon, Color iconColor) {
         bottom: 5,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Row(
-            children: [
-              ClipOval(
-                child: Container(
-                  color: iconColor,
-                  padding: const EdgeInsets.all(10),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 30,
+          child: Container (
+            width: 350,
+            child: Row(
+              children: [
+                ClipOval(
+                  child: Container(
+                    color: iconColor,
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Text(title,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 200,
+                  child: Text(title,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 25
+                    ),
+                  )
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Icon(
+                const Spacer(),
+                const Icon(
                   Icons.keyboard_arrow_right,
                   color: Colors.white,
                   size: 40,
                 ),
-            ],
+              ],
+            )
           )
         ),
       )
     ],
   );
 }
-

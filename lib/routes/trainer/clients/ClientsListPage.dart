@@ -5,9 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/constants.dart';
+import '../../../util/constants.dart';
+import 'AddClient.dart';
 
 class ClientsList extends StatefulWidget{
+  const ClientsList({super.key});
+
+  @override
   ClientsListPage createState() => ClientsListPage();
 }
 
@@ -43,7 +47,7 @@ class ClientsListPage extends State<ClientsList>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(),
+            const MyAppBar(),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 50, // set the height of the fixed box as required
@@ -54,20 +58,20 @@ class ClientsListPage extends State<ClientsList>{
                       TextSpan(
                         children: [
                           TextSpan(
-                            //text: "\nWant to share something new? ",
-                            style: TextStyle(
+                            text: "\nWant to add a new client? ",
+                            style: const TextStyle(
                               color: buttonTextColor,
                               fontSize: questionSize,
                               fontFamily: font2,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => AddNewsPage(),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AddClientPage(),
+                                  ),
+                                );
                               },
                           ),
                         ],

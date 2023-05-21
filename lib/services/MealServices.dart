@@ -204,3 +204,33 @@ Future<List> getDayPlansFromOneWeekMeal (String title, String userID) async {
   );
   return plans;
 }
+
+Future<List<String>> getMealPlans(userID) async {
+  List<String> listMealPlans = [];
+
+  await db.collection("trainers/$userID/meals/one week meal plan/One Week Meal Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        listMealPlans.add(docSnapshot.get('name'));
+      }
+    },
+    onError: (e) => Exception("Error completing: $e"),
+  );
+  return listMealPlans;
+}
+
+Future<DocumentReference<Map<String, dynamic>>> getOneWeekMealPlanReference(String selectedMealPlan, String trainerID) async{
+  String oneWeekMealPlanID = "";
+  await db.collection("trainers/$trainerID/meals/one week meal plan/One Week Meal Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('name') == selectedMealPlan) {
+          oneWeekMealPlanID = docSnapshot.id;
+          break;
+        }
+      }
+    },
+    onError: (e) => Exception("Error getting one week meal plan reference: $e"),
+  );
+  return db.doc("trainers/$trainerID/meals/one week meal plan/One Week Meal Plan/$oneWeekMealPlanID");
+}

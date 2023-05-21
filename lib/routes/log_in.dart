@@ -29,7 +29,7 @@ class LogIn extends StatefulWidget{
       context: context,
     );
     
-    return _authService.getRole(email);
+    return await _authService.getRole(email);
   }
 
   @override

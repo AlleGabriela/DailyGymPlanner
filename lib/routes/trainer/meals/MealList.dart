@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 
-import '../models/ListItems.dart';
+import '../../models/ListItems.dart';
 import 'MealPlans.dart';
 
 class MealList extends StatefulWidget {
