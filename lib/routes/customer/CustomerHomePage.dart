@@ -39,6 +39,9 @@ class CustomerHomePage extends State<CustomerHome> {
       String nameTrainer = await _authService.getTrainerDetails(trainer, "name");
       String locationTrainer = await _authService.getTrainerDetails(trainer, "location");
       String photoTrainer = await _authService.getTrainerDetails(trainer, "photo");
+      setState(() {
+        userName = name;
+      });
       return {
         'userName': name,
         'trainerID': trainer,

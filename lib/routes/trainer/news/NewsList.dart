@@ -66,52 +66,74 @@ class _NewsListState extends State<NewsList> {
         if( title == '' || imageUrl == '' || description == '') {
           throw Exception("The news cannot pe accessed!");
         }
-
-        return Dismissible(
-          key: Key(doc.id),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.red,
-            child: const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.white,
+        if( userRole == "trainer") {
+          return Dismissible(
+            key: Key(doc.id),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Colors.red,
+              child: const Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          onDismissed: (direction) async {
-            await FirebaseFirestore.instance
-                .collection("trainers")
-                .doc(userId)
-                .collection("news")
-                .doc(doc.id)
-                .delete();
-            setState(() {});
-          },
-          child: Container(
-            margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
-            height: 180,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewsDetails(
-                                    title: title,
-                                    imageUrl: imageUrl,
-                                    description: description,
-                                  ),
-                  ),
-                );
-              },
-              child: listItems(title, imageUrl, Icons.newspaper, primaryColor),
-            )
-          ),
-        );
+            onDismissed: (direction) async {
+              await FirebaseFirestore.instance
+                  .collection("trainers")
+                  .doc(userId)
+                  .collection("news")
+                  .doc(doc.id)
+                  .delete();
+              setState(() {});
+            },
+            child: Container(
+                margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
+                height: 180,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewsDetails(
+                          title: title,
+                          imageUrl: imageUrl,
+                          description: description,
+                        ),
+                      ),
+                    );
+                  },
+                  child: listItems(title, imageUrl, Icons.newspaper, primaryColor),
+                )
+            ),
+          );
+        } else {
+          return Container(
+                margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
+                height: 180,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewsDetails(
+                          title: title,
+                          imageUrl: imageUrl,
+                          description: description,
+                        ),
+                      ),
+                    );
+                  },
+                  child: listItems(title, imageUrl, Icons.newspaper, primaryColor),
+                )
+          );
+        }
+
       }).toList();
     }
     setState(() {});
