@@ -8,6 +8,7 @@ import 'package:daily_gym_planner/util/constants.dart';
 import '../services/auth_methods.dart';
 import '../util/components_theme/box.dart';
 import '../util/showSnackBar.dart';
+import 'customer/CustomerHomePage.dart';
 
 class LogIn extends StatefulWidget{
   HomeLogIn createState() => HomeLogIn();
@@ -112,7 +113,8 @@ class LogIn extends StatefulWidget{
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => TrainerHome()));
                               } else {
-                                //TODO:  GO TO CUTOMER PAGE
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => CustomerHome()));
                               }
                             } catch (e) {
                               showSnackBar(context, 'User does not exist: $e');

@@ -19,6 +19,7 @@ class CategoryList extends StatefulWidget{
 class CategoryListPage extends State<CategoryList>{
 
   String userName = "userName";
+  String userRole = "trainer";
 
   @override
   void initState() {
@@ -82,6 +83,7 @@ class CategoryListPage extends State<CategoryList>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
+          userRole: userRole,
           userName: userName,
           selectedSection: "Meals",
         ),

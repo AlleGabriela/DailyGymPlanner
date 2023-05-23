@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
           '/log_in': (context) => LogIn(),
           '/TrainerHomePage':  (context) => TrainerHome(),
           '/_AddNewsPageState':  (context) => AddNewsPage(),
-          //'/_NewsDetailsScreenState':  (context) => NewsDetailsScreen(),
         }
     );
   }
