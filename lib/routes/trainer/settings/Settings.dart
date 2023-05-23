@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +14,17 @@ import '../../models/RiverMenu.dart';
 import '../news/TrainerHomePage.dart';
 
 class Settings extends StatefulWidget{
-  const Settings({super.key});
+  final String userRole;
+
+  const Settings({super.key, required this.userRole});
 
   @override
-  SettingsPage createState() => SettingsPage();
+  SettingsPage createState() => SettingsPage(userRole);
 }
 
 class SettingsPage extends State<Settings>{
   String userName = "";
-  String userRole = "trainer";
+  String userRole = "";
   String userEmail = "";
   String userPassword = "";
   String userPhoto = "";
@@ -29,19 +32,23 @@ class SettingsPage extends State<Settings>{
   bool showPassword = true;
   File? _imageFile;
 
+  late Future<Map<String, String>> fetchDetails;
+
+  SettingsPage(this.userRole);
+
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _userlocationController = TextEditingController();
-  TextEditingController _userpasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _userlocationController = TextEditingController();
+  final TextEditingController _userpasswordController = TextEditingController();
 
 
   @override
   void initState() {
     super.initState();
-    _getUserDetails();
+    fetchDetails = _getUserDetails();
   }
 
-  Future<void> _getUserDetails() async {
+  Future<Map<String, String>> _getUserDetails() async {
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
@@ -54,7 +61,14 @@ class SettingsPage extends State<Settings>{
         userLocation = location;
         userPhoto = photo;
       });
+      return {
+        'userName': name,
+        'userEmail': email,
+        'userLocation': location,
+        'userPhoto': photo,
+      };
     }
+    return {};
   }
 
   Future<void> _pickImage() async {
@@ -89,18 +103,26 @@ class SettingsPage extends State<Settings>{
   void saveChanges() async {
     User? user = FirebaseAuth.instance.currentUser;
     String userID = await authMethods.getUserId();
-    if( _imageFile != null)
-        await _uploadImage();
+    if( _imageFile != null) {
+      await _uploadImage();
+    }
       try {
-        if( _imageFile != null )
-          await authMethods.updatePhotoURL("trainers", userID, userPhoto);
+        if( _imageFile != null ) {
+          if( userRole == "trainer") {
+            await authMethods.updatePhotoURL("trainers", userID, userPhoto);
+          } else {
+            await authMethods.updatePhotoURL("customers", userID, userPhoto);
+          }
+        }
 
-        if( userPassword != "")
-          user?.updatePassword(userPassword);
+      if( userPassword != "") {
+        user?.updatePassword(userPassword);
+      }
 
+      if( userRole == "trainer" ) {
         await authMethods.updateUsername("trainers", userID, userName);
         await authMethods.updateLocation("trainers", userID, userLocation);
-        showSnackBar(context, "News added succesfully!");
+        showSnackBar(context, "Changes are succesfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
@@ -108,6 +130,18 @@ class SettingsPage extends State<Settings>{
             builder: (BuildContext context) => TrainerHome(),
           ),
         );
+      } else {
+        await authMethods.updateUsername("customers", userID, userName);
+        await authMethods.updateLocation("customers", userID, userLocation);
+        showSnackBar(context, "Changes are succesfully!");
+        Navigator.pop(context);
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => CustomerHome(),
+          ),
+        );
+      }
       } catch (e) {
         throw Exception('Error adding news to Firestore: $e');
       }
@@ -126,7 +160,20 @@ class SettingsPage extends State<Settings>{
           slivers: <Widget>[
             const MyAppBar(),
             SliverFillRemaining(
-                child: buildProfile(),
+              child: FutureBuilder<Map<String, String>>(
+                future: fetchDetails, // Replace with your actual future that builds the profile
+                builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Display a loading indicator
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Display an error message
+                  } else if (snapshot.hasData) {
+                      return buildProfile();
+                  } else {
+                    return const Text('No data available'); // Handle case when no data is available
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -147,7 +194,7 @@ class SettingsPage extends State<Settings>{
       padding: const EdgeInsets.only(left: 16, bottom: 25, right: 16),
       child: ListView(
         children: [
-          Text("Edit Profile", style: TextStyle(color: buttonTextColor, fontFamily: font1, fontSize: 20),),
+          const Text("Edit Profile", style: TextStyle(color: buttonTextColor, fontFamily: font1, fontSize: 20),),
           Center(
             child: Stack(
               children: [
@@ -166,10 +213,10 @@ class SettingsPage extends State<Settings>{
                                     spreadRadius: 2,
                                     blurRadius: 10,
                                     color: Colors.black.withOpacity(0.1),
-                                    offset: Offset(0, 10))
+                                    offset: const Offset(0, 10))
                               ],
                               shape: BoxShape.circle,
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                   fit: BoxFit.cover,
                                   image: AssetImage('assets/images/user.png'))),
                         )
@@ -185,7 +232,7 @@ class SettingsPage extends State<Settings>{
                                     spreadRadius: 2,
                                     blurRadius: 10,
                                     color: Colors.black.withOpacity(0.1),
-                                    offset: Offset(0, 10))
+                                    offset: const Offset(0, 10))
                               ],
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -253,7 +300,7 @@ class SettingsPage extends State<Settings>{
                     showPassword = !showPassword;
                   });
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.remove_red_eye,
                   color: Colors.grey,
                 ),
