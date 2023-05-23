@@ -20,6 +20,7 @@ class WorkoutList extends StatefulWidget{
 
 class WorkoutListPage extends State<WorkoutList>{
   String userName = "userName";
+  String userRole = "trainer";
   final List<Category> categories = [
     Category(
         color: primaryColor,
@@ -70,6 +71,7 @@ class WorkoutListPage extends State<WorkoutList>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
+          userRole: userRole,
           userName: userName,
           selectedSection: "Workout",
         ),

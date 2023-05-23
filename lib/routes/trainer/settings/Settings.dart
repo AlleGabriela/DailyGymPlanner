@@ -21,6 +21,7 @@ class Settings extends StatefulWidget{
 
 class SettingsPage extends State<Settings>{
   String userName = "";
+  String userRole = "trainer";
   String userEmail = "";
   String userPassword = "";
   String userPhoto = "";
@@ -117,6 +118,7 @@ class SettingsPage extends State<Settings>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
+          userRole: userRole,
           userName: userName,
           selectedSection: "Settings",
         ),
