@@ -13,62 +13,122 @@ class RiverMenu extends StatelessWidget {
   const RiverMenu({
     Key? key,
     required this.userName,
+    required this.userRole,
     this.selectedSection = 'Home',
   }) : super(key: key);
 
   final String userName;
+  final String userRole;
   final String selectedSection;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: 288,
-        height: double.infinity,
-        color: primaryColor,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              InfoCard(
-                name: userName,
-              ),
-              const Divider(),
-              SideMenuIcons(
-                selectedSection: selectedSection,
-                onHomeSelected: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TrainerHome()));
-                },
-                onClientsSelected: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ClientsList()));
-                },
-                onMealsSelected: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CategoryList()));
-                },
-                onWorkoutSelected: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WorkoutList()));
-                },
-                onTodaySelected: () {
-                  // TODO: Navigate to Today page.
-                },
-                onSettingsSelected: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Settings()));
-                },
-                onLogoutSelected: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                },
-              ),
-            ],
+    if( userRole == "trainer") {
+      return Scaffold(
+        body: Container(
+          width: 288,
+          height: double.infinity,
+          color: primaryColor,
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InfoCard(
+                  name: userName,
+                ),
+                const Divider(),
+                SideMenuIcons(
+                  userRole: userRole,
+                  selectedSection: selectedSection,
+                  onHomeSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => TrainerHome()));
+                  },
+                  onClientsSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ClientsList()));
+                  },
+                  onMealsSelected: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CategoryList()));
+                  },
+                  onWorkoutSelected: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WorkoutList()));
+                  },
+                  onTodaySelected: () {
+                    // TODO: Navigate to Today page.
+                  },
+                  onSettingsSelected: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Settings()));
+                  },
+                  onLogoutSelected: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomeScreen()));
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Scaffold(
+        body: Container(
+          width: 288,
+          height: double.infinity,
+          color: primaryColor,
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InfoCard(
+                  name: userName,
+                ),
+                const Divider(),
+                SideMenuIcons(
+                  userRole: userRole,
+                  selectedSection: selectedSection,
+                  onHomeSelected: () {
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => TrainerHome()));
+                  },
+                  onClientsSelected: () {},
+                  onMealsSelected: () {
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => CategoryList()));
+                  },
+                  onWorkoutSelected: () {
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => WorkoutList()));
+                  },
+                  onTodaySelected: () {},
+                  onSettingsSelected: () {
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => Settings()));
+                  },
+                  onLogoutSelected: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomeScreen()));
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
 
@@ -92,7 +152,7 @@ class InfoCard extends StatelessWidget{
       ),
       title: Text(
         name,
-        style: TextStyle(color: secondColor),
+        style: const TextStyle(color: secondColor),
       ),
     );
   }
@@ -101,6 +161,7 @@ class InfoCard extends StatelessWidget{
 class SideMenuIcons extends StatelessWidget {
   const SideMenuIcons({
     Key? key,
+    required this.userRole,
     required this.selectedSection,
     required this.onHomeSelected,
     required this.onClientsSelected,
@@ -111,6 +172,7 @@ class SideMenuIcons extends StatelessWidget {
     required this.onLogoutSelected,
   }) : super(key: key);
 
+  final String userRole;
   final String selectedSection;
   final VoidCallback onHomeSelected;
   final VoidCallback onClientsSelected;
@@ -122,61 +184,104 @@ class SideMenuIcons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildMenuItem(
-          context,
-          'Home',
-          Icons.home,
-          selectedSection == 'Home',
-          onHomeSelected,
-        ),
-        _buildMenuItem(
-          context,
-          'Clients',
-          Icons.people,
-          selectedSection == 'Clients',
-          onClientsSelected,
-        ),
-        _buildMenuItem(
-          context,
-          'Meals',
-          Icons.restaurant,
-          selectedSection == 'Meals',
-          onMealsSelected,
-        ),
-        _buildMenuItem(
-          context,
-          'Workout',
-          Icons.fitness_center,
-          selectedSection == 'Workout',
-          onWorkoutSelected,
-        ),
-        // TODO: Resolve this when you'll implement Today
-        // _buildMenuItem(
-        //   context,
-        //   'Today',
-        //   Icons.calendar_today,
-        //   selectedSection == 'Today',
-        //   onTodaySelected,
-        // ),
-        const Divider(color: accentColor),
-        _buildMenuItem(
-          context,
-          'Settings',
-          Icons.settings,
-          selectedSection == 'Settings',
-          onSettingsSelected,
-        ),
-        _buildMenuItem(
-          context,
-          'Logout',
-          Icons.logout,
-          selectedSection == 'Logout',
-          onLogoutSelected,
-        ),
-      ],
-    );
+    if( userRole == "trainer") {
+      return Column(
+        children: [
+          _buildMenuItem(
+            context,
+            'Home',
+            Icons.home,
+            selectedSection == 'Home',
+            onHomeSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Clients',
+            Icons.people,
+            selectedSection == 'Clients',
+            onClientsSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Meals',
+            Icons.restaurant,
+            selectedSection == 'Meals',
+            onMealsSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Workout',
+            Icons.fitness_center,
+            selectedSection == 'Workout',
+            onWorkoutSelected,
+          ),
+          // TODO: Resolve this when you'll implement Today
+          // _buildMenuItem(
+          //   context,
+          //   'Today',
+          //   Icons.calendar_today,
+          //   selectedSection == 'Today',
+          //   onTodaySelected,
+          // ),
+          const Divider(color: accentColor),
+          _buildMenuItem(
+            context,
+            'Settings',
+            Icons.settings,
+            selectedSection == 'Settings',
+            onSettingsSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Logout',
+            Icons.logout,
+            selectedSection == 'Logout',
+            onLogoutSelected,
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          _buildMenuItem(
+            context,
+            'Home',
+            Icons.home,
+            selectedSection == 'Home',
+            onHomeSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Meals',
+            Icons.restaurant,
+            selectedSection == 'Meals',
+            onMealsSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Workout',
+            Icons.fitness_center,
+            selectedSection == 'Workout',
+            onWorkoutSelected,
+          ),
+          const Divider(color: accentColor),
+          _buildMenuItem(
+            context,
+            'Settings',
+            Icons.settings,
+            selectedSection == 'Settings',
+            onSettingsSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Logout',
+            Icons.logout,
+            selectedSection == 'Logout',
+            onLogoutSelected,
+          ),
+        ],
+      );
+    }
   }
 }
 
@@ -195,7 +300,7 @@ Widget _buildMenuItem(BuildContext context, String title, IconData icon, bool is
           BoxShadow(
             color: accentColor.withOpacity(0.3),
             blurRadius: 10,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ]
             : null,

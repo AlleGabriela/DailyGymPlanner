@@ -14,8 +14,8 @@ class TrainerHome extends StatefulWidget{
 }
 
 class TrainerHomePage extends State<TrainerHome>{
-
   String userName = "userName";
+  String userRole = "trainer";
 
   @override
   void initState() {
@@ -41,6 +41,7 @@ class TrainerHomePage extends State<TrainerHome>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
+          userRole: userRole,
           userName: userName,
           selectedSection: "Home",
         ),
@@ -81,7 +82,7 @@ class TrainerHomePage extends State<TrainerHome>{
               ),
             ),
             SliverFillRemaining(
-              child: NewsList(),
+              child: NewsList(userRole: userRole),
             )
           ],
         ),
