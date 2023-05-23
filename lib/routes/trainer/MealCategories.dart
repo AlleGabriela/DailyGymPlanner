@@ -89,7 +89,7 @@ class CategoryListPage extends State<CategoryList>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            const MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverFillRemaining(
               child: Container(
                 color: accentColor,

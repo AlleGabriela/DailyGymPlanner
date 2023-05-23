@@ -47,7 +47,7 @@ class TrainerHomePage extends State<TrainerHome>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 50, // set the height of the fixed box as required

@@ -158,7 +158,7 @@ class SettingsPage extends State<Settings>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            const MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverFillRemaining(
               child: FutureBuilder<Map<String, String>>(
                 future: fetchDetails, // Replace with your actual future that builds the profile
