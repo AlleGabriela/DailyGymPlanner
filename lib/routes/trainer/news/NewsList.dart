@@ -1,21 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/trainer/news/NewsDetails.dart';
 import 'package:daily_gym_planner/util/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 
 import '../../models/ListItems.dart';
 
 class NewsList extends StatefulWidget {
-  const NewsList({super.key});
+  final String userRole;
+
+  const NewsList({super.key, required this.userRole});
 
   @override
-  _NewsListState createState() => _NewsListState();
+  _NewsListState createState() => _NewsListState(userRole);
 }
 
 class _NewsListState extends State<NewsList> {
   String userId = '';
+  String userRole = "";
   List<Widget> newsList = [];
+
+  _NewsListState(this.userRole);
 
   @override
   void initState() {
@@ -25,7 +31,18 @@ class _NewsListState extends State<NewsList> {
 
   void handleUserID() async {
     FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    userId = await authMethods.getUserId();
+    if( userRole == "trainer") {
+      userId = await authMethods.getUserId();
+    } else {
+      User? user = FirebaseAuth.instance.currentUser;
+      String? email = user?.email;
+      if (email != null) {
+        String trainer = await authMethods.getTrainer(email);
+        setState(() {
+          userId = trainer;
+        });
+      }
+    }
     handleNewsData();
     if( newsList == []) {
       throw Exception("The list is still empty!");

@@ -14,7 +14,6 @@ class TrainerHome extends StatefulWidget{
 }
 
 class TrainerHomePage extends State<TrainerHome>{
-
   String userName = "userName";
   String userRole = "trainer";
 
@@ -83,7 +82,7 @@ class TrainerHomePage extends State<TrainerHome>{
               ),
             ),
             SliverFillRemaining(
-              child: NewsList(),
+              child: NewsList(userRole: userRole),
             )
           ],
         ),

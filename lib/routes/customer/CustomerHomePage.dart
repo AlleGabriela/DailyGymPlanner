@@ -5,6 +5,7 @@ import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
+import '../trainer/news/NewsList.dart';
 
 class CustomerHome extends StatefulWidget{
   CustomerHomePage createState() => CustomerHomePage();
@@ -124,6 +125,9 @@ class CustomerHomePage extends State<CustomerHome> {
                 ),
               ),
             ),
+            SliverFillRemaining(
+              child: NewsList(userRole: userRole),
+            )
           ],
         ),
       ),
