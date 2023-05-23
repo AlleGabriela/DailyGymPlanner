@@ -196,6 +196,46 @@ class FirebaseAuthMethods {
     return photo;
   }
 
+  Future<String> getTrainer(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String trainer;
+    if (customerSnapshot.exists) {
+      // User exists in the "customers" table
+      trainer = customerSnapshot.get('trainer');
+    } else {
+      // User does not exist in either table
+      throw Exception('User does not exist');
+    }
+    return trainer;
+  }
+
+  Future<String> getTrainerDetails(String id, String infoType) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('trainers')
+        .doc(id)
+        .get();
+
+    String info;
+    if (adminSnapshot.exists) {
+      info = adminSnapshot.get(infoType);
+    } else {
+      throw Exception('User does not exist');
+    }
+    return info;
+  }
+
   Future<void> handlePassReset({
     required String email,
     required BuildContext context,
