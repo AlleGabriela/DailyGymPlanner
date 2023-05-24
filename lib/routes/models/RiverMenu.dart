@@ -7,6 +7,7 @@ import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../customer/CustomerWorkoutPage.dart';
 import '../trainer/MealCategories.dart';
 import '../trainer/settings/Settings.dart';
 
@@ -109,13 +110,13 @@ class RiverMenu extends StatelessWidget {
                     //     MaterialPageRoute(builder: (context) => CategoryList()));
                   },
                   onWorkoutSelected: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => WorkoutList()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CustomerWorkout()));
                   },
                   onTodaySelected: () {},
                   onSettingsSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Settings(userRole: "customer")));
+                        MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
                   },
                   onLogoutSelected: () {
                     Navigator.push(
