@@ -65,7 +65,7 @@ class CustomerHomePage extends State<CustomerHome> {
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverToBoxAdapter(
               child: FutureBuilder<Map<String, String>>(
                 future: fetchDetails,
