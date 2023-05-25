@@ -13,15 +13,12 @@ class NewsList extends StatefulWidget {
   const NewsList({super.key, required this.userRole});
 
   @override
-  _NewsListState createState() => _NewsListState(userRole);
+  State<NewsList> createState() => _NewsListState();
 }
 
 class _NewsListState extends State<NewsList> {
   String userId = '';
-  String userRole = "";
   List<Widget> newsList = [];
-
-  _NewsListState(this.userRole);
 
   @override
   void initState() {
@@ -31,7 +28,7 @@ class _NewsListState extends State<NewsList> {
 
   void handleUserID() async {
     FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    if( userRole == "trainer") {
+    if(widget.userRole == "trainer") {
       userId = await authMethods.getUserId();
     } else {
       User? user = FirebaseAuth.instance.currentUser;
@@ -66,7 +63,7 @@ class _NewsListState extends State<NewsList> {
         if( title == '' || imageUrl == '' || description == '') {
           throw Exception("The news cannot pe accessed!");
         }
-        if( userRole == "trainer") {
+        if(widget.userRole == "trainer") {
           return Dismissible(
             key: Key(doc.id),
             direction: DismissDirection.endToStart,

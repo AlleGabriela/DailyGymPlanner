@@ -176,6 +176,7 @@ class _MealListState extends State<MealList> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => MealPlans(
+                        userID: userId,
                         categoryName: widget.categoryName,
                         title: name,
                         imageUrl: imageUrl,

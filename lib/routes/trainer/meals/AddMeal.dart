@@ -25,7 +25,7 @@ class AddMealPage extends StatefulWidget {
   const AddMealPage({Key? key}) : super(key: key);
 
   @override
-  _AddMealPageState createState() => _AddMealPageState();
+  State<AddMealPage> createState() => _AddMealPageState();
 }
 
 class _AddMealPageState extends State<AddMealPage> {
@@ -226,7 +226,7 @@ class _AddMealPageState extends State<AddMealPage> {
           listOneDayPlan.add(docSnapshot.get('name'));
         }
       },
-      onError: (e) => print("Error completing: $e"),
+      onError: (e) => Exception("Error completing: $e"),
     );
   }
 
@@ -316,7 +316,7 @@ class _AddMealPageState extends State<AddMealPage> {
               height: 200,
               width: 400,
               color: Colors.grey[300],
-              child: Icon(Icons.add_a_photo),
+              child: const Icon(Icons.add_a_photo),
             )
                 : Container(
               height: 200,
@@ -328,7 +328,7 @@ class _AddMealPageState extends State<AddMealPage> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
             decoration: addPageInputStyle("Description"),
             cursorColor: inputDecorationColor,
@@ -382,7 +382,7 @@ class _AddMealPageState extends State<AddMealPage> {
                 backgroundColor: mealButtonColor
             ),
             onPressed: _submitMeal,
-            child: Text('Save meal'),
+            child: const Text('Save meal'),
           ),
           const SizedBox(height: 16),
         ]

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../services/MealServices.dart';
 import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
@@ -46,76 +45,6 @@ class _CustomerMealPage extends State<CustomerMeal> {
     }
   }
 
-  // Future<Container> buildMealContainer(doc) async{
-  //   String mealName = '';
-  //   String mealImageUrl = '';
-  //   String mealDescription = '';
-  //   double mealTimeInHours = 0;
-  //   double mealTimeInMinutes = 0;
-  //   IconData? mealIcon;
-  //   Color? mealIconColor;
-  //   String mealID = "";
-  //
-  //   await doc.get().then( (DocumentSnapshot doc) {
-  //     final data = doc.data() as Map<String, dynamic>;
-  //     mealName = data['name'];
-  //     mealImageUrl = data['imageUrl'];
-  //     mealDescription = data['description'];
-  //     mealTimeInHours = data['timeInHours'];
-  //     mealTimeInMinutes = data['timeInMinutes'];
-  //     mealID = doc.id;
-  //   },
-  //     onError: (e) => print("Error getting document: $e"),
-  //   );
-  //   if( mealName == '' || mealImageUrl == '' || mealDescription == '') {
-  //     throw Exception("The meal cannot pe accessed!");
-  //   }
-  //
-  //   Future<bool> checkCategory(String category) async {
-  //     var a = await db.collection('trainers/$userID/meals/meal/$category').doc(mealID).get();
-  //     if (a.exists) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  //   if (await checkCategory("Breakfast")) {
-  //     mealIcon = Icons.breakfast_dining;
-  //     mealIconColor = Colors.greenAccent.shade400;
-  //   } else if (await checkCategory("Lunch"))  {
-  //     mealIconColor = Colors.redAccent.shade400;
-  //     mealIcon = Icons.soup_kitchen;
-  //   } else if (await checkCategory("Dinner"))  {
-  //     mealIconColor = Colors.teal.shade700;
-  //     mealIcon = Icons.dinner_dining;
-  //   } else {
-  //     mealIconColor = Colors.purple;
-  //     mealIcon = Icons.bakery_dining;
-  //   }
-  //
-  //   return Container(
-  //       margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
-  //       height: 180,
-  //       child: GestureDetector(
-  //         onTap: () {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => MealDetails(
-  //                 title: mealName,
-  //                 imageUrl: mealImageUrl,
-  //                 description: mealDescription,
-  //                 timeInHours: mealTimeInHours,
-  //                 timeInMinutes: mealTimeInMinutes,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //         child: listItems(mealName, mealImageUrl, mealIcon, mealIconColor),
-  //       )
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -151,6 +80,7 @@ class _CustomerMealPage extends State<CustomerMeal> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MealPlans(
+                                        userID: trainerID,
                                         title: snapshot.data![index],
                                         description: '',
                                         categoryName: "Full Day Meal",
@@ -169,8 +99,8 @@ class _CustomerMealPage extends State<CustomerMeal> {
                     return Text(
                         'Error: ${snapshot.error}',
                         style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
+                          color: primaryColor,
+                          fontSize: questionSize,
                         ),
                       );
                   } else {
