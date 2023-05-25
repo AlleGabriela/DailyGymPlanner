@@ -1,9 +1,12 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
 
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+import '../trainer/settings/Settings.dart';
 
-  const MyAppBar({Key? key}) : super(key: key);
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String userRole;
+
+  const MyAppBar({Key? key, required this.userRole}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             backgroundImage: AssetImage('assets/images/user.png'),
           ),
           onPressed: () {
-            //TODO: Add your user photo onPressed logic here
+            if( userRole == "trainer") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Settings(userRole: "trainer")));
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Settings(userRole: "customer")));
+            }
           },
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
@@ -67,7 +68,7 @@ class RiverMenu extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Settings()));
+                            builder: (context) => const Settings(userRole: "trainer")));
                   },
                   onLogoutSelected: () {
                     Navigator.push(
@@ -99,8 +100,8 @@ class RiverMenu extends StatelessWidget {
                   userRole: userRole,
                   selectedSection: selectedSection,
                   onHomeSelected: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => TrainerHome()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CustomerHome()));
                   },
                   onClientsSelected: () {},
                   onMealsSelected: () {
@@ -113,8 +114,8 @@ class RiverMenu extends StatelessWidget {
                   },
                   onTodaySelected: () {},
                   onSettingsSelected: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => Settings()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Settings(userRole: "customer")));
                   },
                   onLogoutSelected: () {
                     Navigator.push(

@@ -77,7 +77,7 @@ class WorkoutListPage extends State<WorkoutList>{
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            const MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverFillRemaining(
               child: Container(
                 color: accentColor,

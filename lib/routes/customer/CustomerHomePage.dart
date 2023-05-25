@@ -1,3 +1,4 @@
+import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class CustomerHomePage extends State<CustomerHome> {
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(),
+            MyAppBar(userRole: userRole),
             SliverToBoxAdapter(
               child: FutureBuilder<Map<String, String>>(
                 future: fetchDetails,
@@ -124,69 +125,7 @@ class CustomerHomePage extends State<CustomerHome> {
                     final trainerLocation = data['trainerLocation'];
                     final trainerPhoto = data['trainerPhoto'];
 
-                    return Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.all(20),
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: lightLila,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: NetworkImage(trainerPhoto!),
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Name: $trainerName",
-                                  style: TextStyle(
-                                    color: buttonTextColor,
-                                    fontSize: questionSize,
-                                    fontFamily: font2,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  "E-mail: $trainerEmail",
-                                  style: TextStyle(
-                                    color: buttonTextColor,
-                                    fontSize: questionSize,
-                                    fontFamily: font2,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  "Location: $trainerLocation",
-                                  style: TextStyle(
-                                    color: buttonTextColor,
-                                    fontSize: questionSize,
-                                    fontFamily: font2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return listClientsAndTrainer(trainerPhoto!, trainerName!, trainerEmail!, trainerLocation!);
                   } else {
                     return Container(
                       alignment: Alignment.center,

@@ -18,14 +18,14 @@ class AddClientPage extends StatefulWidget {
   const AddClientPage({Key? key}) : super(key: key);
 
   @override
-  AddClientPageState createState() => AddClientPageState();
+  State<AddClientPage> createState() => _AddClientPageState();
 }
 
-class AddClientPageState extends State<AddClientPage> {
+class _AddClientPageState extends State<AddClientPage> {
   final formKey = GlobalKey<FormState>();
   String email = '';
-  String workoutPlan = '';
-  String mealPlan = '';
+  String workoutPlan = 'None';
+  String mealPlan = 'None';
 
   late Future<List<String>> fetchWorkouts;
   late Future<List<String>> fetchMeals;
@@ -52,6 +52,8 @@ class AddClientPageState extends State<AddClientPage> {
 
       if (!(await authMethods.doesUserExist(email) && (await authMethods.getRole(email)) == "Customer")) {
         showSnackBar(context, 'Customer with email address $email does not exist');
+      } else if (await trainerHasThisClient(email, userID)) {
+        showSnackBar(context, 'You have already added this customer');
       } else {
         final client = Client(
           userID,
@@ -92,7 +94,7 @@ class AddClientPageState extends State<AddClientPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 32),
-              Text(
+              const Text(
                   "Email",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -103,11 +105,11 @@ class AddClientPageState extends State<AddClientPage> {
               ),
               TextFormField(
                 decoration: //addPageInputStyle(""),
-                InputDecoration(
+                const InputDecoration(
                   prefixIcon: Icon(Icons.email),
                   prefixIconColor: primaryColor ,
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: const BorderSide(color: primaryColor, width: 1),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: primaryColor, width: 1),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.purple, width: 1),
@@ -129,7 +131,7 @@ class AddClientPageState extends State<AddClientPage> {
               FutureBuilder<List<String>>(
                 future: fetchWorkouts,
                 builder: (context, snapshot) {
-                  listWorkoutPlans = ['Choose plan:'];
+                  listWorkoutPlans = ['None'];
                   var snapData = snapshot.data;
                   if (snapData != null) {
                     listWorkoutPlans += snapData;
@@ -145,7 +147,7 @@ class AddClientPageState extends State<AddClientPage> {
               FutureBuilder<List<String>>(
                 future: fetchMeals,
                 builder: (context, snapshot) {
-                  listMealPlans = ['Choose plan:'];
+                  listMealPlans = ['None'];
                   var snapData = snapshot.data;
                   if (snapData != null) {
                     listMealPlans += snapData;
@@ -196,19 +198,19 @@ class AddClientPageState extends State<AddClientPage> {
           style: TextStyle(color: Colors.grey.shade800, fontFamily: font1),
           decoration: InputDecoration(
             prefixIcon: Icon(icon),
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             prefixIconColor: primaryColor ,
             enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: primaryColor, width: 1),
+              borderSide: BorderSide(color: primaryColor, width: 1),
             ),
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.purple, width: 1),
             ),
           ),
           dropdownColor: dropdownFieldColor,
           value: itemChoose,
           validator: (value) {
-            if (value == null || value == "Choose plan:") {
+            if (value == null) {
               showSnackBar( context, 'Please choose ${title.toLowerCase()}.');
             }
             return null;

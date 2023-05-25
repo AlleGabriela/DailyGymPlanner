@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../util/constants.dart';
+
 Stack listItems(String title, String imageUrl, IconData icon, Color iconColor) {
   return Stack(
     children: [
@@ -200,5 +202,71 @@ Stack listItemsWithoutImage(String title, IconData icon, Color iconColor) {
         ),
       )
     ],
+  );
+}
+
+Container listClientsAndTrainer(String photo, String name, String email, String location) {
+  return Container(
+    alignment: Alignment.center,
+    margin: const EdgeInsets.all(15),
+    height: 150,
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: lightLila,
+      borderRadius: BorderRadius.circular(30),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CircleAvatar(
+            radius: 60,
+            backgroundImage: (photo == '') ? const AssetImage('assets/images/user.png') as ImageProvider : NetworkImage(photo),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Name: $name",
+                style: const TextStyle(
+                  color: buttonTextColor,
+                  fontSize: questionSize,
+                  fontFamily: font2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "E-mail: $email",
+                style: const TextStyle(
+                  color: buttonTextColor,
+                  fontSize: questionSize,
+                  fontFamily: font2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Location: $location",
+                style: const TextStyle(
+                  color: buttonTextColor,
+                  fontSize: questionSize,
+                  fontFamily: font2,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
   );
 }
