@@ -16,7 +16,7 @@ class CustomerWorkout extends StatefulWidget{
 }
 
 class CustomerWorkoutPage extends State<CustomerWorkout> {
-  String userID = "userName";
+  String trainerID = "";
   String userName = "userName";
   String userRole = "customer";
   String customerWorkoutName = "";
@@ -34,17 +34,18 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
-      String idUser = await authService.getUserId();
       String name = await authService.getName(email);
+      String trainer = await authService.getTrainer(email);
       String workout = await authService.getWorkoutPlan(email);
       String workoutName = await getWorkoutPlanName(workout);
       setState(() {
-        userID = idUser;
+        trainerID = trainer;
         userName = name;
         customerWorkoutName = workoutName;
       });
       return {
         'userName': name,
+        'trainerID': trainer,
         'workoutPlan': workout,
         'workoutPlanName': workoutName
       };
@@ -71,7 +72,7 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => WorkoutPlansDayWeek(
-                        userID: userID,
+                        userID: trainerID,
                         categoryName: "One Week Workout Plan",
                         title: customerWorkoutName,
                         icon: Icons.fitness_center,
@@ -103,7 +104,7 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

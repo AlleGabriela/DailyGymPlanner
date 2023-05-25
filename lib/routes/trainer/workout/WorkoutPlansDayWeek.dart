@@ -20,6 +20,7 @@ class WorkoutPlansDayWeek extends StatefulWidget{
 
 class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
   String userName = "userName";
+  String currentUserID = "";
 
   List workouts = [];
   List<Widget> fullWorkout = [];
