@@ -49,4 +49,18 @@ Future<List<String>> getExercisesName(String category, String subcategory) async
   return exercisesNames;
 }
 
+Future<List<String>> getWorkoutPlans(userID) async {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  List<String> listWorkoutPlans = [];
 
+  await db.collection("trainers/$userID/workouts/One Week Workout Plan/One Week Workout Plan").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        listWorkoutPlans.add(docSnapshot.get('name'));
+      }
+    },
+    onError: (e) => Exception("Error completing: $e"),
+  );
+
+  return listWorkoutPlans;
+}

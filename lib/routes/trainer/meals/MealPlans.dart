@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/services/MealServices.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth_methods.dart';
-import '../../util/constants.dart';
-import '../models/ListItems.dart';
-import '../models/MealDetails.dart';
+import '../../../services/auth_methods.dart';
+import '../../../util/constants.dart';
+import '../../models/ListItems.dart';
+import 'MealDetails.dart';
 
 class MealPlans extends StatefulWidget {
   final String categoryName;

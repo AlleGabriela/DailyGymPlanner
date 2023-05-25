@@ -87,3 +87,40 @@ Future<List> getOneDayWorkoutsFromOneWeekPlan (String title, String userID) asyn
   }
   return workouts;
 }
+
+Future<String> getOneWeekWorkoutPlanPath(String selectedWorkoutPlan, String trainerID) async{
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  String oneWeekWorkoutPlanID = "";
+
+  if (selectedWorkoutPlan == "None") {
+    return "";
+  } else {
+    await db.collection("trainers/$trainerID/workouts/One Week Workout Plan/One Week Workout Plan").get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.get('name') == selectedWorkoutPlan) {
+            oneWeekWorkoutPlanID = docSnapshot.id;
+            break;
+          }
+        }
+      },
+      onError: (e) => Exception("Error getting one week workout plan path: $e"),
+    );
+    return "trainers/$trainerID/workouts/One Week Workout Plan/One Week Workout Plan/$oneWeekWorkoutPlanID";
+  }
+}
+
+Future<String> getWorkoutPlanName(workoutPlanPath) async{
+  String workoutPlan = "None";
+
+  if (workoutPlanPath != '') {
+    DocumentReference docRef = FirebaseFirestore.instance.doc(workoutPlanPath);
+    await docRef.get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        workoutPlan = documentSnapshot['name'];
+      }
+    });
+  }
+  return workoutPlan;
+}

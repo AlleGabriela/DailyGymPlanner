@@ -1,12 +1,12 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
 import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
-import 'package:daily_gym_planner/routes/trainer/AddMeal.dart';
+import 'package:daily_gym_planner/routes/trainer/meals/AddMeal.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../util/constants.dart';
+import '../../../util/constants.dart';
 import 'MealList.dart';
 
 class CategoryList extends StatefulWidget{
