@@ -9,10 +9,13 @@ import '../models/RiverMenu.dart';
 import '../trainer/news/NewsList.dart';
 
 class CustomerHome extends StatefulWidget{
-  CustomerHomePage createState() => CustomerHomePage();
+  const CustomerHome({super.key});
+
+  @override
+  State<CustomerHome> createState() => _CustomerHomePage();
 }
 
-class CustomerHomePage extends State<CustomerHome> {
+class _CustomerHomePage extends State<CustomerHome> {
   String userName = "userName";
   String userRole = "customer";
   String trainerID = "";
@@ -36,16 +39,22 @@ class CustomerHomePage extends State<CustomerHome> {
     if (email != null) {
       String name = await _authService.getName(email);
       String trainer = await _authService.getTrainer(email);
-      String emailTrainer = await _authService.getTrainerDetails(trainer, "email");
-      String nameTrainer = await _authService.getTrainerDetails(trainer, "name");
-      String locationTrainer = await _authService.getTrainerDetails(trainer, "location");
-      String photoTrainer = await _authService.getTrainerDetails(trainer, "photo");
+      String emailTrainer = '';
+      String nameTrainer = '';
+      String locationTrainer = '';
+      String photoTrainer = '';
+      if (trainer != '') {
+        emailTrainer = await _authService.getTrainerDetails(trainer, "email");
+        nameTrainer = await _authService.getTrainerDetails(trainer, "name");
+        locationTrainer = await _authService.getTrainerDetails(trainer, "location");
+        photoTrainer = await _authService.getTrainerDetails(trainer, "photo");
+      }
       setState(() {
         userName = name;
+        trainerID = trainer;
       });
       return {
         'userName': name,
-        'trainerID': trainer,
         'trainerName': nameTrainer,
         'trainerEmail': emailTrainer,
         'trainerLocation': locationTrainer,
@@ -125,7 +134,11 @@ class CustomerHomePage extends State<CustomerHome> {
                     final trainerLocation = data['trainerLocation'];
                     final trainerPhoto = data['trainerPhoto'];
 
-                    return listClientsAndTrainer(trainerPhoto!, trainerName!, trainerEmail!, trainerLocation!);
+                    if (trainerID != '') {
+                      return listClientsAndTrainer(trainerPhoto!, trainerName!, trainerEmail!, trainerLocation!);
+                    } else {
+                     return Container();
+                    }
                   } else {
                     return Container(
                       alignment: Alignment.center,
@@ -158,7 +171,7 @@ class CustomerHomePage extends State<CustomerHome> {
               ),
             ),
             SliverFillRemaining(
-              child: NewsList(userRole: userRole),
+              child: trainerID!='' ? NewsList(userRole: userRole) : Container(),
             )
           ],
         ),

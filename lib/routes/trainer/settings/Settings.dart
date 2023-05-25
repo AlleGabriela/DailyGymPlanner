@@ -164,7 +164,9 @@ class SettingsPage extends State<Settings>{
                 future: fetchDetails, // Replace with your actual future that builds the profile
                 builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(); // Display a loading indicator
+                    return const CircularProgressIndicator(
+                      valueColor:AlwaysStoppedAnimation<Color>(primaryColor),
+                    ); // Display a loading indicator
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}'); // Display an error message
                   } else if (snapshot.hasData) {
@@ -188,6 +190,7 @@ class SettingsPage extends State<Settings>{
       imageShowed = NetworkImage(userPhoto);
     } else {
       imageShowed = FileImage(_imageFile!);
+      userPhoto = 'photo';
     }
 
     return Container(
@@ -200,7 +203,7 @@ class SettingsPage extends State<Settings>{
               children: [
                 InkWell(
                   onLongPress: () {  _pickImage(); },
-                  child: userPhoto == null
+                  child: userPhoto == ""
                       ? Container(
                           width: 160,
                           height: 160,
