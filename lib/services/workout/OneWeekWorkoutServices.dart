@@ -42,7 +42,7 @@ class OneWeekWorkoutPlan {
         'createdAt': DateTime.now().toUtc()});
 
     } catch (e) {
-      throw Exception('One Week Meal Plan cannot be added to firebase: $e');
+      throw Exception('One Week Workout Plan cannot be added to firebase: $e');
     }
   }
 }

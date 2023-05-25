@@ -225,6 +225,25 @@ class FirebaseAuthMethods {
     return photo;
   }
 
+  Future<String> getWorkoutPlan(String email) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User does not exist!');
+    }
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user.uid)
+        .get();
+
+    String plan;
+    if (customerSnapshot.exists) {
+      plan = customerSnapshot.get('workoutPlan');
+    } else {
+      throw Exception('User does not exist');
+    }
+    return plan;
+  }
+
   Future<String> getTrainer(String email) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {

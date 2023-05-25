@@ -19,6 +19,7 @@ class WorkoutList extends StatefulWidget{
 }
 
 class WorkoutListPage extends State<WorkoutList>{
+  String userID = "";
   String userName = "userName";
   String userRole = "trainer";
   final List<Category> categories = [
@@ -55,12 +56,14 @@ class WorkoutListPage extends State<WorkoutList>{
   }
 
   Future<void> _getUserDetails() async {
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    FirebaseAuthMethods authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
+    String userId = await authService.getUserId();
     if (email != null) {
-      String name = await _authService.getName(email) ;
+      String name = await authService.getName(email) ;
       setState(() {
+        userID = userId;
         userName = name;
       });
     }
@@ -102,7 +105,7 @@ class WorkoutListPage extends State<WorkoutList>{
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => AddWorkoutPage(),
+                                          builder: (context) => const AddWorkoutPage(),
                                         ),
                                       );
                                     },
@@ -124,7 +127,7 @@ class WorkoutListPage extends State<WorkoutList>{
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => CategoryList(categoryName: categories[index].name, icon: categories[index].icon, iconColor: categories[index].color),
+                                          builder: (context) => CategoryList(userID: userID, categoryName: categories[index].name, icon: categories[index].icon, iconColor: categories[index].color),
                                         ),
                                       );
                                     },

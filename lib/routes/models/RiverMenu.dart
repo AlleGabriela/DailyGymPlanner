@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../trainer/meals/MealCategories.dart';
+import '../customer/CustomerWorkoutPage.dart';
 import '../trainer/settings/Settings.dart';
 
 class RiverMenu extends StatelessWidget {
@@ -47,7 +48,7 @@ class RiverMenu extends StatelessWidget {
                   },
                   onClientsSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ClientsList()));
+                        MaterialPageRoute(builder: (context) => const ClientsList()));
                   },
                   onMealsSelected: () {
                     Navigator.push(
@@ -109,13 +110,13 @@ class RiverMenu extends StatelessWidget {
                     //     MaterialPageRoute(builder: (context) => CategoryList()));
                   },
                   onWorkoutSelected: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => WorkoutList()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const CustomerWorkout()));
                   },
                   onTodaySelected: () {},
                   onSettingsSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Settings(userRole: "customer")));
+                        MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
                   },
                   onLogoutSelected: () {
                     Navigator.push(
