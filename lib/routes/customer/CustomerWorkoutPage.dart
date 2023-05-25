@@ -2,8 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth_methods.dart';
+import '../../services/workout/OneWeekWorkoutServices.dart';
+import '../../util/constants.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
+import '../trainer/Workout/WorkoutPlansDayWeek.dart';
 
 class CustomerWorkout extends StatefulWidget{
   const CustomerWorkout({super.key});
@@ -13,9 +16,10 @@ class CustomerWorkout extends StatefulWidget{
 }
 
 class CustomerWorkoutPage extends State<CustomerWorkout> {
+  String userID = "userName";
   String userName = "userName";
   String userRole = "customer";
-  String customerWorkout = "";
+  String customerWorkoutName = "";
 
   late Future<Map<String, String>> fetchDetails;
 
@@ -30,14 +34,19 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
+      String idUser = await authService.getUserId();
       String name = await authService.getName(email);
       String workout = await authService.getWorkoutPlan(email);
+      String workoutName = await getWorkoutPlanName(workout);
       setState(() {
+        userID = idUser;
         userName = name;
+        customerWorkoutName = workoutName;
       });
       return {
         'userName': name,
         'workoutPlan': workout,
+        'workoutPlanName': workoutName
       };
     }
     return {}; // Return an empty map if no user details are available
@@ -55,11 +64,45 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
         body: CustomScrollView(
           slivers: <Widget>[
             MyAppBar(userRole: userRole),
-            const SliverFillRemaining(
-              // child: WorkoutPlansDayWeek(categoryName: "One Week Workout",
-              //   title: planName,
-              //   icon: Icons.fitness_center,
-              //   iconColor: primaryColor),
+            SliverToBoxAdapter(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WorkoutPlansDayWeek(
+                        userID: userID,
+                        categoryName: "One Week Workout Plan",
+                        title: customerWorkoutName,
+                        icon: Icons.fitness_center,
+                        iconColor: primaryColor,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(20),
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: lightLila,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    "Tap to see the workout days",
+                    style: TextStyle(fontSize: 20, color: Colors.black87, fontFamily: font1),
+                  ),
+                ),
+              ),
             )
           ],
         ),

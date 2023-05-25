@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/models/ListItems.dart';
-import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import 'GroupExerciseDetails.dart';
 
 class GroupOfExercise extends StatefulWidget{
+  final String userID;
   final String categoryName;
   final String subcategoryName;
 
-  const GroupOfExercise({super.key, required this.categoryName, required this.subcategoryName});
+  const GroupOfExercise({super.key, required this.userID, required this.categoryName, required this.subcategoryName});
 
   @override
   GroupOfExercisePage createState() => GroupOfExercisePage();
@@ -23,24 +23,18 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
   @override
   void initState() {
     super.initState();
-    handleUserID();
-  }
-
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    String userId = await authMethods.getUserId();
-    getSubcategoryItems(userId);
+    getSubcategoryItems();
     if( exerciseList == []) {
       throw Exception("The list is still empty!");
     }
   }
 
-  void getSubcategoryItems(String userId) async {
+  void getSubcategoryItems() async {
     QuerySnapshot<Map<String, dynamic>> snapshot;
 
     snapshot = await FirebaseFirestore.instance
         .collection("trainers")
-        .doc(userId)
+        .doc(widget.userID)
         .collection("workouts")
         .doc(widget.categoryName)
         .collection(widget.subcategoryName)
@@ -74,7 +68,7 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
           onDismissed: (direction) async {
             await FirebaseFirestore.instance
                 .collection("trainers")
-                .doc(userId)
+                .doc(widget.userID)
                 .collection("workouts")
                 .doc(widget.categoryName)
                 .collection(widget.subcategoryName)
@@ -101,6 +95,7 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
             context,
             MaterialPageRoute(
               builder: (context) => GroupExerciseDetails(
+                userID: widget.userID,
                 categoryName: categoryName,
                 subcategoryName: subcategoryName,
                 title: name

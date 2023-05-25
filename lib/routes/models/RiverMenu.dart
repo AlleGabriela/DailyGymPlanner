@@ -48,7 +48,7 @@ class RiverMenu extends StatelessWidget {
                   },
                   onClientsSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ClientsList()));
+                        MaterialPageRoute(builder: (context) => const ClientsList()));
                   },
                   onMealsSelected: () {
                     Navigator.push(
@@ -111,7 +111,7 @@ class RiverMenu extends StatelessWidget {
                   },
                   onWorkoutSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CustomerWorkout()));
+                        MaterialPageRoute(builder: (context) => const CustomerWorkout()));
                   },
                   onTodaySelected: () {},
                   onSettingsSelected: () {

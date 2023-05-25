@@ -1,14 +1,14 @@
-import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../services/workout/MuscleGroupExerciseServices.dart';
 import '../../../util/constants.dart';
 
 class GroupExerciseDetails extends StatefulWidget{
+  final String userID;
   final String categoryName;
   final String subcategoryName;
   final String title;
 
-  const GroupExerciseDetails({super.key, required this.categoryName, required this.subcategoryName, required this.title});
+  const GroupExerciseDetails({super.key, required this.userID, required this.categoryName, required this.subcategoryName, required this.title});
 
   @override
   GroupExerciseDetailsPage createState() => GroupExerciseDetailsPage();
@@ -23,20 +23,14 @@ class GroupExerciseDetailsPage extends State<GroupExerciseDetails>{
   @override
   void initState() {
     super.initState();
-    handleUserID();
-  }
-
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    String userId = await authMethods.getUserId();
-    getSubcategoryItems(userId);
+    getSubcategoryItems();
     if( exerciseList == []) {
       throw Exception("The list is still empty!");
     }
   }
 
-  void getSubcategoryItems(String userId) async {
-    exercises = await getExerciseFromOneMuscleGroup(widget.title, userId, widget.categoryName, widget.subcategoryName);
+  void getSubcategoryItems() async {
+    exercises = await getExerciseFromOneMuscleGroup(widget.title, widget.userID, widget.categoryName, widget.subcategoryName);
     if (exercises.isNotEmpty) {
       int index = 1;
       exerciseList = [for (final exercise in exercises) await buildGroupOfExerciseList(exercise, index++)];

@@ -1,45 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import 'GroupOfExercise.dart';
 
 class SubcategoryExercise extends StatefulWidget{
+  final String userID;
   final String categoryName;
   final String subcategoryName;
 
-  const SubcategoryExercise({super.key, required this.categoryName, required this.subcategoryName});
+  const SubcategoryExercise({super.key, required this.userID, required this.categoryName, required this.subcategoryName});
 
   @override
-  SubcategoryExercisePage createState() => SubcategoryExercisePage(categoryName, subcategoryName);
+  SubcategoryExercisePage createState() => SubcategoryExercisePage(userID, categoryName, subcategoryName);
 }
 
 class SubcategoryExercisePage extends State<SubcategoryExercise>{
   String userName = "userName";
   String categoryName = "";
   String subcategoryName = "";
+  String userID = "";
 
   List exercises = [];
   List<Widget> exerciseList = [];
 
-  SubcategoryExercisePage(this.categoryName, this.subcategoryName);
+  SubcategoryExercisePage(this.userID, this.categoryName, this.subcategoryName);
 
   @override
   void initState() {
     super.initState();
-    handleUserID();
-  }
-
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    String userId = await authMethods.getUserId();
-    getSubcategoryItems(userId);
+    userID = widget.userID;
+    getSubcategoryItems();
     if( exerciseList == []) {
       throw Exception("The list is still empty!");
     }
   }
 
-  void getSubcategoryItems(String userId) async {
+  void getSubcategoryItems() async {
     QuerySnapshot<Map<String, dynamic>> snapshot;
     if (categoryName == "Upper Body Workouts") {
       categoryName = "Upper Body";
@@ -48,7 +44,7 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
     }
     snapshot = await FirebaseFirestore.instance
         .collection("trainers")
-        .doc(userId)
+        .doc(userID)
         .collection("workouts")
         .doc(categoryName)
         .collection(subcategoryName)
@@ -84,7 +80,7 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
           onDismissed: (direction) async {
             await FirebaseFirestore.instance
                 .collection("trainers")
-                .doc(userId)
+                .doc(userID)
                 .collection("workouts")
                 .doc(categoryName)
                 .collection(subcategoryName)
@@ -143,6 +139,7 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
                     context,
                     MaterialPageRoute(
                       builder: (context) => GroupOfExercise(
+                        userID: userID,
                         categoryName: categoryName,
                         subcategoryName: subcategoryName,
                       ),

@@ -9,10 +9,11 @@ import 'SubcategoryExercise.dart';
 import 'WorkoutPlansDayWeek.dart';
 
 class CategoryList extends StatefulWidget{
+  final String userID;
   final String categoryName;
   final IconData icon;
   final Color iconColor;
-  const CategoryList({super.key, required this.categoryName, required this.icon, required this.iconColor});
+  const CategoryList({super.key, required this.userID, required this.categoryName, required this.icon, required this.iconColor});
 
   @override
   CategoryListPage createState() => CategoryListPage();
@@ -28,7 +29,10 @@ class CategoryListPage extends State<CategoryList>{
   void initState() {
     super.initState();
     _getUserDetails();
-    handleUserID();
+    chooseSubcategory();
+    if( subcategories == [] && fullWorkout == []) {
+      throw Exception("The list is still empty!");
+    }
   }
 
   Future<void> _getUserDetails() async {
@@ -43,16 +47,7 @@ class CategoryListPage extends State<CategoryList>{
     }
   }
 
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    String userId = await authMethods.getUserId();
-    chooseSubcategory(userId);
-    if( subcategories == [] && fullWorkout == []) {
-      throw Exception("The list is still empty!");
-    }
-  }
-
-  void chooseSubcategory(String userId) async{
+  void chooseSubcategory() async{
     List<Category> subcategoryUpperBody = [
       Category(
           color: primaryColor,
@@ -135,7 +130,7 @@ class CategoryListPage extends State<CategoryList>{
     else if( widget.categoryName == "One Day Workout") {
       snapshot = await FirebaseFirestore.instance
           .collection("trainers")
-          .doc(userId)
+          .doc(widget.userID)
           .collection("workouts")
           .doc("One Day Workouts")
           .collection("All One Day Workouts")
@@ -167,7 +162,7 @@ class CategoryListPage extends State<CategoryList>{
               onDismissed: (direction) async {
                   await FirebaseFirestore.instance
                       .collection("trainers")
-                      .doc(userId)
+                      .doc(widget.userID)
                       .collection("workouts")
                       .doc("One Day Workouts")
                       .collection("All One Day Workouts")
@@ -183,7 +178,7 @@ class CategoryListPage extends State<CategoryList>{
     else if( widget.categoryName == "One Week Workout Plan") {
       snapshot = await FirebaseFirestore.instance
           .collection("trainers")
-          .doc(userId)
+          .doc(widget.userID)
           .collection("workouts")
           .doc("One Week Workout Plan")
           .collection("One Week Workout Plan")
@@ -215,7 +210,7 @@ class CategoryListPage extends State<CategoryList>{
               onDismissed: (direction) async {
                 await FirebaseFirestore.instance
                     .collection("trainers")
-                    .doc(userId)
+                    .doc(widget.userID)
                     .collection("workouts")
                     .doc("One Week Workout Plan")
                     .collection("One Week Workout Plan")
@@ -304,6 +299,7 @@ class CategoryListPage extends State<CategoryList>{
                     context,
                     MaterialPageRoute(
                       builder: (context) => SubcategoryExercise(
+                        userID: widget.userID,
                         categoryName: categoryName,
                         subcategoryName: subcategories[index].name,
                       ),
@@ -326,6 +322,7 @@ class CategoryListPage extends State<CategoryList>{
               context,
               MaterialPageRoute(
                 builder: (context) => WorkoutPlansDayWeek(
+                  userID: widget.userID,
                   categoryName: categoryName,
                   title: title,
                   icon: Icons.fitness_center,

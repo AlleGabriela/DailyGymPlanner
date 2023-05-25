@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/material.dart';
 import '../../../services/workout/OneDayWorkoutServices.dart';
 import '../../../services/workout/OneWeekWorkoutServices.dart';
@@ -8,11 +7,12 @@ import '../../models/ListItems.dart';
 import 'GroupExerciseDetails.dart';
 
 class WorkoutPlansDayWeek extends StatefulWidget{
+  final String userID;
   final String categoryName;
   final String title;
   final IconData icon;
   final Color iconColor;
-  const WorkoutPlansDayWeek({super.key, required this.categoryName, required this.title, required this.icon, required this.iconColor});
+  const WorkoutPlansDayWeek({super.key, required this.userID, required this.categoryName, required this.title, required this.icon, required this.iconColor});
 
   @override
   WorkoutPlansDayWeekPage createState() => WorkoutPlansDayWeekPage();
@@ -27,28 +27,22 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
   @override
   void initState() {
     super.initState();
-    handleUserID();
-  }
-
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    String userId = await authMethods.getUserId();
-    chooseSubcategory(userId);
+    chooseSubcategory();
     if( fullWorkout == []) {
       throw Exception("The list is still empty!");
     }
   }
 
-  void chooseSubcategory(String userId) async{
+  void chooseSubcategory() async{
     if( widget.categoryName == "One Day Workout") {
-      workouts = await getMuscleGroupsFromOneDayWorkout(widget.title, userId);
+      workouts = await getMuscleGroupsFromOneDayWorkout(widget.title, widget.userID);
       if (workouts.isNotEmpty) {
         fullWorkout = [for (final workout in workouts) await buildWorkoutContainer(workout)];
       }
     }
     else if( widget.categoryName == "One Week Workout Plan") {
       List imageList = ["assets/images/monday.jpg"] + ["assets/images/tuesday.jpg"] + ["assets/images/wednesday.jpg"] + ["assets/images/thursday.jpg"] + ["assets/images/friday.jpg"] + ["assets/images/saturday.jpg"] + ["assets/images/sunday.jpg"];
-      workouts = await getOneDayWorkoutsFromOneWeekPlan(widget.title, userId);
+      workouts = await getOneDayWorkoutsFromOneWeekPlan(widget.title, widget.userID);
       if (workouts.isNotEmpty) {
         int index = 0;
         fullWorkout = [for (final workout in workouts) await buildPlanContainer(workout, imageList, index++)];
@@ -119,6 +113,7 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
             context,
             MaterialPageRoute(
               builder: (context) => GroupExerciseDetails(
+                userID: widget.userID,
                   categoryName: searchCategory(widget.categoryName, doc),
                   subcategoryName: searchSubcategory(widget.categoryName, doc),
                   title: workoutName
@@ -161,6 +156,7 @@ class WorkoutPlansDayWeekPage extends State<WorkoutPlansDayWeek>{
                 context,
                 MaterialPageRoute(
                   builder: (context) => WorkoutPlansDayWeek(
+                    userID: widget.userID,
                     categoryName: "One Day Workout",
                     title: planName,
                     icon: Icons.fitness_center,
