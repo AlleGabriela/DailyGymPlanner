@@ -8,9 +8,41 @@ import '../util/showSnackBar.dart';
 class FirebaseAuthMethods {
 
   Future<bool> doesUserExist(String email) async {
-    final users = FirebaseFirestore.instance.collection('users');
-    final userSnapshot = await users.where('email', isEqualTo: email).get();
+    if (await doesCustomerExist(email)) {
+      return true;
+    } else {
+      return await doesTrainerExist(email);
+    }
+  }
+
+  Future<bool> doesCustomerExist(String email) async {
+    final customers = FirebaseFirestore.instance.collection('customers');
+    final userSnapshot = await customers.where('email', isEqualTo: email).get();
     return userSnapshot.docs.isNotEmpty;
+  }
+
+  Future<bool> doesTrainerExist(String email) async {
+    final trainers = FirebaseFirestore.instance.collection('trainers');
+    final userSnapshot = await trainers.where('email', isEqualTo: email).get();
+    return userSnapshot.docs.isNotEmpty;
+  }
+
+  Future<String> getCustomerID(String email) async {
+    String customerID = "";
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    await db.collection("customers").get().then(
+          (querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.get('email') == email) {
+            customerID = docSnapshot.id;
+            break;
+          }
+        }
+      },
+      onError: (e) => Exception("Error getting customer id: $e"),
+    );
+    return customerID;
   }
 
   Future<void> handleSignUp({
@@ -45,15 +77,32 @@ class FirebaseAuthMethods {
         }
         final credentials = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
-        FirebaseFirestore.instance
-            .collection(collection)
-            .doc(credentials.user?.uid)
-            .set({
-          'name': name,
-          'role': role,
-          'photo': '',
-          'location': 'The location is not set yet'
-        });
+        if (collection == 'customers') {
+          FirebaseFirestore.instance
+              .collection(collection)
+              .doc(credentials.user?.uid)
+              .set({
+            'name': name,
+            'role': role,
+            'photo': '',
+            'location': 'The location is not set yet',
+            'trainer': '',
+            'workoutPlan': '',
+            'mealPlan': '',
+            'email': email
+          });
+        } else {
+          FirebaseFirestore.instance
+              .collection(collection)
+              .doc(credentials.user?.uid)
+              .set({
+            'name': name,
+            'role': role,
+            'photo': '',
+            'location': 'The location is not set yet',
+            'email': email
+          });
+        }
       } catch (e) {
         showSnackBar(context, 'Failed to create user: $e');
       }
@@ -80,33 +129,13 @@ class FirebaseAuthMethods {
   }
 
   Future<String> getRole(String email) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('User does not exist!');
-    }
-
-    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
-        .collection('trainers')
-        .doc(user.uid)
-        .get();
-
-    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(user.uid)
-        .get();
-
-    String role;
-    if (adminSnapshot.exists) {
-      // User exists in the "admins" table
-      role = adminSnapshot.get('role');
-    } else if (customerSnapshot.exists) {
-      // User exists in the "customers" table
-      role = customerSnapshot.get('role');
+    if (await doesCustomerExist(email)) {
+      return "Customer";
+    } else if (await doesTrainerExist(email)) {
+      return "Trainer";
     } else {
-      // User does not exist in either table
-      throw Exception('User does not exist');
+      return "None";
     }
-    return role;
   }
 
   Future<String> getName(String email) async {

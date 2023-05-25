@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 
-import '../models/ListItems.dart';
+import '../../models/ListItems.dart';
 import 'MealPlans.dart';
 
 class MealList extends StatefulWidget {
@@ -15,19 +15,14 @@ class MealList extends StatefulWidget {
   const MealList({super.key, required this.categoryName, required this.icon, required this.iconColor});
 
   @override
-  _MealListState createState() => _MealListState(categoryName, icon, iconColor);
+  State<MealList> createState() => _MealListState();
 }
 
 class _MealListState extends State<MealList> {
   String userId = '';
   List<Widget> mealList = [];
   String userName = "";
-  String categoryName = "";
-  IconData icon;
-  Color iconColor;
   double imageHeight = 180;
-
-  _MealListState(this.categoryName, this.icon, this.iconColor);
 
   @override
   void initState() {
@@ -61,16 +56,16 @@ class _MealListState extends State<MealList> {
   void handleMealData() async {
     QuerySnapshot<Map<String, dynamic>> snapshot;
 
-    if (categoryName == "Breakfast" || categoryName == "Lunch" || categoryName == "Snack" || categoryName == "Dinner") {
+    if (widget.categoryName == "Breakfast" || widget.categoryName == "Lunch" || widget.categoryName == "Snack" || widget.categoryName == "Dinner") {
       snapshot = await FirebaseFirestore.instance
         .collection("trainers")
         .doc(userId)
         .collection("meals")
         .doc("meal")
-        .collection(categoryName)
+        .collection(widget.categoryName)
         .orderBy('name', descending: false)
         .get();
-    } else if (categoryName == "Full Day Meal") {
+    } else if (widget.categoryName == "Full Day Meal") {
       snapshot = await FirebaseFirestore.instance
           .collection("trainers")
           .doc(userId)
@@ -97,7 +92,7 @@ class _MealListState extends State<MealList> {
         String description = "";
         double timeInHours = 0;
         double timeInMinutes = 0;
-        if (categoryName == "Breakfast" || categoryName == "Lunch" || categoryName == "Snack" || categoryName == "Dinner") {
+        if (widget.categoryName == "Breakfast" || widget.categoryName == "Lunch" || widget.categoryName == "Snack" || widget.categoryName == "Dinner") {
           name = doc['name'];
           imageUrl = doc['imageUrl'];
           description = doc['description'];
@@ -107,7 +102,7 @@ class _MealListState extends State<MealList> {
           if( name == '' || imageUrl == '' || description == '') {
             throw Exception("The meal cannot pe accessed!");
           }
-        } else if (categoryName == "Full Day Meal") {
+        } else if (widget.categoryName == "Full Day Meal") {
           imageHeight = 80;
           name = doc['name'];
 
@@ -140,17 +135,17 @@ class _MealListState extends State<MealList> {
             ),
           ),
           onDismissed: (direction) async {
-            if (categoryName == "Breakfast" || categoryName == "Lunch" || categoryName == "Snack" || categoryName == "Dinner") {
+            if (widget.categoryName == "Breakfast" || widget.categoryName == "Lunch" || widget.categoryName == "Snack" || widget.categoryName == "Dinner") {
               await FirebaseFirestore.instance
                 .collection("trainers")
                 .doc(userId)
                 .collection("meals")
                 .doc("meal")
-                .collection(categoryName)
+                .collection(widget.categoryName)
                 .doc(doc.id)
                 .delete();
               setState(() {});
-            } else if (categoryName == "Full Day Meal") {
+            } else if (widget.categoryName == "Full Day Meal") {
               await FirebaseFirestore.instance
                 .collection("trainers")
                 .doc(userId)
@@ -181,7 +176,7 @@ class _MealListState extends State<MealList> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => MealPlans(
-                        categoryName: categoryName,
+                        categoryName: widget.categoryName,
                         title: name,
                         imageUrl: imageUrl,
                         description: description,
@@ -191,7 +186,7 @@ class _MealListState extends State<MealList> {
                     ),
                   );
                 },
-                child: listMeals(name, imageUrl, icon, iconColor),
+                child: listMeals(name, imageUrl, widget.icon, widget.iconColor),
               )
           ),
         );
@@ -205,7 +200,7 @@ class _MealListState extends State<MealList> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text(categoryName),
+          title: Text(widget.categoryName),
           backgroundColor: primaryColor,
           automaticallyImplyLeading: true,
           leading: IconButton(
@@ -227,7 +222,7 @@ class _MealListState extends State<MealList> {
   }
 
   Stack listMeals(String title, String imageUrl, IconData icon, Color iconColor) {
-    if (categoryName == "Breakfast" || categoryName == "Lunch" || categoryName == "Snack" || categoryName == "Dinner") {
+    if (widget.categoryName == "Breakfast" || widget.categoryName == "Lunch" || widget.categoryName == "Snack" || widget.categoryName == "Dinner") {
       return listItems(title, imageUrl, icon, iconColor);
     } else {
       return listItemsWithoutImage(title, icon, iconColor);

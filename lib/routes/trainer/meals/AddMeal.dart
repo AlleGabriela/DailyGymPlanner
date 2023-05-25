@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/routes/trainer/MealCategories.dart';
+import 'package:daily_gym_planner/routes/trainer/meals/MealCategories.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:daily_gym_planner/util/showSnackBar.dart';
@@ -8,8 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../services/MealServices.dart';
-import '../../util/components_theme/box.dart';
+import '../../../services/MealServices.dart';
+import '../../../util/components_theme/box.dart';
 
 String valueChoose = "Breakfast";
 List listItem = ["Breakfast", "Snack", "Lunch", "Dinner", "Full Day Meal", "One Week Meal Plan"];
