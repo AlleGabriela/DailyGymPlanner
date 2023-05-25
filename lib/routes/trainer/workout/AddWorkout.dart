@@ -19,10 +19,10 @@ class AddWorkoutPage extends StatefulWidget {
   const AddWorkoutPage({Key? key}) : super(key: key);
 
   @override
-  _AddWorkoutPageState createState() => _AddWorkoutPageState();
+  AddWorkoutPageState createState() => AddWorkoutPageState();
 }
 
-class _AddWorkoutPageState extends State<AddWorkoutPage> {
+class AddWorkoutPageState extends State<AddWorkoutPage> {
   final _formKey = GlobalKey<FormState>();
   String _category = "";
   String _subcategory = "";
@@ -33,7 +33,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   String workoutChoose = "";
   List listWorkouts = [];
 
-  /** Group of Exercise Variables **/
+  ///** Group of Exercise Variables **/
   String _nameMuscleGroup = "";
   List<Map<String, dynamic>> exerciseLowerUpperBody = [];
   List<String> exerciseNames = [];
@@ -50,7 +50,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   List<String> exerciseQuads = [];
   /** End Group of Exercise Variables **/
 
-  /** One Day Workout Variables **/
+  ///** One Day Workout Variables **/
   String _nameOneDayWorkout = "";
   List<Map<String, dynamic>> oneDayWorkoutExercise = [];
 
@@ -70,7 +70,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   };
   /** End One Day Workout Variables **/
 
-  /** One Week Workout Variables **/
+  ///** One Week Workout Variables **/
   List<String> oneDayWorkoutsNames = [];
   String _nameOneWeekWorkout = "";
 
@@ -81,7 +81,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   String friday = "";
   String saturday = "";
   String sunday = "";
-  /** End One Week Workout Variables **/
+  ///** End One Week Workout Variables **/
 
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -367,16 +367,16 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
     );
   }
 
-  /** Single exercise functions **/
+  ///** Single exercise functions **/
   Column workoutExercise (String listType) {
-    final String _upperBodySubcategory  = "Choose";
-    final String _lowerBodySubcategory  = "Choose:";
+    const String upperBodySubcategory  = "Choose";
+    const String lowerBodySubcategory  = "Choose:";
 
     if( listType == "Upper Body") {
-      workoutChoose = _upperBodySubcategory;
+      workoutChoose = upperBodySubcategory;
       listWorkouts = upperBodyItems;
     }  else {
-      workoutChoose = _lowerBodySubcategory;
+      workoutChoose = lowerBodySubcategory;
       listWorkouts = lowerBodyItems;
     }
     _category = listType;
@@ -413,7 +413,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
 
   /** End Single exercise functions **/
 
-  /** Group Exercise functions  **/
+  ///** Group Exercise functions  **/
   void _addNewLine() {
     setState(() {
       exerciseLowerUpperBody.add({});
@@ -433,8 +433,8 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       value: exerciseLowerUpperBody[index][dropdownLabel],
       items: dropdownItems
           .map((value) => DropdownMenuItem(
-        child: Text(value),
         value: value,
+        child: Text(value),
       ))
           .toList(),
       onChanged: (value) {
@@ -557,14 +557,14 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   }
 
   Column muscleGroup( String listType) {
-    final String _upperBodySubcategory  = "Choose";
-    final String _lowerBodySubcategory  = "Choose:";
+    const String upperBodySubcategory  = "Choose";
+    const String lowerBodySubcategory  = "Choose:";
 
     List<String> nrSeries = [ "0 series", "1 series", "2 series", "3 series", "4 series", "5 series", "6 series", "7 series", "8 series", "9 series", "10 series"];
     List<String> nrReps =  [ "0 reps", "1 reps", "2 reps", "3 reps", "4 reps", "5 reps", "6 reps", "7 reps", "8 reps", "9 reps", "10 reps", "11 reps", "12 reps", "13 reps", "14 reps", "15 reps", "16 reps", "17 reps", "18 reps", "19 reps", "20 reps"];
 
     if( listType == "Upper Body Muscle Group") {
-      workoutChoose = _upperBodySubcategory;
+      workoutChoose = upperBodySubcategory;
       listWorkouts = upperBodyItems;
       _category = "Upper Body";
       getExerciseNames(_category, 'Abs');
@@ -575,7 +575,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       getExerciseNames(_category, 'Traps');
       getExerciseNames(_category, 'Triceps');
     }  else {
-      workoutChoose = _lowerBodySubcategory;
+      workoutChoose = lowerBodySubcategory;
       listWorkouts = lowerBodyItems;
       _category = "Lower Body";
       getExerciseNames(_category, 'Calves');
@@ -634,7 +634,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
   }
   /** End group of exercise functions **/
 
-  /** One Day Workout functions **/
+  ///** One Day Workout functions **/
 
   void _addNewWorkoutLine() {
     setState(() {
@@ -709,8 +709,8 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
       value: oneDayWorkoutExercise[index][dropdownLabel],
       items: dropdownItems
           .map((value) => DropdownMenuItem(
-        child: Text(value),
         value: value,
+        child: Text(value),
       ))
           .toList(),
       onChanged: (value) {
@@ -760,6 +760,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             titleStyle("Add or delete exercise group:", titleSize*0.3),
             IconButton(
@@ -775,7 +776,6 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
               },
             ),
           ],
-          crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ],
     );
@@ -833,7 +833,7 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
 
   /** End One Day Workout functions **/
 
-  /** One Week Workout functions **/
+  ///** One Week Workout functions **/
 
   void getOneDayWorkoutsNames(String collectionName, String subcollectionName) async {
     List<String> oneDayWorkouts = [];

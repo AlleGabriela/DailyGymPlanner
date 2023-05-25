@@ -103,24 +103,22 @@ class SubcategoryExercisePage extends State<SubcategoryExercise>{
   }
 
   Widget buildExerciseList( int index, String name) {
-    return Container(
-      child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: primaryColor,
-            child: Text('$index'),
-          ),
-          title: Row(
-            children: [
-              Flexible(
-                child: Text(
-                  name,
-                  style: const TextStyle(color: Colors.black, fontFamily: font1),
-                ),
-              ),
-            ],
-          ),
+    return ListTile(
+        leading: CircleAvatar(
+          backgroundColor: primaryColor,
+          child: Text('$index'),
         ),
-    );
+        title: Row(
+          children: [
+            Flexible(
+              child: Text(
+                name,
+                style: const TextStyle(color: Colors.black, fontFamily: font1),
+              ),
+            ),
+          ],
+        ),
+      );
   }
 
   @override

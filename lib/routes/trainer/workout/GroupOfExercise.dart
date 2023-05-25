@@ -12,17 +12,13 @@ class GroupOfExercise extends StatefulWidget{
   const GroupOfExercise({super.key, required this.categoryName, required this.subcategoryName});
 
   @override
-  GroupOfExercisePage createState() => GroupOfExercisePage(categoryName, subcategoryName);
+  GroupOfExercisePage createState() => GroupOfExercisePage();
 }
 
 class GroupOfExercisePage extends State<GroupOfExercise> {
   String userName = "userName";
-  String categoryName = "";
-  String subcategoryName = "";
 
   List<Widget> exerciseList = [];
-
-  GroupOfExercisePage(this.categoryName, this.subcategoryName);
 
   @override
   void initState() {
@@ -46,9 +42,9 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
         .collection("trainers")
         .doc(userId)
         .collection("workouts")
-        .doc(categoryName)
-        .collection(subcategoryName)
-        .doc(subcategoryName)
+        .doc(widget.categoryName)
+        .collection(widget.subcategoryName)
+        .doc(widget.subcategoryName)
         .collection("Muscle Group Exercise")
         .orderBy('name', descending: false)
         .get();
@@ -80,15 +76,15 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
                 .collection("trainers")
                 .doc(userId)
                 .collection("workouts")
-                .doc(categoryName)
-                .collection(subcategoryName)
-                .doc(subcategoryName)
+                .doc(widget.categoryName)
+                .collection(widget.subcategoryName)
+                .doc(widget.subcategoryName)
                 .collection("Muscle Group Exercise")
                 .doc(doc.id)
                 .delete();
             setState(() {});
           },
-          child: buildGroupOfExerciseList(categoryName, subcategoryName, name, exerciseList),
+          child: buildGroupOfExerciseList(widget.categoryName, widget.subcategoryName, name, exerciseList),
         );
       }).toList();
     }
@@ -122,7 +118,7 @@ class GroupOfExercisePage extends State<GroupOfExercise> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: Text(subcategoryName),
+            title: Text(widget.subcategoryName),
             backgroundColor: primaryColor,
             automaticallyImplyLeading: true,
             leading: IconButton(

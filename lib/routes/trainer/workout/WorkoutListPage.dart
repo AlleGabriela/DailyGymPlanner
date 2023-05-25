@@ -55,11 +55,11 @@ class WorkoutListPage extends State<WorkoutList>{
   }
 
   Future<void> _getUserDetails() async {
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    FirebaseAuthMethods authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
-      String name = await _authService.getName(email) ;
+      String name = await authService.getName(email) ;
       setState(() {
         userName = name;
       });
@@ -102,7 +102,7 @@ class WorkoutListPage extends State<WorkoutList>{
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => AddWorkoutPage(),
+                                          builder: (context) => const AddWorkoutPage(),
                                         ),
                                       );
                                     },

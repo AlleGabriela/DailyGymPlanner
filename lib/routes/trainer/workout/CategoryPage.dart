@@ -15,19 +15,14 @@ class CategoryList extends StatefulWidget{
   const CategoryList({super.key, required this.categoryName, required this.icon, required this.iconColor});
 
   @override
-  CategoryListPage createState() => CategoryListPage(categoryName, icon, iconColor);
+  CategoryListPage createState() => CategoryListPage();
 }
 
 class CategoryListPage extends State<CategoryList>{
   String userName = "userName";
-  String categoryName = "";
-  IconData icon;
-  Color iconColor;
 
   List<Category> subcategories = [];
   List<Widget> fullWorkout = [];
-
-  CategoryListPage(this.categoryName, this.icon, this.iconColor);
 
   @override
   void initState() {
@@ -131,13 +126,13 @@ class CategoryListPage extends State<CategoryList>{
 
     QuerySnapshot<Map<String, dynamic>> snapshot;
 
-    if(categoryName == "Upper Body Workouts") {
+    if(widget.categoryName == "Upper Body Workouts") {
       subcategories = subcategoryUpperBody.toList();
     }
-    else if(categoryName == "Lower Body Workouts"){
+    else if(widget.categoryName == "Lower Body Workouts"){
       subcategories = subcategoryLowerBody.toList();
     }
-    else if( categoryName == "One Day Workout") {
+    else if( widget.categoryName == "One Day Workout") {
       snapshot = await FirebaseFirestore.instance
           .collection("trainers")
           .doc(userId)
@@ -180,12 +175,12 @@ class CategoryListPage extends State<CategoryList>{
                       .delete();
                   setState(() {});
               },
-              child: buildSubcategoryList(categoryName, name, subcategories, fullWorkout),
+              child: buildSubcategoryList(widget.categoryName, name, subcategories, fullWorkout),
             );
         }).toList();
       }
     }
-    else if( categoryName == "One Week Workout Plan") {
+    else if( widget.categoryName == "One Week Workout Plan") {
       snapshot = await FirebaseFirestore.instance
           .collection("trainers")
           .doc(userId)
@@ -228,7 +223,7 @@ class CategoryListPage extends State<CategoryList>{
                     .delete();
                 setState(() {});
               },
-              child: buildSubcategoryList(categoryName, name, subcategories, fullWorkout),
+              child: buildSubcategoryList(widget.categoryName, name, subcategories, fullWorkout),
             );
         }).toList();
       }
@@ -238,11 +233,11 @@ class CategoryListPage extends State<CategoryList>{
 
   @override
   Widget build(BuildContext context) {
-    if(categoryName == "Upper Body Workouts" || categoryName == "Lower Body Workouts") {
+    if(widget.categoryName == "Upper Body Workouts" || widget.categoryName == "Lower Body Workouts") {
       return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
-              title: Text(categoryName),
+              title: Text(widget.categoryName),
               backgroundColor: primaryColor,
               automaticallyImplyLeading: true,
               leading: IconButton(
@@ -258,7 +253,7 @@ class CategoryListPage extends State<CategoryList>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      buildSubcategoryList(categoryName, categoryName, subcategories, fullWorkout),
+                      buildSubcategoryList(widget.categoryName, widget.categoryName, subcategories, fullWorkout),
                     ],
                   ),
                 ),
@@ -272,7 +267,7 @@ class CategoryListPage extends State<CategoryList>{
       return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
-              title: Text(categoryName),
+              title: Text(widget.categoryName),
               backgroundColor: primaryColor,
               automaticallyImplyLeading: true,
               leading: IconButton(

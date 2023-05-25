@@ -6,6 +6,9 @@ import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
 
 class CustomerWorkout extends StatefulWidget{
+  const CustomerWorkout({super.key});
+
+  @override
   CustomerWorkoutPage createState() => CustomerWorkoutPage();
 }
 
@@ -23,12 +26,12 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
   }
 
   Future<Map<String, String>> _getUserDetails() async {
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    FirebaseAuthMethods authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
-      String name = await _authService.getName(email);
-      String workout = await _authService.getWorkoutPlan(email);
+      String name = await authService.getName(email);
+      String workout = await authService.getWorkoutPlan(email);
       setState(() {
         userName = name;
       });
@@ -52,8 +55,11 @@ class CustomerWorkoutPage extends State<CustomerWorkout> {
         body: CustomScrollView(
           slivers: <Widget>[
             MyAppBar(userRole: userRole),
-            SliverFillRemaining(
-              // child: NewsList(userRole: userRole),
+            const SliverFillRemaining(
+              // child: WorkoutPlansDayWeek(categoryName: "One Week Workout",
+              //   title: planName,
+              //   icon: Icons.fitness_center,
+              //   iconColor: primaryColor),
             )
           ],
         ),

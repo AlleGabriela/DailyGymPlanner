@@ -89,7 +89,7 @@ class CustomerHomePage extends State<CustomerHome> {
                           ),
                         ],
                       ),
-                      child: CircularProgressIndicator(), // Display a loading indicator
+                      child: const CircularProgressIndicator(), // Display a loading indicator
                     );
                   } else if (snapshot.hasError) {
                     return Container(
@@ -111,7 +111,7 @@ class CustomerHomePage extends State<CustomerHome> {
                       ),
                       child: Text(
                         'Error: ${snapshot.error}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: buttonTextColor,
                           fontSize: questionSize,
                           fontFamily: font2,
@@ -144,7 +144,7 @@ class CustomerHomePage extends State<CustomerHome> {
                           ),
                         ],
                       ),
-                      child: Text(
+                      child: const Text(
                         'No data available',
                         style: TextStyle(
                           color: buttonTextColor,

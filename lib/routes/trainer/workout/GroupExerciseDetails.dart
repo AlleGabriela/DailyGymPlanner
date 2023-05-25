@@ -11,19 +11,14 @@ class GroupExerciseDetails extends StatefulWidget{
   const GroupExerciseDetails({super.key, required this.categoryName, required this.subcategoryName, required this.title});
 
   @override
-  GroupExerciseDetailsPage createState() => GroupExerciseDetailsPage(categoryName, subcategoryName, title);
+  GroupExerciseDetailsPage createState() => GroupExerciseDetailsPage();
 }
 
 class GroupExerciseDetailsPage extends State<GroupExerciseDetails>{
   String userName = "userName";
-  String categoryName = "";
-  String subcategoryName = "";
-  String title = "";
 
   List exercises = [];
   List<Widget> exerciseList = [];
-
-  GroupExerciseDetailsPage(this.categoryName, this.subcategoryName, this.title);
 
   @override
   void initState() {
@@ -41,7 +36,7 @@ class GroupExerciseDetailsPage extends State<GroupExerciseDetails>{
   }
 
   void getSubcategoryItems(String userId) async {
-    exercises = await getExerciseFromOneMuscleGroup(title, userId, categoryName, subcategoryName);
+    exercises = await getExerciseFromOneMuscleGroup(widget.title, userId, widget.categoryName, widget.subcategoryName);
     if (exercises.isNotEmpty) {
       int index = 1;
       exerciseList = [for (final exercise in exercises) await buildGroupOfExerciseList(exercise, index++)];
@@ -91,7 +86,7 @@ class GroupExerciseDetailsPage extends State<GroupExerciseDetails>{
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: Text(title),
+            title: Text(widget.title),
             backgroundColor: primaryColor,
             automaticallyImplyLeading: true,
             leading: IconButton(
