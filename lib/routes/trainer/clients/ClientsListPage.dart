@@ -138,7 +138,7 @@ class ClientsListPage extends State<ClientsList>{
                                       .then((_) => setState(() { clients = getClients(); }))
                                       .catchError((error) => Exception('Error deleting client from trainer:: $error'));
                                 },
-                                child: Container(
+                                child: SizedBox(
                                   height: 220,
                                   child: GestureDetector(
                                     onTap: () {

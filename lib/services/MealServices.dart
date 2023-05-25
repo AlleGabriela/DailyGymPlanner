@@ -254,3 +254,41 @@ Future<String> getMealPlanName(mealPlanPath) async{
   }
   return mealPlan;
 }
+
+Future<String> getMealPlanNameFromReference(mealPlanReference) async{
+  String mealName = '';
+  await mealPlanReference.get().then( (DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    mealName = data['name'];
+  },
+    onError: (e) => Exception("Error getting meal name from reference: $e"),
+  );
+  return mealName;
+}
+
+Future<List<String>> getNamesOfCustomerMealPlans(String customerID) async{
+  String mealPath = '';
+  List<String> namesOfMealPlansForWeek = [];
+
+  await db.doc('customers/$customerID').get()
+    .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      mealPath = documentSnapshot['mealPlan'];
+    }
+  });
+  if (mealPath != '') {
+    await db.doc(mealPath).get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('monday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('tuesday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('wednesday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('thursday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('friday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('saturday')));
+        namesOfMealPlansForWeek.add(await getMealPlanNameFromReference(documentSnapshot.get('sunday')));
+      }
+    });
+  }
+  return namesOfMealPlansForWeek;
+}

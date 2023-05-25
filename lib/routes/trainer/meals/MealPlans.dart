@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/services/MealServices.dart';
 import 'package:flutter/material.dart';
-import '../../../services/auth_methods.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';
 import 'MealDetails.dart';
 
 class MealPlans extends StatefulWidget {
+  final String userID;
   final String categoryName;
   final String title;
   final String? imageUrl;
@@ -14,37 +14,24 @@ class MealPlans extends StatefulWidget {
   final double timeInHours;
   final double timeInMinutes;
 
-  const MealPlans({super.key, required this.title, required this.description, this.imageUrl, required this.categoryName, required this.timeInHours, required this.timeInMinutes});
+  const MealPlans({super.key, required this.userID, required this.title, required this.description, this.imageUrl, required this.categoryName, required this.timeInHours, required this.timeInMinutes});
 
   @override
-  _MealPlansState createState() => _MealPlansState(title, description, imageUrl, categoryName, timeInHours, timeInMinutes);
+  State<MealPlans> createState() => _MealPlansState();
 }
 
 class _MealPlansState extends State<MealPlans> {
-  String categoryName;
-  final String title;
-  final String? imageUrl;
-  final String description;
-  final double timeInHours;
-  final double timeInMinutes;
+  String categoryName = '';
 
   List meals = [];
   List<Widget> mealList = [];
-  String userID = "";
   List imageList = [];
   int index = 0;
-
-  _MealPlansState(this.title, this.description, this.imageUrl, this.categoryName, this.timeInHours, this.timeInMinutes);
 
   @override
   void initState() {
     super.initState();
-    handleUserID();
-  }
-
-  void handleUserID() async {
-    FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-    userID = await authMethods.getUserId();
+    categoryName = widget.categoryName;
     handleMealData();
     if( mealList == []) {
       throw Exception("The list is still empty!");
@@ -53,13 +40,13 @@ class _MealPlansState extends State<MealPlans> {
 
   void handleMealData() async {
     if (categoryName == "Full Day Meal") {
-      meals = await getMealsFromFullDayMeal(title, userID);
+      meals = await getMealsFromFullDayMeal(widget.title, widget.userID);
       if (meals.isNotEmpty) {
         mealList = [for (final meal in meals) await buildMealContainer(meal)];
       }
     } else if (categoryName == "Meal Plan for a Week") {
       imageList = ["assets/images/monday.jpg"] + ["assets/images/tuesday.jpg"] + ["assets/images/wednesday.jpg"] + ["assets/images/thursday.jpg"] + ["assets/images/friday.jpg"] + ["assets/images/saturday.jpg"] + ["assets/images/sunday.jpg"];
-      meals = await getDayPlansFromOneWeekMeal(title, userID);
+      meals = await getDayPlansFromOneWeekMeal(widget.title, widget.userID);
       if (meals.isNotEmpty) {
         index = 0;
         mealList = [for (final meal in meals) await buildPlanContainer(meal)];
@@ -87,14 +74,14 @@ class _MealPlansState extends State<MealPlans> {
       mealTimeInMinutes = data['timeInMinutes'];
       mealID = doc.id;
     },
-      onError: (e) => print("Error getting document: $e"),
+      onError: (e) => Exception("Error getting document: $e"),
     );
     if( mealName == '' || mealImageUrl == '' || mealDescription == '') {
       throw Exception("The meal cannot pe accessed!");
     }
 
     Future<bool> checkCategory(String category) async {
-      var a = await db.collection('trainers/$userID/meals/meal/$category').doc(mealID).get();
+      var a = await db.collection('trainers/${widget.userID}/meals/meal/$category').doc(mealID).get();
       if (a.exists) {
         return true;
       } else {
@@ -160,11 +147,12 @@ class _MealPlansState extends State<MealPlans> {
               context,
               MaterialPageRoute(
                 builder: (context) => MealPlans(
+                    userID: widget.userID,
                     title: planName,
-                    description: description,
+                    description: widget.description,
                     categoryName: categoryName,
-                    timeInHours: timeInHours,
-                    timeInMinutes: timeInMinutes
+                    timeInHours: widget.timeInHours,
+                    timeInMinutes: widget.timeInMinutes
                 )
               ),
             );
@@ -180,7 +168,7 @@ class _MealPlansState extends State<MealPlans> {
       return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
-              title: Text(title),
+              title: Text(widget.title),
               backgroundColor: primaryColor,
               automaticallyImplyLeading: true,
               leading: IconButton(
@@ -200,7 +188,7 @@ class _MealPlansState extends State<MealPlans> {
         ),
       );
     } else {
-      return MealDetails(title: title, imageUrl: imageUrl, description: description, timeInMinutes: timeInMinutes, timeInHours: timeInHours);
+      return MealDetails(title: widget.title, imageUrl: widget.imageUrl, description: widget.description, timeInMinutes: widget.timeInMinutes, timeInHours: widget.timeInHours);
     }
   }
 }
