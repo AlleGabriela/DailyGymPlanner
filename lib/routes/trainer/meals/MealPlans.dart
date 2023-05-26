@@ -132,7 +132,7 @@ class _MealPlansState extends State<MealPlans> {
       final data = doc.data() as Map<String, dynamic>;
       planName = data['name'];
     },
-      onError: (e) => print("Error getting document: $e"),
+      onError: (e) => Exception("Error getting document: $e"),
     );
     if( planName == '') {
       throw Exception("The plan cannot pe accessed!");

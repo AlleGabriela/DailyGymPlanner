@@ -53,7 +53,7 @@ class MealDetails extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 timeOfPreparationMessage,
-                style: TextStyle(color: primaryColor, fontSize: 20),
+                style: const TextStyle(color: primaryColor, fontSize: 20),
               ),
             ),
           ],
