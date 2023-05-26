@@ -6,7 +6,7 @@ import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
-import '../trainer/news/NewsList.dart';
+import '../user/news/NewsList.dart';
 
 class CustomerHome extends StatefulWidget{
   const CustomerHome({super.key});

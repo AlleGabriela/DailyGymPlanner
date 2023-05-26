@@ -1,7 +1,7 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../trainer/settings/Settings.dart';
+import '../user/settings/Settings.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userRole;

@@ -1,14 +1,14 @@
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
-import 'package:daily_gym_planner/routes/reset_password.dart';
-import 'package:daily_gym_planner/routes/sign_up.dart';
+import 'package:daily_gym_planner/routes/authentification/reset_password.dart';
+import 'package:daily_gym_planner/routes/authentification/sign_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 
-import '../services/auth_methods.dart';
-import '../util/components_theme/box.dart';
-import '../util/showSnackBar.dart';
-import 'customer/CustomerHomePage.dart';
+import '../../services/auth_methods.dart';
+import '../../util/components_theme/box.dart';
+import '../../util/showSnackBar.dart';
+import '../customer/CustomerHomePage.dart';
 
 class LogIn extends StatefulWidget{
   HomeLogIn createState() => HomeLogIn();

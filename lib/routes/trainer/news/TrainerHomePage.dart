@@ -1,5 +1,5 @@
 import 'package:daily_gym_planner/routes/models/AppBar.dart';
-import 'package:daily_gym_planner/routes/trainer/news/NewsList.dart';
+import 'package:daily_gym_planner/routes/user/news/NewsList.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
 import 'package:daily_gym_planner/routes/trainer/news/AddNews.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';

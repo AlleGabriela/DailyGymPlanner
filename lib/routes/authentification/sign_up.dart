@@ -1,12 +1,12 @@
-import 'package:daily_gym_planner/routes/log_in.dart';
+import 'package:daily_gym_planner/routes/authentification/log_in.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../util/components_theme/box.dart';
-import '../util/constants.dart';
-import '../util/showSnackBar.dart';
-import 'customer/CustomerHomePage.dart';
+import '../../util/components_theme/box.dart';
+import '../../util/constants.dart';
+import '../../util/showSnackBar.dart';
+import '../customer/CustomerHomePage.dart';
 
 class SignUp extends StatefulWidget{
   const SignUp({super.key});

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/constants.dart';
@@ -46,7 +45,7 @@ Stack listItems(String title, String imageUrl, IconData icon, Color iconColor) {
                 ClipOval(
                   child: Container(
                     color: iconColor,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Icon(
                       // Icons.info
                       icon,
@@ -113,7 +112,7 @@ Stack listItemsUsingImageAsset(String title, String imageUrl, IconData icon, Col
               ClipOval(
                 child: Container(
                   color: iconColor,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Icon(
                     // Icons.info
                     icon,
@@ -165,7 +164,7 @@ Stack listItemsWithoutImage(String title, IconData icon, Color iconColor) {
         bottom: 5,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Container (
+          child: SizedBox(
             width: 350,
             child: Row(
               children: [

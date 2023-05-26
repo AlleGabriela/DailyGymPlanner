@@ -1,11 +1,11 @@
-import 'package:daily_gym_planner/routes/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/authentification/welcome_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth_methods.dart';
-import '../util/components_theme/box.dart';
-import '../util/constants.dart';
-import '../util/showSnackBar.dart';
+import '../../services/auth_methods.dart';
+import '../../util/components_theme/box.dart';
+import '../../util/constants.dart';
+import '../../util/showSnackBar.dart';
 
 class PassReset extends StatefulWidget{
   HomePassReset createState() => HomePassReset();

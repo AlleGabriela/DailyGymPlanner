@@ -1,7 +1,7 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:daily_gym_planner/routes/sign_up.dart';
-import 'package:daily_gym_planner/routes/log_in.dart';
+import 'package:daily_gym_planner/routes/authentification/sign_up.dart';
+import 'package:daily_gym_planner/routes/authentification/log_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
