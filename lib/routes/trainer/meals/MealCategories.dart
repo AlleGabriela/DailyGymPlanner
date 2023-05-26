@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
-import 'MealList.dart';
+import '../../user/meal/MealList.dart';
 
 class CategoryList extends StatefulWidget{
   const CategoryList({super.key});

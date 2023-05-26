@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../services/MealServices.dart';
+import '../../../services/meal/MealServices.dart';
 import '../../../util/components_theme/box.dart';
 
 String valueChoose = "Breakfast";

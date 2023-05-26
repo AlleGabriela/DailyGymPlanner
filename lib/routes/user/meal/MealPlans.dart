@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/services/MealServices.dart';
+import 'package:daily_gym_planner/services/meal/MealServices.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';

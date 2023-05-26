@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
-import 'package:daily_gym_planner/services/MealServices.dart';
+import 'package:daily_gym_planner/services/meal/MealServices.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/services/workout/WorkoutServices.dart';
 import 'package:daily_gym_planner/util/constants.dart';

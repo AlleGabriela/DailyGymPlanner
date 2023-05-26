@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../services/ClientServices.dart';
-import '../../../services/MealServices.dart';
+import '../../../services/meal/MealServices.dart';
 import '../../../services/auth_methods.dart';
 import '../../../services/workout/OneWeekWorkoutServices.dart';
 import '../../../services/workout/WorkoutServices.dart';

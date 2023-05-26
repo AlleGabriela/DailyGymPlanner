@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/services/workout/OneWeekWorkoutServices.dart';
-import 'MealServices.dart';
+import 'meal/MealServices.dart';
 import 'auth_methods.dart';
 
 class Client {
