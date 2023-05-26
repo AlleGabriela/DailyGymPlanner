@@ -61,12 +61,12 @@ class _EditClientPageState extends State<EditClientPage> {
     );
     try {
       await client.editClient();
-      showSnackBar(context, "Client succesfully edited!");
+      showSnackBar(context, "Client successfully edited!");
       Navigator.pop(context);
       Navigator.pushReplacement<void, void>(
         context,
         MaterialPageRoute<void>(
-          builder: (BuildContext context) => ClientsList(),
+          builder: (BuildContext context) => const ClientsList(),
         ),
       );
     } catch (e) {

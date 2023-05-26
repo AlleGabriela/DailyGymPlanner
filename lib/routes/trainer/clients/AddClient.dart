@@ -63,12 +63,12 @@ class _AddClientPageState extends State<AddClientPage> {
         );
         try {
           await client.addClient();
-          showSnackBar(context, "Client added succesfully!");
+          showSnackBar(context, "Client added successfully!");
           Navigator.pop(context);
           Navigator.pushReplacement<void, void>(
             context,
             MaterialPageRoute<void>(
-              builder: (BuildContext context) => ClientsList(),
+              builder: (BuildContext context) => const ClientsList(),
             ),
           );
         } catch (e) {
