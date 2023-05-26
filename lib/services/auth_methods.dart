@@ -58,8 +58,8 @@ class FirebaseAuthMethods {
 
     if (await doesUserExist(email)) {
       showSnackBar(context, 'An user with same email already exists!');
+      throw Exception('An user with same email already exists!');
     } else {
-      // User does not exist. Proceed with sign up
       String collection;
       try {
         if (password != confirmpassword) {
@@ -72,11 +72,10 @@ class FirebaseAuthMethods {
         } else {
           throw Exception('Invalid role');
         }
-        if (email == "" || name == "" || password == "") {
+        if (email == '' || name == '' || password == '') {
           throw Exception('Field cannot be empty.');
         }
-        final credentials = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
+        final credentials = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
         if (collection == 'customers') {
           FirebaseFirestore.instance
               .collection(collection)
@@ -104,7 +103,8 @@ class FirebaseAuthMethods {
           });
         }
       } catch (e) {
-        showSnackBar(context, 'Failed to create user: $e');
+        showSnackBar(context, '$e');
+        throw Exception('Failed to create user: $e');
       }
     }
   }

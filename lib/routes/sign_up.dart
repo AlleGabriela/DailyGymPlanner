@@ -8,40 +8,48 @@ import '../util/constants.dart';
 import '../util/showSnackBar.dart';
 import 'customer/CustomerHomePage.dart';
 
-String userIdErrorText = "User id can not be empty";
-String userIdHintText = "Enter User Id";
-Color userIdHintTextColor = Colors.black;
-String valueChoose = "None";
-List listItem = [
-  "None", "Trainer", "Customer"
-];
-
 class SignUp extends StatefulWidget{
+  const SignUp({super.key});
+
+  @override
   HomeSignUp createState() => HomeSignUp();
 }
 
 class HomeSignUp extends State<SignUp> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String nameController = '';
+  String emailController = '';
+  String passwordController = '';
+  String confirmPasswordController = '';
 
-  FirebaseAuthMethods _authService = FirebaseAuthMethods();
+  String valueChoose = "None";
+  List listItem = [ "None", "Trainer", "Customer" ];
 
-  Future<void> _handleSignUp() async {
-    String name = nameController.text.trim();
-    String email = emailController.text.trim();
-    String password = passwordController.text.trim();
-    String confirmPassword = confirmPasswordController.text.trim();
+  void _handleSignUp() async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
 
-    await _authService.handleSignUp(
-      role: valueChoose,
-      name: name,
-      email: email,
-      password: password,
-      confirmpassword: confirmPassword,
-      context: context,
-    );
+      _formKey.currentState!.save();
+      FirebaseAuthMethods authService = FirebaseAuthMethods();
+      try {
+        await authService.handleSignUp(
+          role: valueChoose,
+          name: nameController,
+          email: emailController,
+          password: passwordController,
+          confirmpassword: confirmPasswordController,
+          context: context,
+        );
+        if( valueChoose == "Trainer") {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => TrainerHome()));
+        } else if( valueChoose == "Customer") {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CustomerHome()));
+        }
+      } catch (e) {
+        throw Exception('Error creating the user: $e');
+      }
+    }
   }
 
   @override
@@ -64,13 +72,13 @@ class HomeSignUp extends State<SignUp> {
                         margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Stack(
                             children: [
-                              Image(image: AssetImage(barbellImage)),
+                              const Image(image: AssetImage(barbellImage)),
                               Positioned.fill(
                                   child: Container(
                                       alignment: Alignment.center,
                                       margin: const EdgeInsets.fromLTRB(
                                           0, 120, 0, 0),
-                                      child: Text("DailyGymPlanner",
+                                      child: const Text("DailyGymPlanner",
                                         style: TextStyle(color: secondColor,
                                             fontSize: titleSizePhoto,
                                             fontFamily: font1),
@@ -82,83 +90,121 @@ class HomeSignUp extends State<SignUp> {
                     ),
                     SafeArea(
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           margin: const EdgeInsets.fromLTRB(
                               marginSize, marginSize, marginSize, marginSize),
                           child: Column(
                             children: [
-                              Text(
+                              const Text(
                                 'Sign Up into your account',
                                 style: TextStyle(color: secondColor,
                                     fontSize: pageSizeName,
                                     fontFamily: font1),
                               ),
-                              SizedBox(height: boxDataSize),
+                              const SizedBox(height: boxDataSize),
                               Form(
+                                  key: _formKey,
                                   child: Column(
                                     children: [
                                       Container(
-                                        child: TextField(
-                                          controller: nameController,
+                                        decoration: Box()
+                                            .inputBoxDecorationShaddow(),
+                                        child: TextFormField(
+                                          cursorColor: inputDecorationColor,
                                           decoration: Box().textInputDecoration(
                                               'Name', 'Enter your name'),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              showSnackBar( context, 'Please complete all fields.');
+                                              throw Exception('Field cannot be empty.');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            nameController = value ?? '';
+                                          },
                                         ),
+                                      ),
+                                      const SizedBox(height: boxDataSize),
+                                      Container(
                                         decoration: Box()
                                             .inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
-                                          controller: emailController,
+                                        child: TextFormField(
+                                          cursorColor: inputDecorationColor,
                                           decoration: Box().textInputDecoration(
                                               'E-mail', 'Enter your e-mail'),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              showSnackBar( context, 'Please complete all fields.');
+                                              throw Exception('Field cannot be empty.');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            emailController = value ?? '';
+                                          },
                                         ),
+                                      ),
+                                      const SizedBox(height: boxDataSize),
+                                      Container(
                                         decoration: Box()
                                             .inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
-                                          controller: passwordController,
+                                        child: TextFormField(
+                                          cursorColor: inputDecorationColor,
                                           obscureText: true,
                                           decoration: Box().textInputDecoration(
-                                              'Pasword', 'Enter your password'),
+                                              'Password', 'Enter your password'),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              showSnackBar( context, 'Please complete all fields.');
+                                              throw Exception('Field cannot be empty.');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (value) {
+                                            passwordController = value ?? '';
+                                          },
                                         ),
+                                      ),
+                                      const SizedBox(height: boxDataSize),
+                                      Container(
                                         decoration: Box()
                                             .inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: TextField(
-                                          controller: confirmPasswordController,
+                                        child: TextFormField(
                                           obscureText: true,
                                           decoration: Box().textInputDecoration(
                                               'Repeat Password',
                                               'Repeat your password'),
-                                        ),
-                                        decoration: Box()
-                                            .inputBoxDecorationShaddow(),
-                                      ),
-                                      SizedBox(height: boxDataSize),
-                                      Container(
-                                        child: DropdownButtonFormField(
-                                          style: TextStyle(color: secondColor, fontFamily: font1),
-                                          dropdownColor: dropdownFieldColor,
-                                          value: valueChoose,
-                                          items: listItem.map(
-                                                  (e) =>
-                                                  DropdownMenuItem(
-                                                    child: Text(e),
-                                                    value: e,
-                                                  )
-                                          ).toList(),
-                                          onChanged: (val) {
-                                            setState(() {
-                                              valueChoose = val as String;
-                                            });
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              showSnackBar( context, 'Please complete all fields.');
+                                              throw Exception('Field cannot be empty.');
+                                            }
+                                            return null;
                                           },
-                                          decoration: InputDecoration(),
+                                          onSaved: (value) {
+                                            confirmPasswordController = value ?? '';
+                                          },
                                         ),
+                                      ),
+                                      const SizedBox(height: boxDataSize),
+                                      DropdownButtonFormField(
+                                        style: const TextStyle(color: secondColor, fontFamily: font1),
+                                        dropdownColor: dropdownFieldColor,
+                                        value: valueChoose,
+                                        items: listItem.map(
+                                                (e) =>
+                                                DropdownMenuItem(
+                                                  value: e,
+                                                  child: Text(e),
+                                                )
+                                        ).toList(),
+                                        onChanged: (val) {
+                                          setState(() {
+                                            valueChoose = val as String;
+                                          });
+                                        },
+                                        decoration: const InputDecoration(),
                                       )
                                     ],
                                   )
@@ -172,34 +218,21 @@ class HomeSignUp extends State<SignUp> {
                         margin: const EdgeInsets.fromLTRB(
                             0, 0, marginSize, marginSize),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await _handleSignUp();
-                              if( valueChoose == "Trainer") {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => TrainerHome()));
-                              } else {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => CustomerHome()));
-                              }
-                            } catch (e) {
-                              showSnackBar(context, 'Failed to create user: $e');
-                            }
-                          },
+                          onPressed: _handleSignUp,
                           style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              fixedSize: Size(buttonWidth, buttonHeight),
-                              textStyle: TextStyle(
+                              shape: const StadiumBorder(),
+                              fixedSize: const Size(buttonWidth, buttonHeight),
+                              textStyle: const TextStyle(
                                   fontSize: buttonText,
                                   fontWeight: FontWeight.bold
                               ),
-                              side: BorderSide(
+                              side: const BorderSide(
                                   color: buttonTextColor, width: 2),
                               backgroundColor: primaryColor,
                               foregroundColor: buttonTextColor,
                               elevation: 15
                           ),
-                          child: Text("Sign Up"),
+                          child: const Text("Sign Up"),
                         )
                     ),
                     Container(
@@ -211,7 +244,7 @@ class HomeSignUp extends State<SignUp> {
                               children: [
                                 TextSpan(
                                   text: "\nAlready have an account? ",
-                                  style: TextStyle(color: questionTextColor,
+                                  style: const TextStyle(color: questionTextColor,
                                       fontSize: questionSize,
                                       fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
