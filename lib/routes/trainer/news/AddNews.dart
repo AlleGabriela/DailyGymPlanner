@@ -11,13 +11,13 @@ import '../../../services/news/NewsServices.dart';
 import '../../../util/components_theme/box.dart';
 
 class AddNewsPage extends StatefulWidget {
-  AddNewsPage({Key? key}) : super(key: key);
+  const AddNewsPage({Key? key}) : super(key: key);
 
   @override
-  _AddNewsPageState createState() => _AddNewsPageState();
+  AddNewsPageState createState() => AddNewsPageState();
 }
 
-class _AddNewsPageState extends State<AddNewsPage> {
+class AddNewsPageState extends State<AddNewsPage> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _imageUrl = '';
@@ -45,7 +45,7 @@ class _AddNewsPageState extends State<AddNewsPage> {
     try {
       String userID = await authMethods.getUserId();
       final postID = DateTime.now().millisecondsSinceEpoch.toString();
-      final storageReference = FirebaseStorage.instance.ref().child('${userID}/news').child("post_$postID");
+      final storageReference = FirebaseStorage.instance.ref().child('$userID/news').child("post_$postID");
       await storageReference.putFile(_imageFile!);
       final downloadUrl = await storageReference.getDownloadURL();
       setState(() {
@@ -57,32 +57,34 @@ class _AddNewsPageState extends State<AddNewsPage> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState != null &&
-        _formKey.currentState!.validate() &&
-        _imageFile != null)
-    {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await _uploadImage();
-      String userID = await authMethods.getUserId();
-      final newss = News(
-        userID,
-        _title,
-        _imageUrl,
-        _description,
-        DateTime.now(),
-      );
-      try {
-        await newss.addToFirestore();
-        showSnackBar(context, "News added succesfully!");
-        Navigator.pop(context);
-        Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => TrainerHome(),
-          ),
+      if (_imageFile != null) {
+        await _uploadImage();
+        String userID = await authMethods.getUserId();
+        final newsAdd = News(
+          userID,
+          _title,
+          _imageUrl,
+          _description,
+          DateTime.now(),
         );
-      } catch (e) {
-        throw Exception('Error adding news to Firestore: $e');
+        try {
+          await newsAdd.addToFirestore();
+          showSnackBar(context, "News added successfully!");
+          Navigator.pop(context);
+          Navigator.pushReplacement<void, void>(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => TrainerHome(),
+            ),
+          );
+        } catch (e) {
+          throw Exception('Error adding news to db: $e');
+        }
+      } else {
+        showSnackBar(context, 'Please add an image.');
+        throw Exception('Image not selected!');
       }
     }
   }
@@ -92,7 +94,7 @@ class _AddNewsPageState extends State<AddNewsPage> {
     return Scaffold(
       backgroundColor: addPagesBackgroundColor,
       appBar: AppBar(
-        title: Text('Add News'),
+        title: const Text('Add News'),
         backgroundColor: primaryColor,
       ),
       body: SingleChildScrollView(
@@ -116,14 +118,14 @@ class _AddNewsPageState extends State<AddNewsPage> {
                   _title = value ?? '';
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               InkWell(
                 onTap: () { _pickImage(); },
                 child: _imageFile == null
                     ? Container(
                         height: 200,
                         color: Colors.grey[300],
-                        child: Icon(Icons.add_a_photo),
+                        child: const Icon(Icons.add_a_photo),
                       )
                     : Container(
                         height: 200,
@@ -135,7 +137,7 @@ class _AddNewsPageState extends State<AddNewsPage> {
                         ),
                       ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 decoration: addPageInputStyle("Description"),
                 cursorColor: inputDecorationColor,
@@ -151,13 +153,13 @@ class _AddNewsPageState extends State<AddNewsPage> {
                   _description = value ?? '';
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor
                 ),
                 onPressed: _submitForm,
-                child: Text('Save'),
+                child: const Text('Save'),
               ),
             ],
           ),

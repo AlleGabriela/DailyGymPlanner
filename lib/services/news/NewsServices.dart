@@ -12,17 +12,17 @@ class News {
   Future<void> addToFirestore() async {
     final firestore = FirebaseFirestore.instance;
     try {
-      if( title == "" || imageUrl == "" || description == "") {
+      if( title == '' || imageUrl == '' || description == '') {
         throw Exception('Field cannot be empty.');
+      } else {
+        await firestore.collection("trainers")
+            .doc(userID)
+            .collection("news")
+            .add({'title': title,
+          'imageUrl': imageUrl,
+          'description': description,
+          'createdAt': createdAt.toUtc(),});
       }
-
-      await firestore.collection("trainers")
-          .doc(userID)
-          .collection("news")
-          .add({'title': title,
-                'imageUrl': imageUrl,
-                'description': description,
-                'createdAt': createdAt.toUtc(),});
     } catch (e) {
       throw Exception('News cannot be added to firebase.');
     }
