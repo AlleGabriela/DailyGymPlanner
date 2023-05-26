@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../util/components_theme/box.dart';
 import '../util/constants.dart';
 import '../util/showSnackBar.dart';
+import 'customer/CustomerHomePage.dart';
 
 String userIdErrorText = "User id can not be empty";
 String userIdHintText = "Enter User Id";
@@ -178,7 +179,8 @@ class HomeSignUp extends State<SignUp> {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => TrainerHome()));
                               } else {
-                                //TODO:  GO TO CUTOMER PAGE
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => CustomerHome()));
                               }
                             } catch (e) {
                               showSnackBar(context, 'Failed to create user: $e');
