@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(marginSize,marginSize,0,0),
-                      child: Text("Daily",
+                      child: const Text("Daily",
                           style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 ),
@@ -30,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(0,0,50,0),
-                      child: Text("Gym",
+                      child: const Text("Gym",
                           style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 ),
@@ -38,13 +38,13 @@ class WelcomeScreen extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Container(
                       margin: const EdgeInsets.fromLTRB(0,0,marginSize,0),
-                      child: Text("Planner",
+                      child: const Text("Planner",
                           style: TextStyle(color: secondColor, fontSize: titleSize, fontFamily: font1))
                   ),
                 )
               ],
             ),
-            Image(image: AssetImage(welcomeImage)),
+            const Image(image: AssetImage(welcomeImage)),
             Container(
               alignment: Alignment.centerRight,
               margin: const EdgeInsets.fromLTRB(0,0,marginSize,0),
@@ -55,45 +55,43 @@ class WelcomeScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LogIn()),
+                            MaterialPageRoute(builder: (context) => const LogIn()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            fixedSize: Size(buttonWidth, buttonHeight),
-                            textStyle: TextStyle(
+                            shape: const StadiumBorder(),
+                            fixedSize: const Size(buttonWidth, buttonHeight),
+                            textStyle: const TextStyle(
                                 fontSize: buttonText,
                                 fontWeight: FontWeight.bold
                             ),
-                            side: BorderSide(color: buttonTextColor, width: 2),
+                            side: const BorderSide(color: buttonTextColor, width: 2),
                             backgroundColor: secondColor,
                             foregroundColor: buttonTextColor,
                             elevation: 15
                         ),
-                        child: Text("Log in"),
+                        child: const Text("Log in"),
                       )
                   ),
-                  Container(
-                      child: ElevatedButton(
-                        onPressed: () {
-                            Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => SignUp()),
-                            );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            fixedSize: Size(buttonWidth, buttonHeight),
-                            textStyle: TextStyle(
-                                fontSize: buttonText,
-                                fontWeight: FontWeight.bold
-                            ),
-                            side: BorderSide(color: buttonTextColor, width: 2),
-                            backgroundColor: secondColor,
-                            foregroundColor: buttonTextColor,
-                            elevation: 15
+                  ElevatedButton(
+                    onPressed: () {
+                        Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => const SignUp()),
+                        );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        fixedSize: const Size(buttonWidth, buttonHeight),
+                        textStyle: const TextStyle(
+                            fontSize: buttonText,
+                            fontWeight: FontWeight.bold
                         ),
-                        child: Text("Sign up"),
-                      )
+                        side: const BorderSide(color: buttonTextColor, width: 2),
+                        backgroundColor: secondColor,
+                        foregroundColor: buttonTextColor,
+                        elevation: 15
+                    ),
+                    child: const Text("Sign up"),
                   ),
                 ],
               ),

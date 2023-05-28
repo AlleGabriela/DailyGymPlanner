@@ -250,7 +250,7 @@ class HomeSignUp extends State<SignUp> {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.push(context, MaterialPageRoute(
-                                          builder: (context) => LogIn()));
+                                          builder: (context) => const LogIn()));
                                     },
                                 ),
                               ]
