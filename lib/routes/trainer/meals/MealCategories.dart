@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
-import 'MealList.dart';
+import '../../user/meal/MealList.dart';
 
 class CategoryList extends StatefulWidget{
   const CategoryList({super.key});
@@ -28,11 +28,11 @@ class CategoryListPage extends State<CategoryList>{
   }
 
   Future<void> _getUserDetails() async {
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    FirebaseAuthMethods authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
-      String name = await _authService.getName(email) ;
+      String name = await authService.getName(email) ;
       setState(() {
         userName = name;
       });
@@ -114,7 +114,7 @@ class CategoryListPage extends State<CategoryList>{
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => AddMealPage(),
+                                        builder: (context) => const AddMealPage(),
                                       ),
                                     );
                                   },

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/services/MealServices.dart';
+import 'package:daily_gym_planner/services/meal/MealServices.dart';
 import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 import '../../models/ListItems.dart';
@@ -132,7 +132,7 @@ class _MealPlansState extends State<MealPlans> {
       final data = doc.data() as Map<String, dynamic>;
       planName = data['name'];
     },
-      onError: (e) => print("Error getting document: $e"),
+      onError: (e) => Exception("Error getting document: $e"),
     );
     if( planName == '') {
       throw Exception("The plan cannot pe accessed!");

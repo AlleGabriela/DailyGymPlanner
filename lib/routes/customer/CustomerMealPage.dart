@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../services/MealServices.dart';
+import '../../services/meal/MealServices.dart';
 import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
 import '../models/AppBar.dart';
 import '../models/ListItems.dart';
 import '../models/RiverMenu.dart';
-import '../trainer/meals/MealPlans.dart';
+import '../user/meal/MealPlans.dart';
 
 class CustomerMeal extends StatefulWidget{
   const CustomerMeal({super.key});

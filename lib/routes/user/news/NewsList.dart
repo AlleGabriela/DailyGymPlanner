@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_gym_planner/routes/trainer/news/NewsDetails.dart';
+import 'package:daily_gym_planner/routes/user/news/NewsDetails.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

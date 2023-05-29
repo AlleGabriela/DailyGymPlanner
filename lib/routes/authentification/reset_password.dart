@@ -1,20 +1,23 @@
-import 'package:daily_gym_planner/routes/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/authentification/welcome_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth_methods.dart';
-import '../util/components_theme/box.dart';
-import '../util/constants.dart';
-import '../util/showSnackBar.dart';
+import '../../services/auth_methods.dart';
+import '../../util/components_theme/box.dart';
+import '../../util/constants.dart';
+import '../../util/showSnackBar.dart';
 
 class PassReset extends StatefulWidget{
+  const PassReset({super.key});
+
+  @override
   HomePassReset createState() => HomePassReset();
 }
 
 class HomePassReset extends State<PassReset>{
   final emailController = TextEditingController();
 
-  FirebaseAuthMethods _authService = FirebaseAuthMethods();
+  final FirebaseAuthMethods _authService = FirebaseAuthMethods();
 
   Future<void> _handlePassReset() async {
     String email = emailController.text.trim();
@@ -42,12 +45,12 @@ class HomePassReset extends State<PassReset>{
                         margin: const EdgeInsets.fromLTRB(0,0,0,0),
                         child: Stack(
                             children: [
-                              Image(image: AssetImage(barbellImage)),
+                              const Image(image: AssetImage(barbellImage)),
                               Positioned.fill(
                                   child: Container(
                                       alignment: Alignment.center,
                                       margin: const EdgeInsets.fromLTRB(0,120,0,0),
-                                      child: Text("DailyGymPlanner",
+                                      child: const Text("DailyGymPlanner",
                                         style: TextStyle(color: secondColor, fontSize: titleSizePhoto, fontFamily: font1),
                                       )
                                   )
@@ -57,24 +60,24 @@ class HomePassReset extends State<PassReset>{
                     ),
                     SafeArea(
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           margin: const EdgeInsets.fromLTRB(marginSize, marginSize, marginSize, marginSize),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'Reset your password',
                                 style: TextStyle(color: secondColor, fontSize: pageSizeName, fontFamily: font1),
                               ),
-                              SizedBox(height: boxDataSize),
+                              const SizedBox(height: boxDataSize),
                               Form(
                                 child: Container(
+                                  decoration: Box().inputBoxDecorationShaddow(),
                                   child: TextField(
                                     controller: emailController,
                                     decoration: Box().textInputDecoration('E-mail', 'Enter your e-mail'),
                                   ),
-                                  decoration: Box().inputBoxDecorationShaddow(),
                                 )
                               )
                             ],
@@ -93,18 +96,18 @@ class HomePassReset extends State<PassReset>{
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              fixedSize: Size(buttonWidth, buttonHeight),
-                              textStyle: TextStyle(
+                              shape: const StadiumBorder(),
+                              fixedSize: const Size(buttonWidth, buttonHeight),
+                              textStyle: const TextStyle(
                                   fontSize: buttonText,
                                   fontWeight: FontWeight.bold
                               ),
-                              side: BorderSide(color: buttonTextColor, width: 2),
+                              side: const BorderSide(color: buttonTextColor, width: 2),
                               backgroundColor: primaryColor,
                               foregroundColor: buttonTextColor,
                               elevation: 15
                           ),
-                          child: Text("Reset"),
+                          child: const Text("Reset"),
                         )
                     ),
                     Container(
@@ -115,10 +118,10 @@ class HomePassReset extends State<PassReset>{
                               children: [
                                 TextSpan(
                                   text: "\nBack To Start Page! ",
-                                  style: TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
+                                  style: const TextStyle(color: questionTextColor, fontSize: questionSize, fontFamily: font2),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen()));
                                     },
                                 )
                               ]

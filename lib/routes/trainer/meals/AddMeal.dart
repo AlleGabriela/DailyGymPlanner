@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../services/MealServices.dart';
+import '../../../services/meal/MealServices.dart';
 import '../../../util/components_theme/box.dart';
 
 String valueChoose = "Breakfast";
@@ -68,9 +68,8 @@ class _AddMealPageState extends State<AddMealPage> {
         _imageFile = File(pickedFile.path);
       });
     }
-    else
-    {
-      showSnackBar(context, 'Image not added!');
+    else {
+      Exception('Image not added!');
     }
   }
 
@@ -78,7 +77,7 @@ class _AddMealPageState extends State<AddMealPage> {
     try {
       String userID = await authMethods.getUserId();
       final postID = DateTime.now().millisecondsSinceEpoch.toString();
-      final storageReference = FirebaseStorage.instance.ref().child('${userID}/meals/meal/$_chosenCategory').child("post_$postID");
+      final storageReference = FirebaseStorage.instance.ref().child('$userID/meals/meal/$_chosenCategory').child("post_$postID");
       await storageReference.putFile(_imageFile!);
       final downloadUrl = await storageReference.getDownloadURL();
       setState(() {
@@ -90,34 +89,37 @@ class _AddMealPageState extends State<AddMealPage> {
   }
 
   void _submitMeal() async {
-    if (_formKey.currentState != null &&
-        _formKey.currentState!.validate() &&
-        _imageFile != null)
+    if (_formKey.currentState != null && _formKey.currentState!.validate() && _imageFile != null)
     {
       _formKey.currentState!.save();
-      await _uploadImage();
-      String userID = await authMethods.getUserId();
-      final meal = Meal(
-        userID,
-        _chosenCategory,
-        _name,
-        _imageUrl,
-        _description,
-        _timeInHours,
-        _timeInMinutes,
-      );
-      try {
-        await meal.addMealToFirestore();
-        showSnackBar(context, "Meal added succesfully!");
-        Navigator.pop(context);
-        Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => CategoryList(),
-          ),
+      if (_imageFile != null)  {
+        await _uploadImage();
+        String userID = await authMethods.getUserId();
+        final meal = Meal(
+          userID,
+          _chosenCategory,
+          _name,
+          _imageUrl,
+          _description,
+          _timeInHours,
+          _timeInMinutes,
         );
-      } catch (e) {
-        throw Exception('Error adding meal to Firestore: $e');
+        try {
+          await meal.addMealToFirestore();
+          showSnackBar(context, "Meal added successfully!");
+          Navigator.pop(context);
+          Navigator.pushReplacement<void, void>(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => const CategoryList(),
+            ),
+          );
+        } catch (e) {
+          throw Exception('Error adding meal to db: $e');
+        }
+      } else {
+        showSnackBar(context, 'Please add an image.');
+        throw Exception('Image not selected!');
       }
     }
   }
@@ -140,16 +142,16 @@ class _AddMealPageState extends State<AddMealPage> {
 
       try {
         await fulldaymeal.addFullMealToFirestore();
-        showSnackBar(context, "Full day meal added succesfully!");
+        showSnackBar(context, "Full day meal added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => CategoryList(),
+            builder: (BuildContext context) => const CategoryList(),
           ),
         );
       } catch (e) {
-        throw Exception('Error adding full day meal to Firestore: $e');
+        throw Exception('Error adding full day meal to db: $e');
       }
     }
   }
@@ -174,16 +176,16 @@ class _AddMealPageState extends State<AddMealPage> {
 
       try {
         await oneWeekPlan.addOneWeekPlanToFirestore();
-        showSnackBar(context, "One week meal plan added succesfully!");
+        showSnackBar(context, "One week meal plan added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => CategoryList(),
+            builder: (BuildContext context) => const CategoryList(),
           ),
         );
       } catch (e) {
-        throw Exception('Error adding one week meal plan to Firestore: $e');
+        throw Exception('Error adding one week meal plan to db: $e');
       }
     }
   }
@@ -212,7 +214,7 @@ class _AddMealPageState extends State<AddMealPage> {
           listDinner += mealList;
         }
       },
-      onError: (e) => print("Error completing: $e"),
+      onError: (e) => Exception("Error completing: $e"),
     );
   }
 
@@ -470,7 +472,7 @@ class _AddMealPageState extends State<AddMealPage> {
           dropdownColor: dropdownFieldColor,
           value: itemChoose,
           validator: (value) {
-            if (value == null || value == "Choose breakfast:" || value == "Choose lunch:" || value == "Choose dinner:") {
+            if (value == null || value == "Choose breakfast:" || value == "Choose lunch:" || value == "Choose dinner:" || value == "Choose plan:") {
               showSnackBar( context, 'Please choose ${title.toLowerCase()}.');
             }
             return null;

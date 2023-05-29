@@ -164,7 +164,9 @@ class ClientsListPage extends State<ClientsList>{
                             },
                           )
                           : const Center(
-                            child: CircularProgressIndicator(),
+                          child: Text( "No client added yet.",
+                            style: TextStyle(fontSize: 20, color: Colors.black87, fontFamily: font1),
+                          ),
                         );
                       },
                     )

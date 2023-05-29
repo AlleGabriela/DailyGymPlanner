@@ -102,7 +102,7 @@ class AddWorkoutPageState extends State<AddWorkoutPage> {
       );
       try {
         await workout.addWorkoutToFirestore();
-        showSnackBar(context, "Exercise added succesfully!");
+        showSnackBar(context, "Exercise added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
@@ -136,7 +136,7 @@ class AddWorkoutPageState extends State<AddWorkoutPage> {
       );
       try {
         await muscleGroup.addMuscleGroupExerciseToFirestore();
-        showSnackBar(context, "Muscle group exercise added succesfully!");
+        showSnackBar(context, "Muscle group exercise added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
@@ -168,7 +168,7 @@ class AddWorkoutPageState extends State<AddWorkoutPage> {
       );
       try {
         await oneDayWorkoutInstance.addOneDayWorkoutToFirestore();
-        showSnackBar(context, "One Day Workout added succesfully!");
+        showSnackBar(context, "One Day Workout added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
@@ -202,7 +202,7 @@ class AddWorkoutPageState extends State<AddWorkoutPage> {
 
       try {
         await oneWeekPlan.addOneWeekWorkoutToFirestore();
-        showSnackBar(context, "One week workout plan added succesfully!");
+        showSnackBar(context, "One week workout plan added successfully!");
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,

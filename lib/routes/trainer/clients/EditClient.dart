@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../services/ClientServices.dart';
-import '../../../services/MealServices.dart';
+import '../../../services/meal/MealServices.dart';
 import '../../../services/auth_methods.dart';
 import '../../../services/workout/OneWeekWorkoutServices.dart';
 import '../../../services/workout/WorkoutServices.dart';
@@ -61,12 +61,12 @@ class _EditClientPageState extends State<EditClientPage> {
     );
     try {
       await client.editClient();
-      showSnackBar(context, "Client succesfully edited!");
+      showSnackBar(context, "Client successfully edited!");
       Navigator.pop(context);
       Navigator.pushReplacement<void, void>(
         context,
         MaterialPageRoute<void>(
-          builder: (BuildContext context) => ClientsList(),
+          builder: (BuildContext context) => const ClientsList(),
         ),
       );
     } catch (e) {

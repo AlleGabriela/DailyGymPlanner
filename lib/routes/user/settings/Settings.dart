@@ -11,7 +11,7 @@ import '../../../util/constants.dart';
 import '../../../util/showSnackBar.dart';
 import '../../models/AppBar.dart';
 import '../../models/RiverMenu.dart';
-import '../news/TrainerHomePage.dart';
+import '../../trainer/news/TrainerHomePage.dart';
 
 class Settings extends StatefulWidget{
   final String userRole;
@@ -19,12 +19,11 @@ class Settings extends StatefulWidget{
   const Settings({super.key, required this.userRole});
 
   @override
-  SettingsPage createState() => SettingsPage(userRole);
+  SettingsPage createState() => SettingsPage();
 }
 
 class SettingsPage extends State<Settings>{
   String userName = "";
-  String userRole = "";
   String userEmail = "";
   String userPassword = "";
   String userPhoto = "";
@@ -34,13 +33,7 @@ class SettingsPage extends State<Settings>{
 
   late Future<Map<String, String>> fetchDetails;
 
-  SettingsPage(this.userRole);
-
   FirebaseAuthMethods authMethods = FirebaseAuthMethods();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _userlocationController = TextEditingController();
-  final TextEditingController _userpasswordController = TextEditingController();
-
 
   @override
   void initState() {
@@ -72,8 +65,8 @@ class SettingsPage extends State<Settings>{
   }
 
   Future<void> _pickImage() async {
-    final _picker = ImagePicker();
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -89,7 +82,7 @@ class SettingsPage extends State<Settings>{
     try {
       String userID = await authMethods.getUserId();
       final postID = DateTime.now().millisecondsSinceEpoch.toString();
-      final storageReference = FirebaseStorage.instance.ref().child('${userID}/profile').child("post_$postID");
+      final storageReference = FirebaseStorage.instance.ref().child('$userID/profile').child("post_$postID");
       await storageReference.putFile(_imageFile!);
       final downloadUrl = await storageReference.getDownloadURL();
       setState(() {
@@ -108,7 +101,7 @@ class SettingsPage extends State<Settings>{
     }
       try {
         if( _imageFile != null ) {
-          if( userRole == "trainer") {
+          if( widget.userRole == "trainer") {
             await authMethods.updatePhotoURL("trainers", userID, userPhoto);
           } else {
             await authMethods.updatePhotoURL("customers", userID, userPhoto);
@@ -119,10 +112,15 @@ class SettingsPage extends State<Settings>{
         user?.updatePassword(userPassword);
       }
 
-      if( userRole == "trainer" ) {
-        await authMethods.updateUsername("trainers", userID, userName);
-        await authMethods.updateLocation("trainers", userID, userLocation);
-        showSnackBar(context, "Changes are succesfully!");
+      if( widget.userRole == "trainer" ) {
+        if( userName != '') {
+          await authMethods.updateUsername("trainers", userID, userName);
+        }
+        if( userLocation != '') {
+          await authMethods.updateLocation("trainers", userID, userLocation);
+        } else {
+          await authMethods.updateLocation("trainers", userID, "  -  ");
+        }
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
@@ -131,19 +129,24 @@ class SettingsPage extends State<Settings>{
           ),
         );
       } else {
-        await authMethods.updateUsername("customers", userID, userName);
-        await authMethods.updateLocation("customers", userID, userLocation);
-        showSnackBar(context, "Changes are succesfully!");
+        if( userName != '') {
+          await authMethods.updateUsername("customers", userID, userName);
+        }
+        if( userLocation != '') {
+          await authMethods.updateLocation("customers", userID, userLocation);
+        } else {
+          await authMethods.updateLocation("customers", userID, "  -  ");
+        }
         Navigator.pop(context);
         Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => CustomerHome(),
+            builder: (BuildContext context) => const CustomerHome(),
           ),
         );
       }
       } catch (e) {
-        throw Exception('Error adding news to Firestore: $e');
+        throw Exception('Error adding news to db: $e');
       }
     }
 
@@ -152,27 +155,27 @@ class SettingsPage extends State<Settings>{
     return MaterialApp(
       home: Scaffold(
         drawer: RiverMenu(
-          userRole: userRole,
+          userRole: widget.userRole,
           userName: userName,
           selectedSection: "Settings",
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            MyAppBar(userRole: userRole),
+            MyAppBar(userRole: widget.userRole),
             SliverFillRemaining(
               child: FutureBuilder<Map<String, String>>(
-                future: fetchDetails, // Replace with your actual future that builds the profile
+                future: fetchDetails,
                 builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator(
                       valueColor:AlwaysStoppedAnimation<Color>(primaryColor),
                     ); // Display a loading indicator
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}'); // Display an error message
+                    return Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                       return buildProfile();
                   } else {
-                    return const Text('No data available'); // Handle case when no data is available
+                    return const Text('No data available');
                   }
                 },
               ),
@@ -246,8 +249,7 @@ class SettingsPage extends State<Settings>{
               ],
             ),
           ),
-          TextField(
-            controller: _usernameController,
+          TextFormField(
             decoration: InputDecoration(
               labelStyle: const TextStyle(color: primaryColor),
               enabledBorder: const UnderlineInputBorder(
@@ -263,13 +265,12 @@ class SettingsPage extends State<Settings>{
             ),
             onChanged: (value) {
               setState(() {
-                userName = value;
+                  userName = value ?? '';
               });
-              _updateUsername();
             },
           ),
           const SizedBox(height: 15),
-          TextField(
+          TextFormField(
             decoration: InputDecoration(
               labelStyle: const TextStyle(color: primaryColor),
               enabledBorder: const UnderlineInputBorder(
@@ -286,8 +287,7 @@ class SettingsPage extends State<Settings>{
             ),
           ),
           const SizedBox(height: 15),
-          TextField(
-              controller: _userpasswordController,
+          TextFormField(
               obscureText: showPassword,
               decoration: InputDecoration(
               labelStyle: const TextStyle(color: primaryColor),
@@ -317,12 +317,10 @@ class SettingsPage extends State<Settings>{
                 setState(() {
                   userPassword = value;
                 });
-                _updatePassword();
               },
           ),
           const SizedBox(height: 15),
-          TextField(
-            controller: _userlocationController,
+          TextFormField(
             decoration: InputDecoration(
               labelStyle: const TextStyle(color: primaryColor),
               enabledBorder: const UnderlineInputBorder(
@@ -338,9 +336,8 @@ class SettingsPage extends State<Settings>{
             ),
             onChanged: (value) {
               setState(() {
-                userLocation = value;
+                userLocation = value ?? '';
               });
-              _updateUserlocation();
             },
           ),
           const SizedBox(height: 15),
@@ -361,32 +358,5 @@ class SettingsPage extends State<Settings>{
         ],
       ),
     );
-  }
-
-  void _updateUsername() {
-    // Perform the update logic here
-    String newUsername = _usernameController.text;
-    // Update the username in Firestore or perform other operations
-    setState(() {
-      userName = newUsername; // Update the placeholder value
-    });
-  }
-
-  void _updateUserlocation() {
-    // Perform the update logic here
-    String newUserlocation = _userlocationController.text;
-    // Update the username in Firestore or perform other operations
-    setState(() {
-      userLocation = newUserlocation; // Update the placeholder value
-    });
-  }
-
-  void _updatePassword() async {
-    String newUserpassword = _userpasswordController.text;
-    // Update the username in Firestore or perform other operations
-    setState(() {
-      userPassword = newUserpassword; // Update the placeholder value
-    });
-
   }
 }

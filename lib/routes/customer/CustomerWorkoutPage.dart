@@ -6,7 +6,7 @@ import '../../services/workout/OneWeekWorkoutServices.dart';
 import '../../util/constants.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
-import '../trainer/Workout/WorkoutPlansDayWeek.dart';
+import '../user/Workout/WorkoutPlansDayWeek.dart';
 
 class CustomerWorkout extends StatefulWidget{
   const CustomerWorkout({super.key});

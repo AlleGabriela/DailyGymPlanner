@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
-import 'package:daily_gym_planner/services/MealServices.dart';
+import 'package:daily_gym_planner/services/meal/MealServices.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:daily_gym_planner/services/workout/WorkoutServices.dart';
 import 'package:daily_gym_planner/util/constants.dart';
@@ -63,12 +63,12 @@ class _AddClientPageState extends State<AddClientPage> {
         );
         try {
           await client.addClient();
-          showSnackBar(context, "Client added succesfully!");
+          showSnackBar(context, "Client added successfully!");
           Navigator.pop(context);
           Navigator.pushReplacement<void, void>(
             context,
             MaterialPageRoute<void>(
-              builder: (BuildContext context) => ClientsList(),
+              builder: (BuildContext context) => const ClientsList(),
             ),
           );
         } catch (e) {

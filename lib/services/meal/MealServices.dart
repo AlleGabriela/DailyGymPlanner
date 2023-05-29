@@ -17,7 +17,7 @@ class Meal {
     String mealsCategory = "meal";
 
     try {
-      if( chosenCategory == "" || name == "" || imageUrl == "" || description == "") {
+      if( chosenCategory == '' || name == ''|| imageUrl == '' || description == '') {
         throw Exception('Field cannot be empty.');
       }
 

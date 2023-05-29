@@ -2,7 +2,7 @@ import 'package:daily_gym_planner/routes/models/AppBar.dart';
 import 'package:daily_gym_planner/routes/models/ListItems.dart';
 import 'package:daily_gym_planner/routes/models/RiverMenu.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/AddWorkout.dart';
-import 'package:daily_gym_planner/routes/trainer/Workout/CategoryPage.dart';
+import 'package:daily_gym_planner/routes/user/Workout/CategoryPage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
