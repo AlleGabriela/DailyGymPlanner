@@ -1,7 +1,7 @@
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:daily_gym_planner/routes/authentification/sign_up.dart';
-import 'package:daily_gym_planner/routes/authentification/log_in.dart';
+import 'package:daily_gym_planner/routes/authentication/sign_up.dart';
+import 'package:daily_gym_planner/routes/authentication/log_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -53,6 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                   Container(
                       margin: const EdgeInsets.fromLTRB(0,0,0,10),
                       child: ElevatedButton(
+                        key: const Key("loginButton"),
                         onPressed: () {
                           Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const LogIn()),
@@ -74,6 +75,7 @@ class WelcomeScreen extends StatelessWidget {
                       )
                   ),
                   ElevatedButton(
+                    key: const Key("signupButton"),
                     onPressed: () {
                         Navigator.push(context,
                                   MaterialPageRoute(builder: (context) => const SignUp()),

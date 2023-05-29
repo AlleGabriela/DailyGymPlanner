@@ -1,4 +1,4 @@
-import 'package:daily_gym_planner/routes/authentification/log_in.dart';
+import 'package:daily_gym_planner/routes/authentication/log_in.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/services/auth_methods.dart';
 import 'package:flutter/gestures.dart';

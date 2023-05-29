@@ -2,7 +2,7 @@ import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
-import 'package:daily_gym_planner/routes/authentification/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/authentication/welcome_screen.dart';
 import 'package:daily_gym_planner/util/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
