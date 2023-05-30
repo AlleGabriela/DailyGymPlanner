@@ -63,13 +63,14 @@ class ClientsListPage extends State<ClientsList>{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
+                    height: 50,
                     color: lightLila,
                     child: Center(
                       child: Text.rich(
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: "\nWant to add a new client? ",
+                              text: "Want to add a new client? ",
                               style: const TextStyle(
                                 color: buttonTextColor,
                                 fontSize: questionSize,

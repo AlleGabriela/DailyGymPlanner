@@ -97,13 +97,14 @@ class CategoryListPage extends State<CategoryList>{
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
+                      height: 50,
                       color: lightLila,
                       child: Center(
                         child: Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: "\nWant to add something new? ",
+                                text: "Want to add something new? ",
                                 style: const TextStyle(
                                   color: buttonTextColor,
                                   fontSize: questionSize,
