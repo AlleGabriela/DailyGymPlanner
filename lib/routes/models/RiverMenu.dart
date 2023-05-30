@@ -2,8 +2,9 @@ import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
-import 'package:daily_gym_planner/routes/authentification/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/authentication/welcome_screen.dart';
 import 'package:daily_gym_planner/util/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -73,6 +74,11 @@ class RiverMenu extends StatelessWidget {
                             builder: (context) => const Settings(userRole: "trainer")));
                   },
                   onLogoutSelected: () {
+                    try {
+                      FirebaseAuth.instance.signOut();
+                    } catch (e){
+                      Exception(e);
+                    }
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -120,6 +126,11 @@ class RiverMenu extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
                   },
                   onLogoutSelected: () {
+                    try {
+                      FirebaseAuth.instance.signOut();
+                    } catch (e){
+                      Exception(e);
+                    }
                     Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -10,10 +10,13 @@ import 'package:flutter/material.dart';
 import '../../../util/constants.dart';
 
 class TrainerHome extends StatefulWidget{
-  TrainerHomePage createState() => TrainerHomePage();
+  const TrainerHome({super.key});
+
+  @override
+  State<TrainerHome> createState() => _TrainerHomeState();
 }
 
-class TrainerHomePage extends State<TrainerHome>{
+class _TrainerHomeState extends State<TrainerHome>{
   String userName = "userName";
   String userRole = "trainer";
 
@@ -58,8 +61,8 @@ class TrainerHomePage extends State<TrainerHome>{
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: "\nWant to share something new? ",
-                            style: TextStyle(
+                            text: "Want to share something new? ",
+                            style: const TextStyle(
                               color: buttonTextColor,
                               fontSize: questionSize,
                               fontFamily: font2,
@@ -69,7 +72,7 @@ class TrainerHomePage extends State<TrainerHome>{
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AddNewsPage(),
+                                    builder: (context) => const AddNewsPage(),
                                   ),
                                 );
                               },

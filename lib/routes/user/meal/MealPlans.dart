@@ -24,7 +24,7 @@ class _MealPlansState extends State<MealPlans> {
   String categoryName = '';
 
   List meals = [];
-  List<Widget> mealList = [];
+  List<Container> mealList = [];
   List imageList = [];
   int index = 0;
 
@@ -32,27 +32,24 @@ class _MealPlansState extends State<MealPlans> {
   void initState() {
     super.initState();
     categoryName = widget.categoryName;
-    handleMealData();
-    if( mealList == []) {
-      throw Exception("The list is still empty!");
-    }
   }
 
-  void handleMealData() async {
+  Future<List<Container>> handleMealData() async {
+    List<Container> listOfMeals = [];
     if (categoryName == "Full Day Meal") {
       meals = await getMealsFromFullDayMeal(widget.title, widget.userID);
       if (meals.isNotEmpty) {
-        mealList = [for (final meal in meals) await buildMealContainer(meal)];
+        listOfMeals = [for (final meal in meals) await buildMealContainer(meal)];
       }
     } else if (categoryName == "Meal Plan for a Week") {
       imageList = ["assets/images/monday.jpg"] + ["assets/images/tuesday.jpg"] + ["assets/images/wednesday.jpg"] + ["assets/images/thursday.jpg"] + ["assets/images/friday.jpg"] + ["assets/images/saturday.jpg"] + ["assets/images/sunday.jpg"];
       meals = await getDayPlansFromOneWeekMeal(widget.title, widget.userID);
       if (meals.isNotEmpty) {
         index = 0;
-        mealList = [for (final meal in meals) await buildPlanContainer(meal)];
+        listOfMeals = [for (final meal in meals) await buildPlanContainer(meal)];
       }
     }
-    setState(() {});
+    return listOfMeals;
   }
 
   Future<Container> buildMealContainer(doc) async{
@@ -102,7 +99,7 @@ class _MealPlansState extends State<MealPlans> {
       mealIcon = Icons.bakery_dining;
     }
 
-      return Container(
+    return Container(
         margin: const EdgeInsets.only(left: 14, right: 14, top: 7, bottom: 7),
         height: 180,
         child: GestureDetector(
@@ -146,14 +143,14 @@ class _MealPlansState extends State<MealPlans> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MealPlans(
-                    userID: widget.userID,
-                    title: planName,
-                    description: widget.description,
-                    categoryName: categoryName,
-                    timeInHours: widget.timeInHours,
-                    timeInMinutes: widget.timeInMinutes
-                )
+                  builder: (context) => MealPlans(
+                      userID: widget.userID,
+                      title: planName,
+                      description: widget.description,
+                      categoryName: categoryName,
+                      timeInHours: widget.timeInHours,
+                      timeInMinutes: widget.timeInMinutes
+                  )
               ),
             );
           },
@@ -176,14 +173,24 @@ class _MealPlansState extends State<MealPlans> {
                 onPressed: () => Navigator.pop(context, false),
               )
           ),
-          body: CustomScrollView(
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  mealList,
-                ),
-              ),
-            ],
+          body: FutureBuilder(
+            future: handleMealData(),
+            builder: (context, snapshot) {
+              mealList = [];
+              var snapData = snapshot.data;
+              if (snapData != null) {
+                mealList += snapData;
+              }
+              return snapshot.hasData
+                ? ListView(
+                  children: mealList,
+                )
+                : const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:AlwaysStoppedAnimation<Color>(primaryColor),
+                  ),
+                );
+            },
           ),
         ),
       );

@@ -1,6 +1,6 @@
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
-import 'package:daily_gym_planner/routes/authentification/reset_password.dart';
-import 'package:daily_gym_planner/routes/authentification/sign_up.dart';
+import 'package:daily_gym_planner/routes/authentication/reset_password.dart';
+import 'package:daily_gym_planner/routes/authentication/sign_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_gym_planner/util/constants.dart';
@@ -84,6 +84,7 @@ class LogIn extends StatefulWidget{
                                       Container(
                                         decoration: Box().inputBoxDecorationShaddow(),
                                         child: TextField(
+                                          key: const Key("emailField"),
                                           controller: emailController,
                                           decoration: Box().textInputDecoration('E-mail', 'Enter your e-mail'),
                                         ),
@@ -92,6 +93,7 @@ class LogIn extends StatefulWidget{
                                       Container(
                                         decoration: Box().inputBoxDecorationShaddow(),
                                         child: TextField(
+                                          key: const Key("passwordField"),
                                           controller: passwordController,
                                           obscureText: true,
                                           decoration: Box().textInputDecoration('Password', 'Enter your password'),
@@ -108,6 +110,7 @@ class LogIn extends StatefulWidget{
                       alignment: Alignment.bottomRight,
                       margin: const EdgeInsets.fromLTRB(0,0,marginSize, marginSize),
                         child: ElevatedButton(
+                          key: const Key("logInButton"),
                           onPressed: () async {
                             try {
                               String role = await _handleLogIn();

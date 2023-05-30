@@ -1,4 +1,4 @@
-import 'package:daily_gym_planner/routes/authentification/welcome_screen.dart';
+import 'package:daily_gym_planner/routes/authentication/welcome_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 

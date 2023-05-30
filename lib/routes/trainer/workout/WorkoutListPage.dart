@@ -88,13 +88,14 @@ class WorkoutListPage extends State<WorkoutList>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
+                        height: 50,
                         color: lightLila,
                         child: Center(
                           child: Text.rich(
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "\nWant to add a new workout? ",
+                                  text: "Want to add a new workout? ",
                                   style: const TextStyle(
                                     color: buttonTextColor,
                                     fontSize: questionSize,

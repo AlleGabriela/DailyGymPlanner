@@ -206,6 +206,7 @@ Stack listItemsWithoutImage(String title, IconData icon, Color iconColor) {
 
 Container listClientsAndTrainer(String photo, String name, String email, String location) {
   return Container(
+    key: const Key("trainerDetails"),
     alignment: Alignment.center,
     margin: const EdgeInsets.all(15),
     height: 150,
