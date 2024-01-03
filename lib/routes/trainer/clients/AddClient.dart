@@ -26,6 +26,7 @@ class _AddClientPageState extends State<AddClientPage> {
   String email = '';
   String workoutPlan = 'None';
   String mealPlan = 'None';
+  bool feedback = false;
 
   late Future<List<String>> fetchWorkouts;
   late Future<List<String>> fetchMeals;
@@ -60,6 +61,7 @@ class _AddClientPageState extends State<AddClientPage> {
           customerID,
           workoutPlan,
           mealPlan,
+          feedback
         );
         try {
           await client.addClient();

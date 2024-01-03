@@ -1,5 +1,6 @@
 import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
+import 'package:daily_gym_planner/routes/trainer/feedback/FeedbackPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/routes/authentication/welcome_screen.dart';
@@ -67,6 +68,10 @@ class RiverMenu extends StatelessWidget {
                   onTodaySelected: () {
                     // TODO: Navigate to Today page.
                   },
+                  onFeedbackSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const FeedbackList()));
+                  },
                   onSettingsSelected: () {
                     Navigator.push(
                         context,
@@ -121,6 +126,9 @@ class RiverMenu extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const CustomerWorkout()));
                   },
                   onTodaySelected: () {},
+                  onFeedbackSelected: () {
+                    //TODO:
+                  },
                   onSettingsSelected: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
@@ -182,6 +190,7 @@ class SideMenuIcons extends StatelessWidget {
     required this.onMealsSelected,
     required this.onWorkoutSelected,
     required this.onTodaySelected,
+    required this.onFeedbackSelected,
     required this.onSettingsSelected,
     required this.onLogoutSelected,
   }) : super(key: key);
@@ -193,6 +202,7 @@ class SideMenuIcons extends StatelessWidget {
   final VoidCallback onMealsSelected;
   final VoidCallback onWorkoutSelected;
   final VoidCallback onTodaySelected;
+  final VoidCallback onFeedbackSelected;
   final VoidCallback onSettingsSelected;
   final VoidCallback onLogoutSelected;
 
@@ -237,6 +247,13 @@ class SideMenuIcons extends StatelessWidget {
           //   selectedSection == 'Today',
           //   onTodaySelected,
           // ),
+          _buildMenuItem(
+            context,
+            'Feedback',
+            Icons.feedback_sharp,
+            selectedSection == 'Feedback',
+            onFeedbackSelected,
+          ),
           const Divider(color: accentColor),
           _buildMenuItem(
             context,
