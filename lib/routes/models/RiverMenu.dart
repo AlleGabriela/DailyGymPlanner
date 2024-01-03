@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../customer/CustomerFeedbackPage.dart';
 import '../customer/CustomerMealPage.dart';
 import '../trainer/meals/MealCategories.dart';
 import '../customer/CustomerWorkoutPage.dart';
@@ -47,7 +48,7 @@ class RiverMenu extends StatelessWidget {
                   selectedSection: selectedSection,
                   onHomeSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TrainerHome()));
+                        MaterialPageRoute(builder: (context) => const TrainerHome()));
                   },
                   onClientsSelected: () {
                     Navigator.push(context,
@@ -127,7 +128,8 @@ class RiverMenu extends StatelessWidget {
                   },
                   onTodaySelected: () {},
                   onFeedbackSelected: () {
-                    //TODO:
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const CustomerFeedback()));
                   },
                   onSettingsSelected: () {
                     Navigator.push(context,
@@ -294,6 +296,13 @@ class SideMenuIcons extends StatelessWidget {
             Icons.fitness_center,
             selectedSection == 'Workout',
             onWorkoutSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Give Feedback',
+            Icons.feedback_sharp,
+            selectedSection == 'Feedback',
+            onFeedbackSelected,
           ),
           const Divider(color: accentColor),
           _buildMenuItem(
