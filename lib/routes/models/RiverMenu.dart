@@ -1,5 +1,6 @@
 import 'package:daily_gym_planner/routes/customer/CustomerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/clients/ClientsListPage.dart';
+import 'package:daily_gym_planner/routes/trainer/feedback/FeedbackPage.dart';
 import 'package:daily_gym_planner/routes/trainer/news/TrainerHomePage.dart';
 import 'package:daily_gym_planner/routes/trainer/Workout/WorkoutListPage.dart';
 import 'package:daily_gym_planner/routes/authentication/welcome_screen.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../customer/CustomerFeedbackPage.dart';
 import '../customer/CustomerMealPage.dart';
 import '../trainer/meals/MealCategories.dart';
 import '../customer/CustomerWorkoutPage.dart';
@@ -46,7 +48,7 @@ class RiverMenu extends StatelessWidget {
                   selectedSection: selectedSection,
                   onHomeSelected: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TrainerHome()));
+                        MaterialPageRoute(builder: (context) => const TrainerHome()));
                   },
                   onClientsSelected: () {
                     Navigator.push(context,
@@ -66,6 +68,10 @@ class RiverMenu extends StatelessWidget {
                   },
                   onTodaySelected: () {
                     // TODO: Navigate to Today page.
+                  },
+                  onFeedbackSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const FeedbackList()));
                   },
                   onSettingsSelected: () {
                     Navigator.push(
@@ -121,6 +127,10 @@ class RiverMenu extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const CustomerWorkout()));
                   },
                   onTodaySelected: () {},
+                  onFeedbackSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const CustomerFeedback()));
+                  },
                   onSettingsSelected: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
@@ -182,6 +192,7 @@ class SideMenuIcons extends StatelessWidget {
     required this.onMealsSelected,
     required this.onWorkoutSelected,
     required this.onTodaySelected,
+    required this.onFeedbackSelected,
     required this.onSettingsSelected,
     required this.onLogoutSelected,
   }) : super(key: key);
@@ -193,6 +204,7 @@ class SideMenuIcons extends StatelessWidget {
   final VoidCallback onMealsSelected;
   final VoidCallback onWorkoutSelected;
   final VoidCallback onTodaySelected;
+  final VoidCallback onFeedbackSelected;
   final VoidCallback onSettingsSelected;
   final VoidCallback onLogoutSelected;
 
@@ -237,6 +249,13 @@ class SideMenuIcons extends StatelessWidget {
           //   selectedSection == 'Today',
           //   onTodaySelected,
           // ),
+          _buildMenuItem(
+            context,
+            'Feedback',
+            Icons.feedback_sharp,
+            selectedSection == 'Feedback',
+            onFeedbackSelected,
+          ),
           const Divider(color: accentColor),
           _buildMenuItem(
             context,
@@ -277,6 +296,13 @@ class SideMenuIcons extends StatelessWidget {
             Icons.fitness_center,
             selectedSection == 'Workout',
             onWorkoutSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Give Feedback',
+            Icons.feedback_sharp,
+            selectedSection == 'Feedback',
+            onFeedbackSelected,
           ),
           const Divider(color: accentColor),
           _buildMenuItem(

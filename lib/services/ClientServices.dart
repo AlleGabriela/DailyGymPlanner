@@ -8,8 +8,9 @@ class Client {
   String customerID;
   String workoutPlan;
   String mealPlan;
+  bool feedback;
 
-  Client(this.trainerID, this.customerID, this.workoutPlan, this.mealPlan);
+  Client(this.trainerID, this.customerID, this.workoutPlan, this.mealPlan, this.feedback);
 
   Future<void> addClient() async {
     try {
@@ -46,6 +47,30 @@ class Client {
   }
 }
 
+Future<String> getWorkoutFeedback(String question, String clientID) async {
+  try {
+    final feedbackSnapshot = await db
+        .collection("customers")
+        .doc(clientID)
+        .collection("feedback")
+        .doc("feedbackAnswers")
+        .get();
+
+    if (feedbackSnapshot.exists) {
+      Map<String, dynamic>? feedbackData = feedbackSnapshot.data();
+      if (feedbackData != null && feedbackData.containsKey(question)) {
+        return feedbackData[question].toString();
+      } else {
+        return 'Question not found in feedback data';
+      }
+    } else {
+      return 'Workout feedback not available';
+    }
+  } catch (e) {
+    throw Exception('Error getting the feedback');
+  }
+}
+
 Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getClients() async{
   List<QueryDocumentSnapshot<Map<String, dynamic>>> listClients = [];
   FirebaseAuthMethods authService = FirebaseAuthMethods();
@@ -60,6 +85,25 @@ Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getClients() async{
       }
     },
     onError: (e) => Exception("Error getting clients: $e"),
+  );
+
+  return listClients;
+}
+
+Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getFeedbackClients() async {
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> listClients = [];
+  FirebaseAuthMethods authService = FirebaseAuthMethods();
+  String trainerID = await authService.getUserId();
+
+  await db.collection("customers").get().then(
+        (querySnapshot) {
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.get('trainer') == trainerID && docSnapshot.get('feedback') == true) {
+          listClients.add(docSnapshot);
+        }
+      }
+    },
+    onError: (e) => throw Exception("Error getting clients: $e"),
   );
 
   return listClients;

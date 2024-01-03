@@ -32,6 +32,7 @@ class _EditClientPageState extends State<EditClientPage> {
   late Future<String> workoutPlanName;
   String selectedMealPlan = "None";
   String selectedWorkoutPlan = "None";
+  bool feedback = false;
   List<String> listWorkoutPlans = [];
   List<String> listMealPlans = [];
   late Future<List<String>> fetchWorkouts;
@@ -58,6 +59,7 @@ class _EditClientPageState extends State<EditClientPage> {
       widget.clientID,
       selectedWorkoutPlan,
       selectedMealPlan,
+      feedback
     );
     try {
       await client.editClient();
