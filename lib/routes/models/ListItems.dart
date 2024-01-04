@@ -317,7 +317,7 @@ Container chatComponent(String photo, String name, String email) {
                 "E-mail: $email",
                 style: const TextStyle(
                   color: buttonTextColor,
-                  fontSize: questionSize,
+                  fontSize: questionSize-5,
                   fontFamily: font2,
                 ),
               ),
