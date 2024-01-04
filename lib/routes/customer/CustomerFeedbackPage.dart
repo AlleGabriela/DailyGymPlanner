@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
 import '../../util/showSnackBar.dart';
+import '../chat/chatPage.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
 
@@ -19,6 +20,7 @@ class CustomerFeedback extends StatefulWidget{
 
 class CustomerFeedbackPage extends State<CustomerFeedback> {
   String trainerID = "";
+  String trainerEmail = "";
   String userName = "userName";
   String userRole = "customer";
   bool workoutHardness = false; // Yes/No for hardness question
@@ -42,13 +44,16 @@ class CustomerFeedbackPage extends State<CustomerFeedback> {
     if (email != null) {
       String name = await authService.getName(email);
       String trainer = await authService.getTrainer(email);
+      String emailTrainer = await authService.getTrainerDetails(trainer, "email");
       setState(() {
         trainerID = trainer;
         userName = name;
+        trainerEmail = emailTrainer;
       });
       return {
         'userName': name,
-        'trainerID': trainer
+        'trainerID': trainer,
+        'trainerEmail': emailTrainer
       };
     }
     return {}; // Return an empty map if no user details are available
@@ -87,60 +92,85 @@ class CustomerFeedbackPage extends State<CustomerFeedback> {
           userName: userName,
           selectedSection: "Give Feedback",
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            MyAppBar(userRole: userRole),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildYesNoQuestion('Was the workout too hard?', workoutHardness, (value) {
-                          setState(() {
-                            workoutHardness = value;
-                          });
-                        }),
-                        _buildYesNoQuestion('Did anything hurt during your plan?', painDuringPlan, (value) {
-                          setState(() {
-                            painDuringPlan = value;
-                          });
-                        }),
-                        _buildYesNoQuestion('Were you challenged by this plan?', challengedByPlan, (value) {
-                          setState(() {
-                            challengedByPlan = value;
-                          });
-                        }),
-                        _buildYesNoQuestion('Do you want a change in this workout plan?', changePlan, (value) {
-                          setState(() {
-                           changePlan = value;
-                          });
-                        }),
-                        _buildTextQuestion('Do you want to say something?', additionalFeedback, (value) {
-                          setState(() {
-                            additionalFeedback = value;
-                          });
-                        }),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: submitForm,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: inputDecorationColor, // Background color
-                          ),
-                          child: const Text(
-                            'Submit Feedback',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: <Widget>[
+                MyAppBar(userRole: userRole),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            _buildYesNoQuestion('Was the workout too hard?', workoutHardness, (value) {
+                              setState(() {
+                                workoutHardness = value;
+                              });
+                            }),
+                            _buildYesNoQuestion('Did anything hurt during your plan?', painDuringPlan, (value) {
+                              setState(() {
+                                painDuringPlan = value;
+                              });
+                            }),
+                            _buildYesNoQuestion('Were you challenged by this plan?', challengedByPlan, (value) {
+                              setState(() {
+                                challengedByPlan = value;
+                              });
+                            }),
+                            _buildYesNoQuestion('Do you want a change in this workout plan?', changePlan, (value) {
+                              setState(() {
+                                changePlan = value;
+                              });
+                            }),
+                            _buildTextQuestion('Do you want to say something?', additionalFeedback, (value) {
+                              setState(() {
+                                additionalFeedback = value;
+                              });
+                            }),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: submitForm,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: inputDecorationColor, // Background color
+                              ),
+                              child: const Text(
+                                'Submit Feedback',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              ],
+            ),
+            // Chat icon positioned in the bottom-right corner
+            Positioned(
+              bottom: 16.0,
+              right: 16.0,
+              child: FloatingActionButton(
+                onPressed: () {
+                  if(trainerEmail != null && trainerID != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(receiverUserEmail: trainerEmail, receiverUserID: trainerID),
+                      ),
+                    );
+                  } else {
+                    showSnackBar(context, "This feature will be available when you will have a trainer.");
+                  }
+                },
+                backgroundColor: lightLila,
+                child: const Icon(Icons.chat),
               ),
             ),
           ],

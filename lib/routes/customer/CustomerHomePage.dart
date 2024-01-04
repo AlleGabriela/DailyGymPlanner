@@ -1,9 +1,11 @@
 import 'package:daily_gym_planner/routes/models/ListItems.dart';
+import 'package:daily_gym_planner/util/showSnackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth_methods.dart';
 import '../../util/constants.dart';
+import '../chat/chatPage.dart';
 import '../models/AppBar.dart';
 import '../models/RiverMenu.dart';
 import '../user/news/NewsList.dart';
@@ -52,6 +54,7 @@ class _CustomerHomePage extends State<CustomerHome> {
       setState(() {
         userName = name;
         trainerID = trainer;
+        trainerEmail = emailTrainer;
       });
       return {
         'userName': name,
@@ -73,106 +76,131 @@ class _CustomerHomePage extends State<CustomerHome> {
           userName: userName,
           selectedSection: "Home",
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            MyAppBar(userRole: userRole),
-            SliverToBoxAdapter(
-              child: FutureBuilder<Map<String, String>>(
-                future: fetchDetails,
-                builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.all(20),
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: lightLila,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 2),
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: <Widget>[
+                MyAppBar(userRole: userRole),
+                SliverToBoxAdapter(
+                  child: FutureBuilder<Map<String, String>>(
+                    future: fetchDetails,
+                    builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.all(20),
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightLila,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: const CircularProgressIndicator(), // Display a loading indicator
-                    );
-                  } else if (snapshot.hasError) {
-                    return Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.all(20),
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: lightLila,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 2),
+                          child: const CircularProgressIndicator(), // Display a loading indicator
+                        );
+                      } else if (snapshot.hasError) {
+                        return Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.all(20),
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightLila,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Text(
-                        'Error: ${snapshot.error}',
-                        style: const TextStyle(
-                          color: buttonTextColor,
-                          fontSize: questionSize,
-                          fontFamily: font2,
-                        ),
-                      ), // Display an error message
-                    );
-                  } else if (snapshot.hasData) {
-                    final data = snapshot.data!;
-                    final trainerName = data['trainerName'];
-                    final trainerEmail = data['trainerEmail'];
-                    final trainerLocation = data['trainerLocation'];
-                    final trainerPhoto = data['trainerPhoto'];
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: const TextStyle(
+                              color: buttonTextColor,
+                              fontSize: questionSize,
+                              fontFamily: font2,
+                            ),
+                          ), // Display an error message
+                        );
+                      } else if (snapshot.hasData) {
+                        final data = snapshot.data!;
+                        final trainerName = data['trainerName'];
+                        final trainerEmail = data['trainerEmail'];
+                        final trainerLocation = data['trainerLocation'];
+                        final trainerPhoto = data['trainerPhoto'];
 
-                    if (trainerID != '') {
-                      return listClientsAndTrainer(trainerPhoto!, trainerName!, trainerEmail!, trainerLocation!);
-                    } else {
-                     return Container();
-                    }
-                  } else {
-                    return Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.all(20),
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: lightLila,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(0, 2),
+                        if (trainerID != '') {
+                          return listClientsAndTrainer(trainerPhoto!, trainerName!, trainerEmail!, trainerLocation!);
+                        } else {
+                          return Container();
+                        }
+                      } else {
+                        return Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.all(20),
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: lightLila,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ],
+                          child: const Text(
+                            'No data available',
+                            style: TextStyle(
+                              color: buttonTextColor,
+                              fontSize: questionSize,
+                              fontFamily: font2,
+                            ),
+                          ), // Handle case when no data is available
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SliverFillRemaining(
+                  child: trainerID!='' ? NewsList(userRole: userRole) : Container(),
+                )
+              ],
+            ),
+            // Chat icon positioned in the bottom-right corner
+            Positioned(
+              bottom: 16.0,
+              right: 16.0,
+              child: FloatingActionButton(
+                onPressed: () {
+                  if(trainerEmail != null && trainerID != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(receiverUserEmail: trainerEmail, receiverUserID: trainerID),
                       ),
-                      child: const Text(
-                        'No data available',
-                        style: TextStyle(
-                          color: buttonTextColor,
-                          fontSize: questionSize,
-                          fontFamily: font2,
-                        ),
-                      ), // Handle case when no data is available
                     );
+                  } else {
+                    showSnackBar(context, "This feature will be available when you will have a trainer.");
                   }
                 },
+                backgroundColor: lightLila,
+                child: Icon(Icons.chat),
               ),
             ),
-            SliverFillRemaining(
-              child: trainerID!='' ? NewsList(userRole: userRole) : Container(),
-            )
           ],
         ),
       ),
