@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../chat/ConversationList.dart';
 import '../customer/CustomerFeedbackPage.dart';
 import '../customer/CustomerMealPage.dart';
 import '../trainer/meals/MealCategories.dart';
@@ -73,6 +74,10 @@ class RiverMenu extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const FeedbackList()));
                   },
+                  onConversationSelected: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ConversationList()));
+                  },
                   onSettingsSelected: () {
                     Navigator.push(
                         context,
@@ -131,6 +136,7 @@ class RiverMenu extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const CustomerFeedback()));
                   },
+                  onConversationSelected: () {},
                   onSettingsSelected: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const Settings(userRole: "customer")));
@@ -193,6 +199,7 @@ class SideMenuIcons extends StatelessWidget {
     required this.onWorkoutSelected,
     required this.onTodaySelected,
     required this.onFeedbackSelected,
+    required this.onConversationSelected,
     required this.onSettingsSelected,
     required this.onLogoutSelected,
   }) : super(key: key);
@@ -205,6 +212,7 @@ class SideMenuIcons extends StatelessWidget {
   final VoidCallback onWorkoutSelected;
   final VoidCallback onTodaySelected;
   final VoidCallback onFeedbackSelected;
+  final VoidCallback onConversationSelected;
   final VoidCallback onSettingsSelected;
   final VoidCallback onLogoutSelected;
 
@@ -255,6 +263,13 @@ class SideMenuIcons extends StatelessWidget {
             Icons.feedback_sharp,
             selectedSection == 'Feedback',
             onFeedbackSelected,
+          ),
+          _buildMenuItem(
+            context,
+            'Conversations',
+            Icons.chat_sharp,
+            selectedSection == 'Conversations',
+            onConversationSelected,
           ),
           const Divider(color: accentColor),
           _buildMenuItem(

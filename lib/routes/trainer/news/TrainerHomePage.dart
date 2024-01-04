@@ -28,11 +28,11 @@ class _TrainerHomeState extends State<TrainerHome>{
 
   Future<void> _getUserDetails() async {
 
-    FirebaseAuthMethods _authService = FirebaseAuthMethods();
+    FirebaseAuthMethods authService = FirebaseAuthMethods();
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user?.email;
     if (email != null) {
-      String name = await _authService.getName(email) ;
+      String name = await authService.getName(email) ;
       setState(() {
         userName = name;
       });
@@ -48,45 +48,49 @@ class _TrainerHomeState extends State<TrainerHome>{
           userName: userName,
           selectedSection: "Home",
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            MyAppBar(userRole: userRole),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 50, // set the height of the fixed box as required
-                child: Container( 
-                  color: lightLila,
-                  child: Center(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: <Widget>[
+                MyAppBar(userRole: userRole),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 50, // set the height of the fixed box as required
+                    child: Container(
+                      color: lightLila,
+                      child: Center(
+                        child: Text.rich(
                           TextSpan(
-                            text: "Want to share something new? ",
-                            style: const TextStyle(
-                              color: buttonTextColor,
-                              fontSize: questionSize,
-                              fontFamily: font2,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const AddNewsPage(),
-                                  ),
-                                );
-                              },
+                            children: [
+                              TextSpan(
+                                text: "Want to share something new? ",
+                                style: const TextStyle(
+                                  color: buttonTextColor,
+                                  fontSize: questionSize,
+                                  fontFamily: font2,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AddNewsPage(),
+                                      ),
+                                    );
+                                  },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                SliverFillRemaining(
+                  child: NewsList(userRole: userRole),
+                ),
+              ],
             ),
-            SliverFillRemaining(
-              child: NewsList(userRole: userRole),
-            )
           ],
         ),
       ),
